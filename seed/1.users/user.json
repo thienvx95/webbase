@@ -1,0 +1,3 @@
+[{"username":"admin","email":"admin@admin.com","password":"$2a$10$ZSwLkDDxb/Nw2OPpaq3Zj.x/nQ5wQTkPuZ9wbN4kWHQXqwOo6ct/O","roles":["Admin","Member"],"avatar":"https://gravatar.com/avatar/64e1b8d34f425d19e1ee2ea7236d3028?s=40&d=retro","fullname":"Admin","dob":"1995-09-05T08:08:01.600+00:00","mobile":"267-264-4188","gender":"Male","isActive":true,"address":"Vietnam"},
+ {"username":"user","email":"member@member.com","password":"$2a$10$ZSwLkDDxb/Nw2OPpaq3Zj.x/nQ5wQTkPuZ9wbN4kWHQXqwOo6ct/O","roles":["Member"],"avatar":"https://gravatar.com/avatar/64e1b8d34f425d19e1ee2ea7236d3028?s=40&d=retro","fullname":"Member","dob":"1995-09-05T08:08:01.600+00:00","mobile":"267-264-4188","gender":"Female","isActive":true,"address":"Vietnam"}
+]

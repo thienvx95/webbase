@@ -1,0 +1,30 @@
+{
+    "keep": {
+        "days": true,
+        "amount": 10
+    },
+    "auditLog": "G:\\Project\\WebBase\\webbase\\.logs\\.bc16e5977d21b3f826bd7920471389d4ad43184d-audit.json",
+    "files": [
+        {
+            "date": 1671942644496,
+            "name": "G:\\Project\\WebBase\\webbase\\.logs\\2022-12-25.log",
+            "hash": "9d1c018392194f6a043685052a9fd78b19e868ab03b51ab95ca12c16a289cc3b"
+        },
+        {
+            "date": 1672054821100,
+            "name": "G:\\Project\\WebBase\\webbase\\.logs\\2022-12-26.log",
+            "hash": "eaea6026ca951905d0477d5aaf8f8f08bb43fed1644b01034b7c487b30fa52cf"
+        },
+        {
+            "date": 1672074164610,
+            "name": "G:\\Project\\WebBase\\webbase\\.logs\\2022-12-27.log",
+            "hash": "fd236a2e47bd1f0c04740865d233599a9312960410eecf21e69dbc4064d46dc2"
+        },
+        {
+            "date": 1672160476169,
+            "name": "G:\\Project\\WebBase\\webbase\\.logs\\2022-12-28.log",
+            "hash": "81a520d0c61385f8824d0179fc6b3b2aa0d3050b30b0b2ded0934f7a29923787"
+        }
+    ],
+    "hashType": "sha256"
+}

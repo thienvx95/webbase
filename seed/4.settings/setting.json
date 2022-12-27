@@ -1,0 +1,464 @@
+[
+  {
+    "_id": "General",
+    "type": "group",
+    "name": "settings.general",
+    "sorter": 10
+  },
+  {
+    "_id": "Accounts",
+    "type": "group",
+    "name": "settings.accounts",
+    "sorter": 20
+  },
+  {
+    "_id": "FileUpload",
+    "type": "group",
+    "name": "settings.file-upload",
+    "sorter": 30
+  },
+  {
+    "_id": "Logs",
+    "type": "group",
+    "name": "settings.logs",
+    "sorter": 40
+  },
+  {
+    "_id": "RateLimitter",
+    "type": "group",
+    "name": "settings.rate-limiter",
+    "sorter": 50
+  },
+  {
+    "_id": "Site_Url",
+    "type": "string",
+    "group": "General",
+    "value": "",
+    "name": "settings.general.site-url",
+    "sorter": 10
+  },
+  {
+    "_id": "Site_Name",
+    "type": "string",
+    "group": "General",
+    "value": "",
+    "name": "settings.general.site-name",
+    "sorter": 20
+  },
+  {
+    "_id": "FileUpload_MaxFileSize",
+    "type": "int",
+    "group": "FileUpload",
+    "name": "settings.file-upload.maxfilesize",
+    "description": "settings.file-upload.maxfilesize-description",
+    "value": 104857600,
+    "sorter": 10
+  },
+  {
+    "_id": "FileUpload_MediaTypeWhiteList",
+    "type": "string",
+    "group": "FileUpload",
+    "name": "settings.file-upload.mediatypewhitelist",
+    "description": "settings.file-upload.mediatypewhitelist-description",
+    "value": "",
+    "sorter": 20
+  },
+  {
+    "_id": "FileUpload_ProtectFiles",
+    "type": "boolean",
+    "group": "FileUpload",
+    "name": "settings.file-upload.protectfiles",
+    "description": "settings.file-upload.protectfiles-description",
+    "value": true,
+    "sorter": 60
+  },
+  {
+    "_id": "FileUpload_Storage_Type",
+    "type": "select",
+    "group": "FileUpload",
+    "name": "settings.file-upload.storagetype",
+    "description": "settings.file-upload.storagetype-description",
+    "values": [
+      {
+        "value": "GridFS",
+        "label": "settings.file-upload.gridfs"
+      },
+      {
+        "value": "AmazonS3",
+        "label": "settings.file-upload.s3"
+      },
+      {
+        "value": "GoogleCloudStorage",
+        "label": "settings.file-upload.google-cloud"
+      },
+      {
+        "value": "Webdav",
+        "label": "settings.file-upload.webdav"
+      },
+      {
+        "value": "FileSystem",
+        "label": "settings.file-upload.file-system"
+      }
+    ],
+    "value": "AmazonS3",
+    "sorter": 70
+  },
+  {
+    "_id": "Amazon_S3",
+    "type": "section",
+    "group": "FileUpload",
+    "name": "settings.file-upload.s3",
+    "sorter": 80
+  },
+  {
+    "_id": "FileUpload_S3_Bucket",
+    "type": "string",
+    "group": "FileUpload",
+    "section": "Amazon_S3",
+    "name": "settings.file-upload.s3-bucket",
+    "value": "",
+    "sorter": 90
+  },
+  {
+    "_id": "FileUpload_S3_Acl",
+    "type": "string",
+    "group": "FileUpload",
+    "section": "Amazon_S3",
+    "name": "settings.file-upload.s3-acl",
+    "value": "",
+    "sorter": 100
+  },
+  {
+    "_id": "FileUpload_S3_AWSAccessKeyId",
+    "type": "string",
+    "group": "FileUpload",
+    "section": "Amazon_S3",
+    "name": "settings.file-upload.s3-awssecretaccesskeyid",
+    "value": "",
+    "sorter": 110
+  },
+  {
+    "_id": "FileUpload_S3_AWSSecretAccessKey",
+    "type": "string",
+    "group": "FileUpload",
+    "section": "Amazon_S3",
+    "name": "settings.file-upload.s3-awssecretaccesskey",
+    "value": "",
+    "sorter": 120
+  },
+  {
+    "_id": "FileUpload_S3_CDN",
+    "type": "string",
+    "group": "FileUpload",
+    "section": "Amazon_S3",
+    "name": "settings.file-upload.s3-cdn",
+    "value": "",
+    "sorter": 130
+  },
+  {
+    "_id": "FileUpload_S3_Region",
+    "type": "string",
+    "group": "FileUpload",
+    "section": "Amazon_S3",
+    "name": "settings.file-upload.s3-region",
+    "value": "",
+    "sorter": 140
+  },
+  {
+    "_id": "FileUpload_S3_BucketURL",
+    "type": "string",
+    "group": "FileUpload",
+    "section": "Amazon_S3",
+    "name": "settings.file-upload.s3-bucketurl",
+    "description": "settings.file-upload.s3-bucketurl-description",
+    "value": "",
+    "sorter": 150
+  },
+  {
+    "_id": "FileUpload_S3_SignatureVersion",
+    "type": "string",
+    "group": "FileUpload",
+    "section": "Amazon_S3",
+    "name": "settings.file-upload.s3-signatureversion",
+    "value": "v4",
+    "sorter": 160
+  },
+  {
+    "_id": "FileUpload_S3_ForcePathStyle",
+    "type": "boolean",
+    "group": "FileUpload",
+    "section": "Amazon_S3",
+    "name": "settings.file-upload.s3-forcepathstyle",
+    "value": false,
+    "sorter": 170
+  },
+  {
+    "_id": "FileUpload_S3_URLExpiryTimeSpan",
+    "type": "int",
+    "group": "FileUpload",
+    "section": "Amazon_S3",
+    "name": "settings.file-upload.s3-URLExpiryTimeSpan",
+    "description": "settings.file-upload.s3-URLExpiryTimeSpan-description",
+    "value": 120,
+    "sorter": 180
+  },
+  {
+    "_id": "FileUpload_S3_Proxy_Avatars",
+    "type": "boolean",
+    "group": "FileUpload",
+    "section": "Amazon_S3",
+    "name": "settings.file-upload.s3-proxy-avatars",
+    "value": false,
+    "sorter": 190
+  },
+  {
+    "_id": "FileUpload_S3_Proxy_Uploads",
+    "type": "boolean",
+    "group": "FileUpload",
+    "section": "Amazon_S3",
+    "name": "settings.file-upload.s3-proxy-uploads",
+    "value": false,
+    "sorter": 200
+  },
+  {
+    "_id": "Google_Cloud_Storage",
+    "type": "section",
+    "group": "FileUpload",
+    "name": "settings.file-upload.google-cloud",
+    "sorter": 210
+  },
+  {
+    "_id": "FileUpload_GoogleStorage_Bucket",
+    "type": "string",
+    "group": "FileUpload",
+    "section": "Google_Cloud_Storage",
+    "name": "settings.file-upload.google-cloud-bucket",
+    "value": "",
+    "sorter": 220
+  },
+  {
+    "_id": "FileUpload_GoogleStorage_AccessId",
+    "type": "string",
+    "group": "FileUpload",
+    "section": "Google_Cloud_Storage",
+    "name": "settings.file-upload.google-cloud-accessid",
+    "value": "",
+    "sorter": 230
+  },
+  {
+    "_id": "FileUpload_GoogleStorage_Secret",
+    "type": "string",
+    "group": "FileUpload",
+    "section": "Google_Cloud_Storage",
+    "name": "settings.file-upload.google-cloud-secret",
+    "value": "",
+    "sorter": 240
+  },
+  {
+    "_id": "FileUpload_GoogleStorage_Proxy_Avatars",
+    "type": "boolean",
+    "group": "FileUpload",
+    "section": "Google_Cloud_Storage",
+    "name": "settings.file-upload.google-cloud-proxy-avatars",
+    "value": false,
+    "sorter": 250
+  },
+  {
+    "_id": "FileUpload_GoogleStorage_Proxy_Uploads",
+    "type": "boolean",
+    "group": "FileUpload",
+    "section": "Google_Cloud_Storage",
+    "name": "settings.file-upload.google-cloud-proxy-uploads",
+    "value": false,
+    "sorter": 260
+  },
+  {
+    "_id": "File_System",
+    "type": "section",
+    "group": "FileUpload",
+    "name": "settings.file-upload.file-system",
+    "sorter": 270
+  },
+  {
+    "_id": "FileUpload_FileSystemPath",
+    "type": "string",
+    "group": "FileUpload",
+    "section": "File_System",
+    "name": "settings.file-upload.file-system-path",
+    "value": "",
+    "sorter": 280
+  },
+  {
+    "_id": "WebDAV",
+    "type": "section",
+    "group": "FileUpload",
+    "name": "settings.file-upload.webdav",
+    "sorter": 290
+  },
+  {
+    "_id": "FileUpload_Webdav_Upload_Folder_Path",
+    "type": "string",
+    "group": "FileUpload",
+    "section": "WebDAV",
+    "name": "settings.file-upload.webdav-upload-folder-path",
+    "value": "",
+    "sorter": 300
+  },
+  {
+    "_id": "FileUpload_Webdav_Server_URL",
+    "type": "string",
+    "group": "FileUpload",
+    "section": "WebDAV",
+    "name": "settings.file-upload.webdav-server-url",
+    "value": "",
+    "sorter": 310
+  },
+  {
+    "_id": "FileUpload_Webdav_Username",
+    "type": "string",
+    "group": "FileUpload",
+    "section": "WebDAV",
+    "name": "settings.file-upload.webdav-username",
+    "value": "",
+    "sorter": 320
+  },
+  {
+    "_id": "FileUpload_Webdav_Password",
+    "type": "string",
+    "group": "FileUpload",
+    "section": "WebDAV",
+    "name": "settings.file-upload.webdav-password",
+    "value": "",
+    "sorter": 330
+  },
+  {
+    "_id": "FileUpload_Webdav_Proxy_Avatars",
+    "type": "boolean",
+    "group": "FileUpload",
+    "section": "WebDAV",
+    "name": "settings.file-upload.webdav-proxy-avatars",
+    "value": false,
+    "sorter": 340
+  },
+  {
+    "_id": "FileUpload_Webdav_Proxy_Uploads",
+    "type": "boolean",
+    "group": "FileUpload",
+    "section": "WebDAV",
+    "name": "settings.file-upload.webdav-proxy-uploads",
+    "value": false,
+    "sorter": 350
+  },
+  {
+    "_id": "Password_Default",
+    "type": "string",
+    "group": "Accounts",
+    "name": "settings.accounts.password-default",
+    "value": "123456aA@",
+    "sorter": 5
+  },
+  {
+    "_id": "Token_Expiration_In",
+    "type": "int",
+    "group": "Accounts",
+    "name": "settings.accounts.token-expiration-in",
+    "description": "settings.accounts.token-expiration-in-description",
+    "value": 15,
+    "sorter": 10
+  },
+  {
+    "_id": "Refresh_Token_Expiration_In",
+    "type": "int",
+    "group": "Accounts",
+    "name": "settings.accounts.refresh-token-expiration-in",
+    "description": "settings.accounts.refresh-token-expiration-in-description",
+    "value": 15,
+    "sorter": 20
+  },
+  {
+    "_id": "Accounts_Google",
+    "type": "section",
+    "group": "Accounts",
+    "name": "settings.accounts.google",
+    "sorter": 30
+  },
+  {
+    "_id": "Accounts_Facebook",
+    "type": "section",
+    "group": "Accounts",
+    "name": "settings.accounts.facebook",
+    "sorter": 40
+  },
+  {
+    "_id": "Google_Login",
+    "type": "boolean",
+    "group": "Accounts",
+    "section": "Accounts_Google",
+    "name": "settings.accounts.google-login",
+    "value": false,
+    "sorter": 50
+  },
+  {
+    "_id": "Google_Id",
+    "type": "string",
+    "group": "Accounts",
+    "section": "Accounts_Google",
+    "name": "settings.accounts.google-id",
+    "value": "",
+    "sorter": 60
+  },
+  {
+    "_id": "Google_Secret",
+    "type": "string",
+    "group": "Accounts",
+    "section": "Accounts_Google",
+    "name": "settings.accounts.google-secret",
+    "value": "",
+    "sorter": 70
+  },
+  {
+    "_id": "Google_Callback_URL",
+    "type": "string",
+    "group": "Accounts",
+    "section": "Accounts_Google",
+    "name": "settings.accounts.google-callback-url",
+    "value": "",
+    "sorter": 80
+  },
+  {
+    "_id": "Facebook_Login",
+    "type": "boolean",
+    "group": "Accounts",
+    "section": "Accounts_Facebook",
+    "name": "settings.accounts.facebook-login",
+    "value": false,
+    "sorter": 90
+  },
+  {
+    "_id": "Facebook_App_ID",
+    "type": "string",
+    "group": "Accounts",
+    "section": "Accounts_Facebook",
+    "name": "settings.accounts.facebook-app-id",
+    "value": "",
+    "sorter": 100
+  },
+  {
+    "_id": "Facebook_Secret",
+    "type": "string",
+    "group": "Accounts",
+    "section": "Accounts_Facebook",
+    "name": "settings.accounts.facebook-secret",
+    "value": "",
+    "sorter": 100
+  },
+  {
+    "_id": "Facebook_CallBack_URL",
+    "type": "string",
+    "group": "Accounts",
+    "section": "Accounts_Facebook",
+    "name": "settings.accounts.facebook-callback-url",
+    "value": "",
+    "sorter": 100
+  }
+]
