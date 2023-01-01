@@ -1,17 +1,17 @@
 import {
   prop,
-  getModelForClass,
   modelOptions,
   Severity,
 } from "@typegoose/typegoose";
 
 import { BaseEntity } from "@entities/base.entity";
+import { DataBaseCustomNames } from "@core/enums/dbCustomeNames";
 
 @modelOptions({
-  options: {  allowMixed: Severity.ALLOW, customName: "menus" },
+  options: {  allowMixed: Severity.ALLOW, customName: DataBaseCustomNames.Menus },
   schemaOptions: { timestamps: true },
 })
-export class Menu extends BaseEntity {
+export class Menu extends BaseEntity<string> {
   @prop()
   access?: string | string[];
 
@@ -33,11 +33,11 @@ export class Menu extends BaseEntity {
   @prop()
   name?: string;
 
-  @prop({ required: true })
-  path: string;
+  @prop()
+  path?: string;
 
   @prop()
-  layout: boolean;
+  layout?: boolean;
 
   @prop()
   redirect?: string;
@@ -52,7 +52,5 @@ export class Menu extends BaseEntity {
   parentId?: string;
 
   @prop({ default: true })
-  isActive: boolean;
+  isActive?: boolean;
 }
-
-getModelForClass(Menu);

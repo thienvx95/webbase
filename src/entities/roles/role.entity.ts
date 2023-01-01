@@ -1,22 +1,16 @@
 import { BaseEntity } from "../base.entity";
 import {
   prop,
-  getModelForClass,
   modelOptions,
+  Severity,
 } from "@typegoose/typegoose";
+import { DataBaseCustomNames } from "@core/enums/dbCustomeNames";
 
 @modelOptions({
-  options: { customName: "roles" },
-  schemaOptions: {
-    timestamps: true,
-  },
+  options: {  allowMixed: Severity.ALLOW, customName: DataBaseCustomNames.Roles },
+  schemaOptions: { timestamps: true },
 })
 export class Role extends BaseEntity<string> {
-  constructor(init?: Partial<Role>){
-    super();
-    Object.assign(this, init);
-  }
-
   @prop()
   public description?: string;
 
@@ -24,7 +18,5 @@ export class Role extends BaseEntity<string> {
   public roleType?: string;
 
   @prop({ default: true })
-  public isActive: boolean;
+  public isActive?: boolean;
 }
-
-getModelForClass(Role);

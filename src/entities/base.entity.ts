@@ -1,8 +1,7 @@
 import type { Types } from 'mongoose';
-import { PaginateOptions, PaginateResult } from "@business/common/model";
 import { prop, plugin, modelOptions, Severity } from '@typegoose/typegoose';
 import { mongoosePlugin } from 'mongo-cursor-pagination';
-
+import { AutoMap } from '@automapper/classes';
 @modelOptions({
   options: { allowMixed: Severity.ALLOW },
   schemaOptions: {
@@ -11,16 +10,14 @@ import { mongoosePlugin } from 'mongo-cursor-pagination';
 })
 @plugin(mongoosePlugin)
 export class BaseEntity<T = Types.ObjectId> {
-  @prop()
-  _id: T;
+
+  @AutoMap()
+  @prop({ auto: true })
+  _id?: T;
 
   @prop()
   updatedBy?: string;
 
   @prop()
   createdBy?: string;
-
-  static paginate<T, K>(this: T, options: PaginateOptions): PaginateResult<K> {
-    return (this as any).paginate(options);
-  }
 }

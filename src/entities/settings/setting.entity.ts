@@ -1,6 +1,6 @@
+import { DataBaseCustomNames } from "@core/enums/dbCustomeNames";
 import {
     prop,
-    getModelForClass,
     modelOptions,
     Severity
   } from "@typegoose/typegoose";
@@ -13,7 +13,7 @@ import {
   }
   
   @modelOptions({
-    options: { allowMixed: Severity.ALLOW, customName: "settings" },
+    options: { allowMixed: Severity.ALLOW, customName: DataBaseCustomNames.Settings },
   })
   export class Setting {
     constructor(init?: Partial<Setting>){
@@ -58,5 +58,3 @@ import {
     @prop()
     createdBy?: string;
   }
-  
-  getModelForClass(Setting);

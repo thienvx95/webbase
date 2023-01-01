@@ -88,6 +88,7 @@ export interface ISystemConfig {
   StorageProvider?: StorageProvider;
   S3Config?: S3Config;
   Dirs: PathStructure;
+  InstallKey: string;
 }
 
 export interface PathStructure{

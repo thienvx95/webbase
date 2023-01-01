@@ -1,20 +1,16 @@
-import { Service } from 'typedi';
-
-import {
-  ISiteSettings,
-  SiteSettingDecorator,
-} from '@infrastructures/decorators/siteSetting.decorator';
+import { COMMON_TYPES, ISiteSettings } from '@infrastructures/modules/common';
 import { OAuth2Client, LoginTicket } from 'google-auth-library';
 import { GetTokenResponse } from 'google-auth-library/build/src/auth/oauth2client';
+import { inject, injectable } from 'inversify';
 
 export interface IGoogleAuthService {
   getToken(code: string): Promise<GetTokenResponse>;
   verifyToken(token: string): Promise<LoginTicket>;
 }
-@Service()
+@injectable()
 export class GoogleAuthService implements IGoogleAuthService {
   private googleAuthClient: OAuth2Client;
-  constructor(@SiteSettingDecorator() private siteSettings: ISiteSettings) {
+  constructor(@inject(COMMON_TYPES.SiteSettings) private siteSettings: ISiteSettings) {
     const googleId = this.siteSettings.get('Google_Id') as string;
     const googleCallBack = this.siteSettings.get(
       'Google_Callback_URL',

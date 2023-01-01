@@ -1,18 +1,11 @@
-import { Service } from 'typedi';
-
-import {
-  EventDispatcher,
-  IEventDispatcher,
-  Repository,
-  IRepository,
-  AutoMapperDecorator,
-  IAutoMapper
-} from '@infrastructures/decorators';
 import { events } from '@infrastructures/events';
 import { isEmpty } from 'lodash';
 import { FileUpload } from '@entities/index';
 import { Logging } from '@core/log';
 import { FileUploadDto } from '@business/common/model';
+import { inject, injectable } from 'inversify';
+import { REPOSITORY_TYPES, IRepository } from '@infrastructures/modules/repositories';
+import { COMMON_TYPES, IEventDispatcher, IAutoMapper } from '@infrastructures/modules/common';
 
 export interface IFileUploadService {
   find(): Promise<FileUploadDto[]>;
@@ -23,25 +16,25 @@ export interface IFileUploadService {
   delete(_id: string): Promise<boolean>;
 }
 
-@Service()
+@injectable()
 export class FileUploadService implements IFileUploadService {
     private log = Logging.getInstance('FileUploadService');
   constructor(
-    @Repository() private fileUploadRepository: IRepository<FileUpload>,
-    @EventDispatcher() private eventDispatcher: IEventDispatcher,
-    @AutoMapperDecorator() private autoMapper: IAutoMapper,
+    @inject(REPOSITORY_TYPES.FileUploadRepository) private fileUploadRepository: IRepository<FileUpload>,
+    @inject(COMMON_TYPES.EventDispatcher) private eventDispatcher: IEventDispatcher,
+    @inject(COMMON_TYPES.AutoMapper) private autoMapper: IAutoMapper,
   ) {}
 
   async find(): Promise<FileUploadDto[]> {
     this.log.info('Find all FileUploads');
     const models = await this.fileUploadRepository.find({});
-    return !isEmpty(models) ? this.autoMapper.MapArray(models, FileUpload, FileUploadDto) : [];
+    return !isEmpty(models) ? this.autoMapper.MapArray(models, typeof FileUpload, FileUploadDto) : [];
   }
 
   async findById(id: string): Promise<FileUploadDto> {
     this.log.info('Find one fileUpload id: ' + id);
     const model = await this.fileUploadRepository.findById(id);
-    return !isEmpty(model) ? this.autoMapper.Map(model, FileUpload, FileUploadDto) : {};
+    return !isEmpty(model) ? this.autoMapper.Map(model, typeof FileUpload, FileUploadDto) : {};
   }
 
   async createMulti(

@@ -2,13 +2,14 @@ import { HttpStatusError, HttpStatus, ErrorEnum } from '@core/exception/httpStat
 import { events } from '@infrastructures/events';
 import { TokenPayload } from 'google-auth-library';
 import { GetTokenResponse } from 'google-auth-library/build/src/auth/oauth2client';
-import { IEventDispatcher, EventDispatcher, ISiteSettings, SiteSettingDecorator, IRepository, Repository, AutoMapperDecorator, IAutoMapper } from '@infrastructures/decorators';
 import { gravatar, PasswordUtil } from '@core/ultis';
 import { Logging } from '@core/log';
 import { PaginateOptions, PaginateResult } from '@business/common/model';
 import { User, UserToken } from 'entities';
 import { ChangePasswordRequest, UserDto, UserTokenDto } from '@business/user/model';
-import { Service } from 'typedi';
+import { inject, injectable } from 'inversify';
+import { IRepository, REPOSITORY_TYPES } from '@infrastructures/modules/repositories';
+import { COMMON_TYPES, IAutoMapper, IEventDispatcher, ISiteSettings } from '@infrastructures/modules/common';
 
 export interface IUserService {
   find(): Promise<UserDto[]>;
@@ -27,15 +28,15 @@ export interface IUserService {
   getTokenByUserId(userId: string): Promise<UserTokenDto[]>;
 }
 
-@Service()
+@injectable()
 export class UserService implements IUserService {
   private readonly _log = Logging.getInstance('UserService');
   constructor(
-    @Repository() private userRepository: IRepository<User>,
-    @Repository() private userTokenRepository: IRepository<UserToken>,
-    @SiteSettingDecorator() private siteSettings: ISiteSettings,
-    @EventDispatcher() private eventDispatcher: IEventDispatcher,
-    @AutoMapperDecorator() private autoMapper: IAutoMapper,
+    @inject(REPOSITORY_TYPES.UserRepository) private userRepository: IRepository<User>,
+    @inject(REPOSITORY_TYPES.UserTokenRepository) private userTokenRepository: IRepository<UserToken>,
+    @inject(COMMON_TYPES.SiteSettings) private siteSettings: ISiteSettings,
+    @inject(COMMON_TYPES.EventDispatcher) private eventDispatcher: IEventDispatcher,
+    @inject(COMMON_TYPES.AutoMapper) private autoMapper: IAutoMapper,
   ) {}
 
   async find(): Promise<UserDto[]> {

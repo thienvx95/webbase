@@ -1,22 +1,23 @@
 import {
     prop,
-    getModelForClass,
     modelOptions,
     Severity,
   } from "@typegoose/typegoose";
   
   import { BaseEntity } from "@entities/base.entity";
+import { DataBaseCustomNames } from "@core/enums/dbCustomeNames";
   
   @modelOptions({
-    options: {  allowMixed: Severity.ALLOW, customName: "languages" },
+    options: {  allowMixed: Severity.ALLOW, customName: DataBaseCustomNames.Languages },
     schemaOptions: { timestamps: true },
   })
-  export class Language extends BaseEntity {
+  export class Language extends BaseEntity<string> {
+    constructor(init?: Partial<string>){
+      super();
+      Object.assign(this, init);
+    }
     @prop()
     name: string;
-
-    @prop()
-    code: string;
 
     @prop()
     rtl: boolean;
@@ -25,7 +26,5 @@ import {
     sortOrder?: number;
     
     @prop({ default: true })
-    isActive: boolean;
+    isActive?: boolean;
   }
-  
-  getModelForClass(Language);

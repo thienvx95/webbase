@@ -1,0 +1,15 @@
+export enum DataBaseCustomNames {
+    Users = "users",
+    UserTokens = "userTokens",
+    Roles = "roles",
+    Settings = "settings",
+    ApplicationInfo = "applicationInfo",
+    DomainHosts = "domainHosts",
+    MigrationDb = "migrationDb",
+    FileUploads = "fileUploads",
+    Languages = "languages",
+    Translations = "translations",
+    Menus = "menus",
+    Permissions = "permissions",
+    PermissionActions = "permissionActions",
+  }

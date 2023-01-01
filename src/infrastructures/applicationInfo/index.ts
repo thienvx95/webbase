@@ -18,6 +18,11 @@ export class Application implements IApplication {
         this.init();
     }
 
+    public static get isInstall(): boolean {
+        const data = this.getInstance().get();
+        return data.isInstall;
+    }
+
     public static getInstance(): Application {
         if (!Application._instance) {
             Application._instance = new Application();
@@ -30,7 +35,7 @@ export class Application implements IApplication {
 		this._applicationModel.findOne({}, {}, (err: CallbackError, data: any) => {
             if(err) return;
             if(data){
-                this._cache.set('applicationInfo', data.value);
+                this._cache.set('applicationInfo', data);
                 return;
             }
 
@@ -44,7 +49,7 @@ export class Application implements IApplication {
                 databaseMigration: '',
             }, (err: CallbackError, data: any) => { 
                 if(err) return;
-                this._cache.set('applicationInfo', data.value);
+                this._cache.set('applicationInfo', data);
               });
         });
 	}
@@ -52,6 +57,11 @@ export class Application implements IApplication {
 	get(isReload = false): ApplicationInfo {
 		return this.getValue('applicationInfo', isReload);
 	}
+
+    setIsInstall(value: boolean): void {
+        this._applicationModel.updateOne({ version: ApplicationVersion },  { isInstall: value }, {}, () => null);
+        this.get(true);
+    }
 
     private setValue = (_id: string, value: ApplicationInfo): void => {
         this._cache.set(_id, value);
@@ -61,7 +71,7 @@ export class Application implements IApplication {
         this._applicationModel.findOne({}, {}, (err: CallbackError, data: any) => {
             if(err) return;
             if(data){
-                this.setValue(_id, data.value);
+                this.setValue(_id, data);
             }
         });
     };

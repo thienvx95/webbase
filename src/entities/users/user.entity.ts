@@ -1,6 +1,5 @@
 import {
     prop,
-    getModelForClass,
     modelOptions,
     Severity,
     plugin,
@@ -11,6 +10,8 @@ import {
   import { DATABASE } from '@core/constants';
   import { BaseEntity } from '../base.entity';
   import { Role } from '../roles/role.entity';
+import { DataBaseCustomNames } from '@core/enums/dbCustomeNames';
+import { AutoMap } from '@automapper/classes';
   
   export interface IUserServices {
     google?: IGoogleService;
@@ -32,7 +33,7 @@ import {
 //     });
 //   })
   @modelOptions({
-    options: { allowMixed: Severity.ALLOW, customName: "users", },
+    options: { allowMixed: Severity.ALLOW, customName: DataBaseCustomNames.Users },
     schemaOptions: {
       timestamps: true,
     },
@@ -43,6 +44,8 @@ import {
       super();
       Object.assign(this, init);
     }
+
+    @AutoMap()
     @prop({
       required: true,
       lowercase: true,
@@ -54,6 +57,7 @@ import {
     })
     email!: string;
   
+    @AutoMap()
     @prop({
       required: true,
       lowercase: true,
@@ -68,24 +72,30 @@ import {
     @prop({ required: true })
     password!: string;
   
+    @AutoMap()
     @prop({ required: true })
     fullname!: string;
   
+    @AutoMap()
     @prop()
     avatar?: string;
   
+    @AutoMap()
     @prop()
     address: string;
   
+    @AutoMap()
     @prop({
       enum: [DATABASE.GENDER.FEMALE, DATABASE.GENDER.MALE],
       default: 'Male',
     })
     gender: string;
   
+    @AutoMap()
     @prop({ default: Date.now() })
     dob: Date;
   
+        @AutoMap()
     @prop()
     services?: IUserServices;
   
@@ -98,12 +108,11 @@ import {
     @prop({ ref: Role, type: String })
     public roles: Ref<Role>[];
   
+    @AutoMap()
     @prop()
     mobile: string;
   
+    @AutoMap()
     @prop({ default: true })
-    isActive: boolean;
+    isActive?: boolean;
   }
-  
-  getModelForClass(User);
-  

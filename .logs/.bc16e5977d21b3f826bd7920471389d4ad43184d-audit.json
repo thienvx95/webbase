@@ -24,6 +24,21 @@
             "date": 1672160476169,
             "name": "G:\\Project\\WebBase\\webbase\\.logs\\2022-12-28.log",
             "hash": "81a520d0c61385f8824d0179fc6b3b2aa0d3050b30b0b2ded0934f7a29923787"
+        },
+        {
+            "date": 1672394245655,
+            "name": "G:\\Project\\WebBase\\webbase\\.logs\\2022-12-30.log",
+            "hash": "dfc2d5c475561ddcf92d7a90a4935e6e1907af8ac54543a2a408a8f961bafe73"
+        },
+        {
+            "date": 1672480623765,
+            "name": "G:\\Project\\WebBase\\webbase\\.logs\\2022-12-31.log",
+            "hash": "3748ff840f3a76a375d876a67ffade07265c0c0d69d3eaa085950d41266a0ea0"
+        },
+        {
+            "date": 1672506113309,
+            "name": "G:\\Project\\WebBase\\webbase\\.logs\\2023-01-01.log",
+            "hash": "ea7fba1c6dde2604963a3031fedeeefc31d285817ae89d4cd737bb38cdc13281"
         }
     ],
     "hashType": "sha256"

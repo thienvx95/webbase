@@ -1,6 +1,5 @@
 import {
     prop,
-    getModelForClass,
     modelOptions,
     Severity,
   } from "@typegoose/typegoose";
@@ -8,9 +7,10 @@ import {
   import { BaseEntity } from "@entities/base.entity";
 import { ApplicationVersion } from "@core/constants";
 import { SystemConfig } from "@core/configuration";
+import { DataBaseCustomNames } from "@core/enums/dbCustomeNames";
   
   @modelOptions({
-    options: {  allowMixed: Severity.ALLOW, customName: "applicationInfo" },
+    options: {  allowMixed: Severity.ALLOW, customName: DataBaseCustomNames.ApplicationInfo },
     schemaOptions: { timestamps: true },
   })
   export class ApplicationInfo extends BaseEntity {
@@ -42,5 +42,3 @@ import { SystemConfig } from "@core/configuration";
     @prop()
     isInstall: boolean;
   }
-  
-  getModelForClass(ApplicationInfo);

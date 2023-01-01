@@ -1,26 +1,27 @@
 import { FilterQuery, QueryOptions, ProjectionType, UpdateQuery } from 'mongoose';
-import { ReturnModelType, DocumentType, getModelWithString } from '@typegoose/typegoose';
+import { ReturnModelType, DocumentType, getModelForClass } from '@typegoose/typegoose';
 import { AnyParamConstructor, BeAnObject } from '@typegoose/typegoose/lib/types';
 import { HttpStatus, HttpStatusError } from '@core/exception/httpStatusError';
 import { IRepository } from '../repository.interface';
 import { ErrorEnum } from '@core/enums/error.enum';
 import { PaginateOptions, PaginateResult } from '@business/common/model';
 import { BaseEntity } from '@entities/base.entity';
-import { Service } from 'typedi';
 import { BuildQuery } from '@business/common/utils/buildQuery';
 
-@Service({ id: 'mongoRepository.factory' })
-export class MongoRepository<T> implements IRepository<T> {
-  private readonly _model: ReturnModelType<AnyParamConstructor<T>>;
-  private _class:T;
-  constructor() {
-    this._model = getModelWithString((typeof this._class));
+export interface IPaginateModel<T> {
+  paginate(options: PaginateOptions): PaginateResult<DocumentType<T>>;
+}
+
+export class MongoRepository<T = BaseEntity> implements IRepository<T> {
+  private readonly _model: IPaginateModel<T> & ReturnModelType<AnyParamConstructor<T>>;
+  constructor(_class: { new(): T ;} ) {
+    this._model = getModelForClass(_class) as IPaginateModel<T> & ReturnModelType<AnyParamConstructor<T>>;
   }
   /**
    * Handle Error Mongoose
    * @param error - Error mongoose
    */
-  private handleError = (error: any) => {
+  private handleError = (error: any): any => {
     if (error.code && error.code === 11000) {
       throw new HttpStatusError(HttpStatus.BadRequest, ErrorEnum.Duplicate_Record);
     }
@@ -34,7 +35,7 @@ export class MongoRepository<T> implements IRepository<T> {
    */
   async insertOne(entity: T): Promise<DocumentType<T>> {
     try {
-      return await this._model.create(entity);
+      return await this._model.create({ ...entity });
     } catch (e) {
       return this.handleError(e);
     }
@@ -52,13 +53,14 @@ export class MongoRepository<T> implements IRepository<T> {
     }
   }
 
-  async findOrInsertOne(filter: FilterQuery<DocumentType<T>>, entity: T): Promise<T> {
+    /**
+   * Insert entity if not exist
+   * @param entities - array model
+   */
+  async insertIfNotExist(filter: FilterQuery<DocumentType<T>>, entity: T): Promise<boolean> {
     try {
-      const existEntity = await this._model.findOne(filter);
-      if(existEntity){
-        return existEntity;
-      }
-      return await this._model.create(entity);
+      const existEntity = await this._model.updateOne(filter, { $setOnInsert: { ...entity } } , { upsert: true});
+      return existEntity.upsertedCount > 0;
     } catch (e) {
       return this.handleError(e);
     }
@@ -184,7 +186,8 @@ export class MongoRepository<T> implements IRepository<T> {
 
   public async findPaging(
     option: PaginateOptions,
-  ): Promise<PaginateResult<DocumentType<T>>> {
-    return await BaseEntity.paginate(BuildQuery.convertToQuery(option));
+  ): Promise<PaginateResult<DocumentType<T>>> 
+  {
+      return await this._model.paginate(BuildQuery.convertToQuery(option));
   }
 }

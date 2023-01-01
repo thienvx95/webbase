@@ -19,6 +19,7 @@
       "strictNullChecks": false,
       "emitDecoratorMetadata": true,
       "experimentalDecorators": true,
+      "resolveJsonModule": true,
       "baseUrl": "src",
       "paths": {
         "@core/*": ["core/*"],
@@ -26,7 +27,6 @@
         "@business/*": ["business/*"],
         "@infrastructures/*": ["infrastructures/*"],
         "@entities/*": ["entities/*"],
-        "@routing-controllers-openapi": ["infrastructures/routing-controllers-openapi/index.ts"],
       }
     },
     "include": ["src/**/*", "__tests__/**/*"]

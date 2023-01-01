@@ -1,9 +1,9 @@
 import { ResponseResult } from "@business/common/model/responseResult";
+import { injectable } from "inversify";
 import { Interceptor, InterceptorInterface, Action } from "routing-controllers";
-import { Service } from "typedi";
 
+@injectable()
 @Interceptor()
-@Service()
 export class APIResponseInterceptor implements InterceptorInterface {
   intercept(_action: Action, content: any): ResponseResult {
     const result = new ResponseResult();

@@ -4,7 +4,7 @@ import { toNumber, toBool, getOsEnv, normalizePort } from '@core/ultis';
 import { ISystemConfig } from './systemConfig.interface';
 import { DbProvider } from '@core/enums/dbProvider.enum';
 import { StorageProvider } from '@core/enums/storageProvider.enum';
-import { MongoRepositotyFactory, S3UploaderFactory } from '@core/factory.constant';
+import { S3UploaderFactory } from '@core/factory.constant';
 
 export class SystemConfig {
   private _configs: ISystemConfig;
@@ -42,13 +42,6 @@ export class SystemConfig {
   public static get getUploaderServiceId(): string{
     if(this.Configs.StorageProvider === StorageProvider.S3){
       return S3UploaderFactory;
-    }
-    return '';
-  }
-
-  public static get getRepositoryServiceId(): string{
-    if(this.DbProvider === DbProvider.MongoDB){
-      return MongoRepositotyFactory;
     }
     return '';
   }
@@ -135,6 +128,7 @@ export class SystemConfig {
         Subscribers: getOsEnv('SUBSCRIBERS'),
       },
       StorageProvider: StorageProvider[getOsEnv('STORAGE_PROVIDER')],
+      InstallKey: getOsEnv('INSTALL_KEY')
     };
   }
 }

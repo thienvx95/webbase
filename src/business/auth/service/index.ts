@@ -1,2 +1,2 @@
-export { IAuthService } from './authenticateUser.service';
-export { IGoogleAuthService } from './googleAuth.service';
+export { IAuthService, AuthenticateUserService } from './authenticateUser.service';
+export { IGoogleAuthService, GoogleAuthService } from './googleAuth.service';

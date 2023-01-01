@@ -3,7 +3,7 @@ import { Express } from 'express';
 import * as basicAuth from 'express-basic-auth';
 import { validationMetadatasToSchemas } from 'class-validator-jsonschema';
 import { getMetadataArgsStorage } from 'routing-controllers';
-import { routingControllersToSpec } from '@routing-controllers-openapi';
+import { routingControllersToSpec } from 'routing-controllers-openapi';
 import * as swaggerUi from 'swagger-ui-express';
 import { ISystemConfig } from '@core/configuration/systemConfig.interface';
 
@@ -54,7 +54,7 @@ export const SwaggerLoader: ILoader = async (
             },
             challenge: true,
           })
-        : (_req: any, _res: any, next: any) => next(),
+        : (_req: any, _res: any, next: any): void => next(),
       swaggerUi.serve,
       swaggerUi.setup(specifications),
     );

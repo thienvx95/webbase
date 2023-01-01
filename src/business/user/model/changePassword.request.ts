@@ -1,5 +1,5 @@
 import { IsString, IsNotEmpty, MinLength, MaxLength, Matches } from "class-validator";
-import { Match } from "@infrastructures/decorators/match.decorator";
+import { Match } from "@core/decorators/match.decorator";
 import { PasswordRegex } from "@core/constants";
 export class ChangePasswordRequest {
   @IsNotEmpty()

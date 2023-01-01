@@ -1,14 +1,14 @@
 import {
     prop,
-    getModelForClass,
     modelOptions,
     Severity,
   } from "@typegoose/typegoose";
   
   import { BaseEntity } from "@entities/base.entity";
+import { DataBaseCustomNames } from "@core/enums/dbCustomeNames";
   
   @modelOptions({
-    options: {  allowMixed: Severity.ALLOW, customName: "permissionActions" },
+    options: {  allowMixed: Severity.ALLOW, customName: DataBaseCustomNames.PermissionActions },
     schemaOptions: { timestamps: true },
   })
   export class PermissionAction extends BaseEntity {
@@ -18,5 +18,3 @@ import {
     @prop()
     action: string;
   }
-  
-  getModelForClass(PermissionAction);

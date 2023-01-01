@@ -1,4 +1,4 @@
-import crypto from "crypto";
+import * as crypto from "crypto";
 import { sign, SignOptions, verify } from 'jsonwebtoken';
 
 import { SystemConfig } from '@core/configuration';
@@ -12,9 +12,8 @@ export class TokenUtil {
       const options: SignOptions = {
         expiresIn: configs.jwtExpiresIn * 60,
       };
-      
-      sign(payload, configs.SecretKey, options, (err, token) => {
-        if (err) reject(new HttpStatusError(HttpStatus.InternalServerError));
+      sign(JSON.parse(JSON.stringify(payload)), configs.SecretKey, options, (err, token) => {
+        if (err) reject(new HttpStatusError(HttpStatus.InternalServerError, null, err.message));
 
         resolve(String(token));
       });

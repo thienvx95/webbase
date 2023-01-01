@@ -5,6 +5,7 @@ import { SystemConfig } from '@core/configuration';
 import { JwtPayload } from "@business/auth/model/jwtPayload.model";
 import { Role } from "@entities/roles/role.entity";
 import { getModelForClass } from "@typegoose/typegoose";
+import { Roles } from "@core/enums/role.enum";
 
 export const AuthorizationChecker = async (
   action: Action,
@@ -30,23 +31,26 @@ export const AuthorizationChecker = async (
   }
 
   const roleModel = getModelForClass(Role);
+  if(!requirements.length){
+    return true;
+  }
+
   if (
     requirements.length &&
-    roles.every(role => requirements.every(async required => {
-      if(!["Admin", "Member"].includes(role)){
+    roles.some(role => requirements.some(async required => {
+      if(![Roles.Admin.toString(), Roles.User.toString()].includes(role)){
         const result = await roleModel.findById(role);
-        if(result && result.roleType !== required){
+        if(result && result.roleType === required){
           return true;
         }
       }
-      if(required !== role){
+      if(required === role){
         return true;
       }
       return false;
     }))
   ) {
-    throw new HttpStatusError(HttpStatus.Forbidden, ErrorEnum.UnAuthorized_Access);
+    return true;
   }
-
-  return true;
+  throw new HttpStatusError(HttpStatus.Forbidden, ErrorEnum.UnAuthorized_Access);
 };

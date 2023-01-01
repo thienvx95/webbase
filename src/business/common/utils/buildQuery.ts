@@ -1,4 +1,4 @@
-import isEmpty from 'lodash/isEmpty';
+import { isEmpty } from 'lodash';
 import { toBool } from '@core/ultis';
 import { PaginateOptions } from '../model/pagingation/paginateOptions';
 

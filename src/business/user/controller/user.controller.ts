@@ -8,31 +8,25 @@ import {
   Post,
   Put,
   CurrentUser,
-  UploadedFile,
 } from 'routing-controllers';
-import { Service } from 'typedi';
-import { ResponseSchema } from '@routing-controllers-openapi';
+import { ResponseSchema } from 'routing-controllers-openapi';
 import { UserService } from '@business/user/service/user.service';
 import { Roles } from '@core/enums/role.enum';
-import {
-  FileUploader,
-  IFileUploader,
-} from '@infrastructures/decorators/fileUploader.decorator';
 import { ChangePasswordRequest, UserDto } from '../model';
 import { User } from '@entities/index';
 import { Session, UserTokenDto } from '@business/auth/model';
 import {
-  FileUploadDto,
   PaginateOptions,
   PaginateResult,
 } from '@business/common/model';
+import { inject, injectable } from 'inversify';
+import { SERVICE_TYPES } from '@infrastructures/modules/services';
 
 @JsonController('/users')
-@Service()
+@injectable()
 export class UserController {
   constructor(
-    private userService: UserService,
-    @FileUploader() private fileUploader: IFileUploader,
+    @inject(SERVICE_TYPES.UserService) private userService: UserService,
   ) {}
 
   @Authorized([Roles.Admin])
@@ -56,18 +50,18 @@ export class UserController {
     return await this.userService.findById(session._id);
   }
 
-  @Authorized([Roles.User])
-  @Get('/uploadAvatar')
-  @ResponseSchema(UserDto)
-  async uploadAvatar(
-    @UploadedFile('file') file: Express.Multer.File,
-  ): Promise<FileUploadDto[]> {
-    return await this.fileUploader.upload([file]);
-  }
+  // @Authorized([Roles.User])
+  // @Get('/uploadAvatar')
+  // @ResponseSchema(UserDto)
+  // async uploadAvatar(
+  //   @UploadedFile('file') file: Express.Multer.File,
+  // ): Promise<FileUploadDto[]> {
+  //   return await this.fileUploader.upload([file]);
+  // }
 
   @Authorized([Roles.Admin])
   @Post('/paging')
-  @ResponseSchema(PaginateResult < UserDto)
+  @ResponseSchema(PaginateResult<UserDto>)
   async findPaging(
     @Body() body: PaginateOptions,
   ): Promise<PaginateResult<UserDto>> {

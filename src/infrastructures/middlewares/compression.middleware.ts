@@ -1,9 +1,9 @@
 import * as compression from "compression";
-import { Service } from "typedi";
 import { Request, Response, NextFunction } from "express";
+import { injectable } from "inversify";
 import { ExpressMiddlewareInterface, Middleware } from "routing-controllers";
 
-@Service()
+@injectable()
 @Middleware({ type: "before" })
 export class CompressionMiddleware implements ExpressMiddlewareInterface {
     public use(req: Request, res: Response, next: NextFunction): any {

@@ -1,4 +1,3 @@
-import { Service } from "typedi";
 import { HttpStatusError, HttpStatus, ErrorEnum } from "@core/exception/httpStatusError";
 import S3 from "aws-sdk/clients/s3";
 import isEmpty from "lodash/isEmpty";
@@ -6,8 +5,9 @@ import { IFileUploadService } from "../fileUpload.service";
 import { SystemConfig } from "@core/configuration";
 import { IFileUploader } from "../fileupload.interface";
 import { FileUploadDto } from "@business/common/model";
+import { injectable } from "inversify";
 
-@Service({ id: 's3.uploader.factory' })
+@injectable()
 export class AWSFileUploadSerivce implements IFileUploader {
   private client: S3;
   private readonly _configs = SystemConfig.Configs;

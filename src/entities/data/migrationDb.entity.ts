@@ -1,14 +1,14 @@
 import {
     prop,
-    getModelForClass,
     modelOptions,
     Severity,
   } from "@typegoose/typegoose";
   
   import { BaseEntity } from "@entities/base.entity";
+import { DataBaseCustomNames } from "@core/enums/dbCustomeNames";
   
   @modelOptions({
-    options: {  allowMixed: Severity.ALLOW, customName: "migrationDb" },
+    options: {  allowMixed: Severity.ALLOW, customName: DataBaseCustomNames.MigrationDb  },
     schemaOptions: { timestamps: true },
   })
   export class MigrationDb extends BaseEntity {
@@ -21,5 +21,3 @@ import {
     @prop()
     isInstall: boolean;
   }
-  
-  getModelForClass(MigrationDb);

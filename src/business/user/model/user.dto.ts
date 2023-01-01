@@ -10,50 +10,63 @@ import {
   Matches,
 } from 'class-validator';
 import { DATABASE, PasswordRegex } from '@core/constants';
+import { AutoMap } from '@automapper/classes';
 export class UserDto {
+
+  @AutoMap()
   @IsNotEmpty()
   id?: string;
   
+  @AutoMap()
   @IsNotEmpty()
   @IsString()
   @Length(0, 50)
   fullname?: string;
 
+  @AutoMap()
   @IsNotEmpty()
   username?: string;
 
+  @AutoMap()
   @IsEmail()
   @IsNotEmpty()
   @IsString()
   @Length(0, 50)
   email?: string;
 
+  @AutoMap()
   @IsEnum([DATABASE.GENDER.MALE, DATABASE.GENDER.FEMALE])
   @IsOptional()
   gender?: string;
 
+  @AutoMap()
   @IsOptional()
   @IsString()
   @Length(0, 50)
   public address?: string;
 
+  @AutoMap()
   @IsNotEmpty()
   @IsArray()
   roles?: string[];
 
+  @AutoMap()
   @IsOptional()
   @IsDateString()
   dob?: Date;
 
+  @AutoMap()
   @IsOptional()
   @IsString()
   avatar?: string;
 
+  @AutoMap()
   @IsOptional()
   @IsString()
   @Length(0, 20)
   mobile?: string;
 
+  @AutoMap()
   @IsOptional()
   isActive?: boolean;
 

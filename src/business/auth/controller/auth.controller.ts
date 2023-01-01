@@ -7,8 +7,7 @@ import {
   Param,
 } from 'routing-controllers';
 import { Request } from 'express';
-import { ResponseSchema } from '@routing-controllers-openapi';
-import { Service } from 'typedi';
+import { ResponseSchema } from 'routing-controllers-openapi';
 import { IAuthService, IGoogleAuthService } from '@business/auth/service';
 import { IUserService } from '@business/user/service/user.service';
 import {
@@ -17,14 +16,17 @@ import {
   GoogleAuthRequest,
   RefreshTokenRequest,
 } from '@business/auth/model';
+import { inject, injectable } from 'inversify';
+import { SERVICE_TYPES } from '@infrastructures/modules/services';
 
-@Service()
+
+@injectable()
 @JsonController('/auth')
 export class AuthController {
   constructor(
-    private authService: IAuthService,
-    private googleAuthService: IGoogleAuthService,
-    private userService: IUserService,
+    @inject(SERVICE_TYPES.AuthService) private authService: IAuthService,
+    @inject(SERVICE_TYPES.GoogleAuthService) private googleAuthService: IGoogleAuthService,
+    @inject(SERVICE_TYPES.UserService) private userService: IUserService,
   ) {}
 
   @Post()

@@ -1,4 +1,4 @@
-import mongoose, { CallbackError, Mongoose } from 'mongoose';
+import mongoose, { Mongoose } from 'mongoose';
 import * as bluebird from 'bluebird';
 
 import { SystemConfig } from '@core/configuration';

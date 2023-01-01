@@ -1,14 +1,14 @@
 import {
     prop,
-    getModelForClass,
     modelOptions,
     Severity,
   } from "@typegoose/typegoose";
   
   import { BaseEntity } from "@entities/base.entity";
+import { DataBaseCustomNames } from "@core/enums/dbCustomeNames";
   
   @modelOptions({
-    options: {  allowMixed: Severity.ALLOW, customName: "domainHosts" },
+    options: {  allowMixed: Severity.ALLOW, customName: DataBaseCustomNames.DomainHosts },
     schemaOptions: { timestamps: true },
   })
   export class DomainHost extends BaseEntity {
@@ -16,7 +16,7 @@ import {
     name?: string;
 
     @prop()
-    hostName?: string;
+    port?: number;
 
     @prop()
     languageCode?: string;
@@ -30,5 +30,3 @@ import {
     @prop()
     primary: boolean;
   }
-  
-  getModelForClass(DomainHost);

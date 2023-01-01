@@ -1,6 +1,5 @@
 import {
     prop,
-    getModelForClass,
     modelOptions,
     Severity,
     Ref,
@@ -8,9 +7,10 @@ import {
   
   import { BaseEntity } from "@entities/base.entity";
 import { Role } from "@entities/roles/role.entity";
+import { DataBaseCustomNames } from "@core/enums/dbCustomeNames";
   
   @modelOptions({
-    options: {  allowMixed: Severity.ALLOW, customName: "permissions" },
+    options: {  allowMixed: Severity.ALLOW, customName: DataBaseCustomNames.Permissions },
     schemaOptions: { timestamps: true },
   })
   export class Permission extends BaseEntity {
@@ -23,5 +23,3 @@ import { Role } from "@entities/roles/role.entity";
     @prop({ default: true })
     isActive: boolean;
   }
-  
-  getModelForClass(Permission);

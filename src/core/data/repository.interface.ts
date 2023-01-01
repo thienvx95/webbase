@@ -1,12 +1,13 @@
-import { FilterQuery, QueryOptions, ProjectionType, UpdateQuery } from "mongoose";
+import { FilterQuery, QueryOptions, ProjectionType, UpdateQuery, Types } from "mongoose";
 import { DocumentType } from "@typegoose/typegoose";
 import { PaginateOptions, PaginateResult } from "@business/common/model";
 
+export { Types };
 export type IRepository<T> = IWrite<T> & IRead<T>;
 export interface IWrite<T> {
   insertOne(entity: T): Promise<T>;
   insertMany(entities: T[]): Promise<T[]>;
-  findOrInsertOne(filter: FilterQuery<DocumentType<T>>, entity: T): Promise<T>;
+  insertIfNotExist(filter: FilterQuery<DocumentType<T>>, entity: T): Promise<boolean>;
   update(filter: FilterQuery<DocumentType<T>>, update: UpdateQuery<DocumentType<T>>): Promise<boolean>;
   updateOne(entity: T): Promise<boolean>;
   updateMany(entities: T[]): Promise<boolean>;

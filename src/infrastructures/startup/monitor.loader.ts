@@ -58,7 +58,7 @@ export const MonitorLoader: ILoader = async (
             },
             challenge: true,
           })
-        : (_req: any, _res: any, next: any) => next(),
+        : (_req: any, _res: any, next: any): void => next(),
         statusMonitor.pageRoute
     );
   }

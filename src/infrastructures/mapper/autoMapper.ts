@@ -4,26 +4,29 @@ import {
     createMap,
     ModelIdentifier,
     Mapping,
+    MappingConfiguration,
   } from '@automapper/core';
   import { classes } from '@automapper/classes';
   import { isEmpty } from 'lodash';
+import { injectable } from 'inversify';
   
   export interface IAutoMapper{
     Map<T, K>(
       sourceObject: T,
-      source: ModelIdentifier<T>,
+      source: any,
       destination: ModelIdentifier<K>,
     ): K
     MapArray<T, K>(
       sourceObject: T[],
-      source: ModelIdentifier<T>,
+      source: any,
       destination: ModelIdentifier<K>,
     ): K[]
   }
 
+  @injectable()
   export class AutoMapper implements IAutoMapper {
     private static instance: AutoMapper;
-    private _mapper: Mapper;
+    public _mapper: Mapper;
     constructor() {
       this._mapper = createMapper({
         strategyInitializer: classes(),
@@ -33,14 +36,16 @@ import {
     public createMap<T, K>(
       source: ModelIdentifier<T>,
       destination: ModelIdentifier<K>,
+      ...mappingConfigFns: (MappingConfiguration<T, K> | undefined)[]
     ): Mapping<T, K> {
-      return createMap(this._mapper, source, destination);
+      return createMap(this._mapper, source, destination, ...mappingConfigFns);
     }
   
     public Map<T, K>(
       sourceObject: T,
       source: ModelIdentifier<T>,
       destination: ModelIdentifier<K>,
+      
     ): K {
       if(isEmpty(sourceObject)) return null;
       return this._mapper.map(sourceObject, source, destination);

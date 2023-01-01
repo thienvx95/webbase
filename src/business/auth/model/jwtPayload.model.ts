@@ -18,8 +18,4 @@ export class JwtPayload {
     roles: string[];
 
     avatar: string;
-
-    iat: number;
-    
-    exp: number;
 }

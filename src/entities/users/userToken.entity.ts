@@ -1,14 +1,14 @@
 import {
   prop,
-  getModelForClass,
   modelOptions,
   Ref,
 } from '@typegoose/typegoose';
 import { User } from './user.entity';
 import { BaseEntity } from '../base.entity';
+import { DataBaseCustomNames } from '@core/enums/dbCustomeNames';
 
 @modelOptions({
-  options: { customName: 'userTokens' },
+  options: { customName: DataBaseCustomNames.UserTokens },
   schemaOptions: { timestamps: true },
 })
 export class UserToken extends BaseEntity {
@@ -45,4 +45,3 @@ export class UserToken extends BaseEntity {
     return !this.revoked && !this.isExpired();
   }
 }
-getModelForClass(UserToken);

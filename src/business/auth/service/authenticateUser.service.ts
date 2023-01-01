@@ -1,16 +1,8 @@
-import { Service } from 'typedi';
 import {
   HttpStatusError,
   HttpStatus,
   ErrorEnum,
 } from '@core/exception/httpStatusError';
-import {
-  Repository,
-  IRepository,
-  AutoMapperDecorator,
-  IAutoMapper,
-} from '@infrastructures/decorators';
-import { Types } from 'mongoose';
 import { Logging } from '@core/log';
 import { SystemConfig } from '@core/configuration';
 import { User, UserToken } from '@entities/index';
@@ -22,6 +14,9 @@ import {
 } from '../model';
 import { PasswordUtil, TokenUtil } from '@core/ultis';
 import { UserDto } from '@business/user/model';
+import { injectable, inject } from 'inversify';
+import { REPOSITORY_TYPES, IRepository, Types } from '@infrastructures/modules/repositories';
+import { COMMON_TYPES, IAutoMapper } from '@infrastructures/modules/common';
 
 export interface IAuthService{
     authenticate(request: AuthRequest, ipAddress: string): Promise<AuthResponse>
@@ -31,16 +26,15 @@ export interface IAuthService{
     refreshToken(refreshToken: RefreshTokenRequest, ipAddress: string): Promise<AuthResponse>
 }
 
-@Service()
+@injectable()
 export class AuthenticateUserService implements IAuthService {
   private log = Logging.getInstance('AuthenticateUserService');
   private configs = SystemConfig.Configs;
 
   constructor(
-    @Repository<User>() private userRepository: IRepository<User>,
-    @Repository<UserToken>()
-    private userTokenRepository: IRepository<UserToken>,
-    @AutoMapperDecorator() private autoMapper: IAutoMapper,
+    @inject(REPOSITORY_TYPES.UserRepository) private userRepository: IRepository<User>,
+    @inject(REPOSITORY_TYPES.UserTokenRepository) private userTokenRepository: IRepository<UserToken>,
+    @inject(COMMON_TYPES.AutoMapper) private autoMapper: IAutoMapper,
   ) {}
 
   authenticate = async (
@@ -52,11 +46,11 @@ export class AuthenticateUserService implements IAuthService {
     if (!user) {
       throw new HttpStatusError(HttpStatus.BadRequest, ErrorEnum.Login_Invalid);
     }
-
+    
     if (!user.isActive) {
       throw new HttpStatusError(HttpStatus.BadRequest, ErrorEnum.Login_Invalid);
     }
-
+    
     const isMatch = await PasswordUtil.validatePassword({
       requestPassword: password,
       storedPassword: user.password,
@@ -71,6 +65,7 @@ export class AuthenticateUserService implements IAuthService {
     const token = await TokenUtil.generateToken(
       new JwtPayload(this.autoMapper.Map(user, User, UserDto)),
     );
+    
     const refreshToken = await this.generateRefreshToken(user._id, ipAddress);
     return {
       token,
@@ -92,7 +87,7 @@ export class AuthenticateUserService implements IAuthService {
       throw new HttpStatusError(HttpStatus.BadRequest, ErrorEnum.Login_Invalid);
     }
     const token = await TokenUtil.generateToken(
-      new JwtPayload(this.autoMapper.Map(user, User, UserDto)),
+      new JwtPayload(this.autoMapper.Map(user, typeof User, UserDto)),
     );
     const refreshToken = await this.generateRefreshToken(user._id, ipAddress);
     return {
@@ -154,7 +149,7 @@ export class AuthenticateUserService implements IAuthService {
       throw new HttpStatusError(HttpStatus.BadRequest, ErrorEnum.Invalid_Token);
     }
     const newToken = await TokenUtil.generateToken(
-      new JwtPayload(this.autoMapper.Map(existUser, User, UserDto)),
+      new JwtPayload(this.autoMapper.Map(existUser, typeof User, UserDto)),
     );
     return {
       token: newToken,
@@ -192,6 +187,7 @@ export class AuthenticateUserService implements IAuthService {
       }
       const newRefreshToken = await this.userTokenRepository.insertOne(
         new UserToken({
+          _id: new Types.ObjectId(),
           user: userId,
           token: TokenUtil.randomTokenString(),
           expires: new Date(

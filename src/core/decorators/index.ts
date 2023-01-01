@@ -1,0 +1,1 @@
+export { MatchConstraint } from './match.decorator';

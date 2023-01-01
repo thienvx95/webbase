@@ -73,6 +73,7 @@ export const DATABASE = {
     debug: "white",
   };
   
+  export const DefaultPassword = '123456aA!@';
   export const PasswordRegex = /((?=.*\d)|(?=.*\W+))(?![.\n])(?=.*[A-Z])(?=.*[a-z]).*$/;
   export const ErrorInfoRegex = /at (?:(.+?)\s+\()?(?:(.+?):(\d+)(?::(\d+))?|([^)]+))\)?/;
   export const GoogleUrl = {

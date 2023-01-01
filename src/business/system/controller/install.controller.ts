@@ -1,20 +1,22 @@
-import {
-    Post,
-    JsonController,
-  } from 'routing-controllers';
-  import { Service } from 'typedi';
-import { InstallService } from '../service/install.service';
-  
-  @Service()
-  @JsonController('/install')
-  export class InstallController {
-    constructor(
-      private installService: InstallService,
-    ) {}
-  
-    @Post()
-    async install(): Promise<boolean> {
-        return this.installService.install();
-    }
+import { SystemConfig } from '@core/configuration';
+import { SERVICE_TYPES, IInstallService } from '@infrastructures/modules/services';
+import { inject, injectable } from 'inversify';
+import { Post, JsonController, Param } from 'routing-controllers';
+
+@injectable()
+@JsonController('/install')
+export class InstallController {
+  private _installService: IInstallService;
+  constructor(@inject(SERVICE_TYPES.InstallService) installService: IInstallService) {
+    this._installService = installService;
   }
-  
+
+  @Post('/:key')
+  async install(@Param('key') key: string): Promise<boolean> {
+    const installKey = SystemConfig.Configs.InstallKey;
+    if (key !== installKey) {
+      return false;
+    }
+    return this._installService.install();
+  }
+}

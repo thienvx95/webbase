@@ -13,7 +13,7 @@ export class HttpStatusError extends Error {
     }
     super(message);
     this.statusCode = statusCode;
-    this.errorCode = messageCode.toString();
+    this.errorCode = messageCode?.toString();
     Object.setPrototypeOf(this, HttpStatusError.prototype);
   }
 }

@@ -1,6 +1,7 @@
 import { join } from 'path';
 import crypto from "crypto";
 import { ValidationError } from 'class-validator';
+import { ErrorInfoRegex } from '@core/constants';
 
 export const getOsEnv = (key: string): string => {
   if (typeof process.env[key] === 'undefined') {
@@ -72,4 +73,16 @@ export const formatErrors = (errors: ValidationError[]): any[] => {
   return errors && errors.length
     ? errors.map(({ property, constraints }) => property + ":" + Object.values(constraints))
     : [];
+}
+
+export const getMethodError = (error: Error): string => {
+  let method = null;
+  if (error != null && error.stack) {
+    const lines = error.stack.split('\n').slice(1);
+    if (lines.length > 1) {
+      const match = lines[0].match(ErrorInfoRegex);
+      method = `[${match[0]}]`;
+    }
+  }
+  return method;
 }

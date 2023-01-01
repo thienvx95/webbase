@@ -18,7 +18,6 @@ export class PasswordUtil {
         storedPassword: string;
     }): Promise<boolean> {
         const { requestPassword, storedPassword } = params;
-
         const password = await compare(requestPassword, storedPassword);
 
         if (!password) {
