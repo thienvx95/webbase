@@ -1,18 +1,51 @@
+import { AutoMap } from "@automapper/classes";
+import { IsNotEmpty, IsArray, IsString } from "class-validator";
+
 export class MenuDto {
-    _id?: string;
-    authority?: string | string[];
-    access?: string[] | string;
-    children?: MenuDto[];
-    hideChildrenInMenu?: boolean;
-    hideInMenu?: boolean;
-    icon?: string;
-    name?: string;
-    component?: string;
-    path?: string;
-    exact?: boolean;
-    sortOrder?: number;
-    parentId?: string;
-    layout?: boolean;
+    @AutoMap()
+    @IsString()
+    @IsNotEmpty()
+    id: string;
+
+    @AutoMap()
+    @IsArray()
+    authority: string[];
+    
+    @AutoMap()
+    access: string[] | string;
+    
+    children: MenuDto[];
+    
+    @AutoMap()
+    hideChildrenInMenu: boolean;
+    
+    @AutoMap()
+    hideInMenu: boolean;
+    
+    @AutoMap()
+    icon: string;
+    
+    @AutoMap()
+    name: string;
+    
+    @AutoMap()
+    component: string;
+    
+    @AutoMap()
+    path: string;
+    
+    @AutoMap()
+    exact: boolean;
+    
+    @AutoMap()
+    sortOrder: number;
+
+    @AutoMap()
+    parentId: string;
+    
+    @AutoMap()
+    layout: boolean;
+    
+    @AutoMap()
     redirect?: string;
-    isActive?: boolean;
   }

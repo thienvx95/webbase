@@ -8,3 +8,4 @@ export { SwaggerLoader } from './swagger.loader';
 export { PublicLoader } from './public.loader';
 export { QueueMonitorLoader } from './queueMonitor.loader';
 export { ExpressLoader } from './express.loader';
+export { MigrationLoader } from './migration.loader';

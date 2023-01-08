@@ -16,7 +16,7 @@ export const CurrentUserChecker = async (action: Action): Promise<Session> => {
       _id: sub,
       roles,
     };
-  } catch {
+  } catch(e) {
     throw new HttpStatusError(HttpStatus.Unauthorized, ErrorEnum.Token_Expired);
   }
 };

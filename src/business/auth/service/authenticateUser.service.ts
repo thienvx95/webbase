@@ -44,11 +44,11 @@ export class AuthenticateUserService implements IAuthService {
     this.log.info('Login user: ' + username);
     const user = await this.userRepository.findOne({ username });
     if (!user) {
-      throw new HttpStatusError(HttpStatus.BadRequest, ErrorEnum.Login_Invalid);
+      throw new HttpStatusError(HttpStatus.Ok, ErrorEnum.Login_Invalid);
     }
     
     if (!user.isActive) {
-      throw new HttpStatusError(HttpStatus.BadRequest, ErrorEnum.Login_Invalid);
+      throw new HttpStatusError(HttpStatus.Ok, ErrorEnum.Login_Invalid);
     }
     
     const isMatch = await PasswordUtil.validatePassword({
@@ -58,7 +58,7 @@ export class AuthenticateUserService implements IAuthService {
 
     if (!isMatch) {
       throw new HttpStatusError(
-        HttpStatus.BadRequest,
+        HttpStatus.Ok,
         ErrorEnum.Password_Not_Match,
       );
     }
@@ -87,7 +87,7 @@ export class AuthenticateUserService implements IAuthService {
       throw new HttpStatusError(HttpStatus.BadRequest, ErrorEnum.Login_Invalid);
     }
     const token = await TokenUtil.generateToken(
-      new JwtPayload(this.autoMapper.Map(user, typeof User, UserDto)),
+      new JwtPayload(this.autoMapper.Map(user, User, UserDto)),
     );
     const refreshToken = await this.generateRefreshToken(user._id, ipAddress);
     return {
@@ -128,14 +128,14 @@ export class AuthenticateUserService implements IAuthService {
     const existUser = await this.userRepository.findOne({ _id: user });
     if (!existUser) {
       throw new HttpStatusError(
-        HttpStatus.BadRequest,
+        HttpStatus.Ok,
         ErrorEnum.User_Not_Found,
       );
     }
 
     if (!existUser.isActive) {
       throw new HttpStatusError(
-        HttpStatus.BadRequest,
+        HttpStatus.Ok,
         ErrorEnum.Login_Inactive,
       );
     }
@@ -146,10 +146,10 @@ export class AuthenticateUserService implements IAuthService {
       { token: newGenerateToken, replacedByToken: refreshToken.token },
     );
     if (!result) {
-      throw new HttpStatusError(HttpStatus.BadRequest, ErrorEnum.Invalid_Token);
+      throw new HttpStatusError(HttpStatus.Ok, ErrorEnum.Invalid_Token);
     }
     const newToken = await TokenUtil.generateToken(
-      new JwtPayload(this.autoMapper.Map(existUser, typeof User, UserDto)),
+      new JwtPayload(this.autoMapper.Map(existUser, User, UserDto)),
     );
     return {
       token: newToken,
@@ -160,11 +160,11 @@ export class AuthenticateUserService implements IAuthService {
   private getRefreshToken = async (token: string) : Promise<UserToken> => {
     const refreshTokens = await this.userTokenRepository.findOne({ token });
     if (!refreshTokens) {
-      throw new HttpStatusError(HttpStatus.BadRequest, ErrorEnum.Invalid_Token);
+      throw new HttpStatusError(HttpStatus.Ok, ErrorEnum.Invalid_Token);
     }
 
     if (!refreshTokens.isActive()) {
-        throw new HttpStatusError(HttpStatus.BadRequest, ErrorEnum.Invalid_Token);
+        throw new HttpStatusError(HttpStatus.Ok, ErrorEnum.Invalid_Token);
     }
 
     return refreshTokens;

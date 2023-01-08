@@ -68,12 +68,13 @@ export class MongoRepository<T = BaseEntity> implements IRepository<T> {
 
   /**
    * Update an entity
+   * @param id - id update
    * @param entity - entity
    * @returns
    */
-  async updateOne(entity: T): Promise<boolean> {
+  async updateOne(id: string, entity: T): Promise<boolean> {
     try {
-      const result = await this._model.updateOne(entity).exec();
+      const result = await this._model.updateOne({ _id: id }, { $setOnInsert: { ...entity } } , { upsert: false}).exec();
       return result.matchedCount > 0;
     } catch (e) {
       this.handleError(e);
@@ -104,6 +105,20 @@ export class MongoRepository<T = BaseEntity> implements IRepository<T> {
     try {
       const result = await this._model.updateMany(entities).exec();
       return result.matchedCount > 0;
+    } catch (e) {
+      this.handleError(e);
+      return false;
+    }
+  }
+
+    /**
+   * Bulk Write entities
+   * @param writes - array model
+   */
+  async bulkWrite(writes: any[]): Promise<boolean> {
+    try {
+      const result = await this._model.bulkWrite(writes);
+      return result.modifiedCount > 0;
     } catch (e) {
       this.handleError(e);
       return false;

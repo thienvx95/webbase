@@ -1,15 +1,15 @@
 export enum ErrorEnum {
-    Login_Invalid,
-    Login_Inactive,
-    Invalid_Token,
-    User_Not_Found,
-    Duplicate_Record,
-    Password_Not_Match,
-    UnAuthorized,
-    Token_Expired,
-    UnAuthorized_Access,
-    Api_Rate_Limit,
-    Error_Upload_Files
+    Login_Invalid = 100,
+    Login_Inactive = 110,
+    Invalid_Token = 120,
+    User_Not_Found = 130,
+    Duplicate_Record = 140,
+    Password_Not_Match = 150,
+    UnAuthorized = 160,
+    Token_Expired = 170,
+    UnAuthorized_Access = 180,
+    Api_Rate_Limit = 190,
+    Error_Upload_Files = 200
 }
 
 export const ErrorMessageMapping = new Map<ErrorEnum, string>([

@@ -78,6 +78,7 @@ export class InstallService implements IInstallService {
         name: 'admin',
         icon: 'crown',
         layout: false,
+        sortOrder: 0
       },
     );
     this.menuRepository.insertIfNotExist(
@@ -88,6 +89,7 @@ export class InstallService implements IInstallService {
         path: '/dashboard/admin/account-management/',
         name: 'account-management',
         parentId: "DASHBOARD_ADMIN",
+        sortOrder: 0
       },
     );
     this.menuRepository.insertIfNotExist(
@@ -98,6 +100,7 @@ export class InstallService implements IInstallService {
         path: '/dashboard/admin/account-management/users',
         name: 'user-list',
         parentId: "DASHBOARD_ADMIN_ACCOUNT_MANAGEMENT",
+        sortOrder: 0
       },
     );
 
@@ -109,6 +112,7 @@ export class InstallService implements IInstallService {
         path: '/dashboard/admin/account-management/roles',
         name: 'role-list',
         parentId: "DASHBOARD_ADMIN_ACCOUNT_MANAGEMENT",
+        sortOrder: 0
       },
     );
 
@@ -120,6 +124,7 @@ export class InstallService implements IInstallService {
         path: '/dashboard/admin/configuration/',
         name: 'configuration',
         parentId: "DASHBOARD_ADMIN",
+        sortOrder: 0
       },
     );
 
@@ -131,6 +136,7 @@ export class InstallService implements IInstallService {
         path: '/dashboard/admin/configuration/menus',
         name: 'menu-list',
         parentId: "DASHBOARD_ADMIN_CONFIGURATION",
+        sortOrder: 0
       },
     );
 
@@ -142,6 +148,7 @@ export class InstallService implements IInstallService {
         path: '/dashboard/admin/system/',
         name: 'system',
         parentId: "DASHBOARD_ADMIN",
+        sortOrder: 0
       },
     );
 
@@ -153,6 +160,7 @@ export class InstallService implements IInstallService {
         path: '/dashboard/admin/system/settings',
         name: 'settings',
         parentId: "DASHBOARD_ADMIN_SYSTEM",
+        sortOrder: 0
       },
     );
   }

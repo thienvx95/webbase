@@ -22,7 +22,7 @@ import {
 import { inject, injectable } from 'inversify';
 import { SERVICE_TYPES } from '@infrastructures/modules/services';
 
-@JsonController('/users')
+@JsonController('/user')
 @injectable()
 export class UserController {
   constructor(

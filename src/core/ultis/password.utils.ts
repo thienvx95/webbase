@@ -1,5 +1,4 @@
 import { genSalt, compare, hash } from "bcrypt";
-import { Unauthorized } from "http-errors";
 
 export class PasswordUtil {
     public static async encryptPassword(
@@ -21,7 +20,7 @@ export class PasswordUtil {
         const password = await compare(requestPassword, storedPassword);
 
         if (!password) {
-            throw new Unauthorized("Email or password is incorrect");
+            return false;
         }
 
         return true;

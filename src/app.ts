@@ -10,13 +10,15 @@ import {
   PublicLoader,
   SwaggerLoader,
   QueueMonitorLoader,
-  ExpressLoader
+  ExpressLoader,
+  MigrationLoader
 } from '@infrastructures/startup';
 import { ApiRateLimitLoader } from '@infrastructures/startup/apiRateLimit.loader';
 
 bootstrapMicroframework({
   loaders: [
     DatabaseLoader,
+    MigrationLoader,
     IocLoader,
     RegisterLoader,
     RoutingControllerLoader,

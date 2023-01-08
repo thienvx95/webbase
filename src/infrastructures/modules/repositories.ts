@@ -11,6 +11,7 @@ import {
   Menu,
   DomainHost,
   FileUpload,
+  Permission
 } from 'entities';
 import { SystemConfig } from '@core/configuration';
 import { IBinding, LifeTime } from './binding.interfaces';
@@ -24,6 +25,7 @@ export const REPOSITORY_TYPES = {
   MenuRepository: Symbol.for('MenuRepository'),
   DomainHostRepository: Symbol.for('DomainHostRepository'),
   FileUploadRepository: Symbol.for('FileUploadRepository'),
+  PermissionRepository: Symbol.for('PermissionRepository'),
 };
 
 export const bindingRepositories: Array<IBinding> = [
@@ -65,6 +67,11 @@ export const bindingRepositories: Array<IBinding> = [
   {
     class: FileUpload,
     symbol: REPOSITORY_TYPES.FileUploadRepository,
+    lifeTime: LifeTime.Scoped,
+  },
+  {
+    class: Permission,
+    symbol: REPOSITORY_TYPES.PermissionRepository,
     lifeTime: LifeTime.Scoped,
   },
 ];

@@ -67,17 +67,17 @@ export class Logging implements ILogging {
   
     // Adds INFO prefix string to the log string
     public info(_string: string, method?: string): void {
-      this.logger.info(` ${this._className ? `[${this._className}]` : ''} ${_string} ${method ? `${method} ` : ''}`);
+      this.logger.info(` ${this._className ? `[${this._className}]` : ''} ${method ? `[${method}] ` : ''} ${_string}`);
     }
   
     // Adds WARN prefix string to the log string
     public warn(_string: string, method?: string): void {
-      this.logger.warn(` ${this._className ? `[${this._className}]` : ''} ${_string} ${method ? `${method} ` : ''}`);
+      this.logger.warn(` ${this._className ? `[${this._className}]` : ''} ${method ? `[${method}] ` : ''} ${_string}`);
     }
   
     // Adds ERROR prefix string to the log string
     public error(_string: string, method?: string): void {
-      this.logger.error(`${this._className ? `[${this._className}]` : ''} [${_string}] ${method ? `${method} ` : ''}`);
+      this.logger.error(`${this._className ? `[${this._className}]` : ''} ${method ? `[${method}] ` : ''} ${_string}`);
     }
   
     public static getInstance(className?: string): Logging {

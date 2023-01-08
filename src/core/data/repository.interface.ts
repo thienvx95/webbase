@@ -9,8 +9,9 @@ export interface IWrite<T> {
   insertMany(entities: T[]): Promise<T[]>;
   insertIfNotExist(filter: FilterQuery<DocumentType<T>>, entity: T): Promise<boolean>;
   update(filter: FilterQuery<DocumentType<T>>, update: UpdateQuery<DocumentType<T>>): Promise<boolean>;
-  updateOne(entity: T): Promise<boolean>;
+  updateOne(id: string, entity: T): Promise<boolean>
   updateMany(entities: T[]): Promise<boolean>;
+  bulkWrite(writes: Array<any>): Promise<boolean>;
   deleteOne(entity: T): Promise<boolean>;
   deleteById(_id: string): Promise<boolean>;
   deleteMany(entities: T[]): Promise<boolean>;

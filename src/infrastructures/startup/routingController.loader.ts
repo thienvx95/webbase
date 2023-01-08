@@ -17,7 +17,7 @@ export const RoutingControllerLoader: ILoader = async (
       currentUserChecker: CurrentUserChecker,
       classTransformer: true,
       routePrefix: `/${configs.AppSetting.APIPrefix}`,
-      cors: true,
+      cors: configs.AppSetting.isCORSEnabled,
       defaultErrorHandler: false,
       validation: true,
       development: !configs.IsProduction,

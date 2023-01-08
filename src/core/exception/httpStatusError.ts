@@ -2,18 +2,18 @@ import { HttpStatus } from "@core/enums/httpStatus.enum";
 import { ErrorEnum, ErrorMessageMapping } from "@core/enums/error.enum";
 export class HttpStatusError extends Error {
   statusCode: HttpStatus;
-  errorCode: string;
+  code: number;
   constructor(
     statusCode: HttpStatus = HttpStatus.InternalServerError,
     messageCode? : ErrorEnum,
     message?: string,
   ) {
-    if(messageCode && ErrorMessageMapping.has(messageCode)){
-      message = ErrorMessageMapping.get(messageCode);
-    }
     super(message);
+    if(messageCode && ErrorMessageMapping.has(messageCode)){
+      this.message = ErrorMessageMapping.get(messageCode);
+    }
     this.statusCode = statusCode;
-    this.errorCode = messageCode?.toString();
+    this.code = messageCode;
     Object.setPrototypeOf(this, HttpStatusError.prototype);
   }
 }

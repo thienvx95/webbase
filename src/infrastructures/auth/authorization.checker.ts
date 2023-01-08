@@ -26,7 +26,7 @@ export const AuthorizationChecker = async (
     const jwt = verify(token, scretKey) as JwtPayload;
 
     roles = jwt.roles;
-  } catch {
+  } catch(e) {
     throw new HttpStatusError(HttpStatus.Unauthorized, ErrorEnum.Token_Expired);
   }
 

@@ -1,6 +1,6 @@
 
 
-import { IsNotEmpty, IsString, IsBoolean, IsArray, IsOptional } from "class-validator";
+import { IsNotEmpty, IsNumber, IsBoolean, IsArray, IsOptional, IsString } from "class-validator";
 
 export class ResponseResult<T = any> {
   @IsNotEmpty()
@@ -14,8 +14,8 @@ export class ResponseResult<T = any> {
   data: T | T[];
 
   @IsOptional()
-  @IsString()
-  errorCode: string;
+  @IsNumber()
+  code: number;
 
   @IsOptional()
   @IsArray()

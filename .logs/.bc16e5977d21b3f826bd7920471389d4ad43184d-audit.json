@@ -6,26 +6,6 @@
     "auditLog": "G:\\Project\\WebBase\\webbase\\.logs\\.bc16e5977d21b3f826bd7920471389d4ad43184d-audit.json",
     "files": [
         {
-            "date": 1671942644496,
-            "name": "G:\\Project\\WebBase\\webbase\\.logs\\2022-12-25.log",
-            "hash": "9d1c018392194f6a043685052a9fd78b19e868ab03b51ab95ca12c16a289cc3b"
-        },
-        {
-            "date": 1672054821100,
-            "name": "G:\\Project\\WebBase\\webbase\\.logs\\2022-12-26.log",
-            "hash": "eaea6026ca951905d0477d5aaf8f8f08bb43fed1644b01034b7c487b30fa52cf"
-        },
-        {
-            "date": 1672074164610,
-            "name": "G:\\Project\\WebBase\\webbase\\.logs\\2022-12-27.log",
-            "hash": "fd236a2e47bd1f0c04740865d233599a9312960410eecf21e69dbc4064d46dc2"
-        },
-        {
-            "date": 1672160476169,
-            "name": "G:\\Project\\WebBase\\webbase\\.logs\\2022-12-28.log",
-            "hash": "81a520d0c61385f8824d0179fc6b3b2aa0d3050b30b0b2ded0934f7a29923787"
-        },
-        {
             "date": 1672394245655,
             "name": "G:\\Project\\WebBase\\webbase\\.logs\\2022-12-30.log",
             "hash": "dfc2d5c475561ddcf92d7a90a4935e6e1907af8ac54543a2a408a8f961bafe73"
@@ -39,6 +19,21 @@
             "date": 1672506113309,
             "name": "G:\\Project\\WebBase\\webbase\\.logs\\2023-01-01.log",
             "hash": "ea7fba1c6dde2604963a3031fedeeefc31d285817ae89d4cd737bb38cdc13281"
+        },
+        {
+            "date": 1672975571105,
+            "name": "G:\\Project\\WebBase\\webbase\\.logs\\2023-01-06.log",
+            "hash": "6e26961e740dafb2631c74dccea3b380fdd0fc1eb1db3472e7258088d84ac5ee"
+        },
+        {
+            "date": 1673024409350,
+            "name": "G:\\Project\\WebBase\\webbase\\.logs\\2023-01-07.log",
+            "hash": "f85daa548f15bb8a800e00c656e7247e8750bce33aa322b18f5be30141770884"
+        },
+        {
+            "date": 1673113139686,
+            "name": "G:\\Project\\WebBase\\webbase\\.logs\\2023-01-08.log",
+            "hash": "b8ee35d6ccc429e58a7153aaa31a9b699a464ab5bcff0f3d49e20cd153de460a"
         }
     ],
     "hashType": "sha256"

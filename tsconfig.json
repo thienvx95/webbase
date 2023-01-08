@@ -21,12 +21,14 @@
       "experimentalDecorators": true,
       "resolveJsonModule": true,
       "baseUrl": "src",
+      "allowJs": true,
       "paths": {
         "@core/*": ["core/*"],
         "@microframework": ["core/microframework/index.ts"],
         "@business/*": ["business/*"],
         "@infrastructures/*": ["infrastructures/*"],
         "@entities/*": ["entities/*"],
+        "@script/*": ["script/*"],
       }
     },
     "include": ["src/**/*", "__tests__/**/*"]

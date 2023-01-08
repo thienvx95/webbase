@@ -26,13 +26,13 @@ export class ErrorHandlerMiddleware implements ExpressErrorMiddlewareInterface {
     const responseResult = new ResponseResult();
     responseResult.success = false;
     responseResult.message = error.message;
-    responseResult.errorCode = error.errorCode;
+    responseResult.code = error.code;
     
     if (error.statusCode && error.statusCode !== HttpStatus.InternalServerError) {
       if(error.errors){
-        log.info(JSON.stringify(formatErrors(error.errors)));
+        log.info(`[${error.code}]${error.message} - ${JSON.stringify(formatErrors(error.errors))}` );
       } else {
-        log.info(error.message);
+        log.info(`[${error.code}]${error.message}`);
       }
       return res.status(error.statusCode).json(responseResult);
     }
