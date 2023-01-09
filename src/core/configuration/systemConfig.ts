@@ -5,6 +5,7 @@ import { ISystemConfig } from './systemConfig.interface';
 import { DbProvider } from '@core/enums/dbProvider.enum';
 import { StorageProvider } from '@core/enums/storageProvider.enum';
 import { S3UploaderFactory } from '@core/factory.constant';
+import { CacheProvider } from '@core/enums/cacheProvider.enum.';
 
 export class SystemConfig {
   private _configs: ISystemConfig;
@@ -25,6 +26,11 @@ export class SystemConfig {
   public static get DbProvider(): DbProvider {
     const configs =  this.getInstance()._configs;
     return configs.DataSettings.DbProvider
+  }
+
+  public static get CacheProvider(): CacheProvider {
+    const configs =  this.getInstance()._configs;
+    return configs.CacheProvider;
   }
 
   public static get DbVersion(): string {
@@ -108,9 +114,10 @@ export class SystemConfig {
         Route: getOsEnv('SWAGGER_ROUTE'),
         User: getOsEnv('SWAGGER_PASSWORD'),
       },
+      CacheProvider: CacheProvider[getOsEnv('CACHE_PROVIDER')],
       ReditSetting: {
         Db: toNumber(getOsEnv('REDIS_DB')),
-        Host: getOsEnv('REDIS_HOST'),
+        Username: getOsEnv('REDIS_USERNAME'),
         Password: getOsEnv('REDIS_PASSWORD'),
         Port: toNumber(getOsEnv('REDIS_PORT')),
         Prefix: getOsEnv('REDIS_PREFIX'),

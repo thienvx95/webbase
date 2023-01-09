@@ -1,3 +1,4 @@
+import { CacheProvider } from "@core/enums/cacheProvider.enum.";
 import { DbProvider } from "@core/enums/dbProvider.enum";
 import { StorageProvider } from "@core/enums/storageProvider.enum";
 
@@ -84,6 +85,7 @@ export interface ISystemConfig {
   SwaggerSetting?: SwaggerSetting;
   StatusMonitorSetting?: StatusMonitorSetting;
   QueueMonitorSetting?: QueueMonitorSetting;
+  CacheProvider: CacheProvider;
   ReditSetting?: ReditSetting;
   StorageProvider?: StorageProvider;
   S3Config?: S3Config;

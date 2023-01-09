@@ -13,7 +13,7 @@ export interface IMicroframework{
 }
 
 export class Microframework implements IMicroframework {
-  private _logging = Logging.getInstance('Microframwork');
+
   private frameworkConfig?: IConfig;
   private allConfiguration: any = {};
   private loaders: ILoader[] = [];
@@ -61,10 +61,13 @@ export class Microframework implements IMicroframework {
       return loaderResult instanceof Promise ? loaderResult : Promise.resolve();
     })
     .then(() => {
-        if (this.frameworkConfig && this.frameworkConfig.showBootstrapTime)
-        this._logging.info(`Application is up and running. It took ${
-          +new Date() - bootstrapTime - (this.frameworkConfig.bootstrapTimeout || 0)
-        } ms to bootstrap the app.`)
+        if (this.frameworkConfig && this.frameworkConfig.showBootstrapTime){
+          const _logging = Logging.getInstance('Microframwork');
+          _logging.info(`Application is up and running. It took ${
+            +new Date() - bootstrapTime - (this.frameworkConfig.bootstrapTimeout || 0)
+          } ms to bootstrap the app.`)
+        }
+
 
         return this;
       });

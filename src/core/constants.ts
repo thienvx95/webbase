@@ -89,6 +89,4 @@ export const DATABASE = {
 
   export const ApplicationVersion = '1.0.0';
 
-  export const PassportStrategy = {
-    Local:"local"
-  }
+  export const CacheTime = 600;

@@ -9,3 +9,4 @@ export { PublicLoader } from './public.loader';
 export { QueueMonitorLoader } from './queueMonitor.loader';
 export { ExpressLoader } from './express.loader';
 export { MigrationLoader } from './migration.loader';
+export { CacheLoader } from './cache.loader';

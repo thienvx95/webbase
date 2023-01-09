@@ -13,6 +13,7 @@ export const banner = (): void =>  {
     log.info(`Database Provider : ${chalk.blue(SystemConfig.DbProvider)}`);
     log.info(`Database Version  : ${chalk.blue(SystemConfig.DbVersion)}`);
     log.info(`Storage Provider  : ${chalk.blue(configs.StorageProvider)}`);
+    log.info(`Cache Provider    : ${chalk.blue(configs.CacheProvider)}`);
     log.info(`Log Level         : ${chalk.blue(configs.LoggingSetting.Level)}`);
     log.info(`Server Info       : ${chalk.magenta(route)}`);
     log.info(`API Info          : ${chalk.magenta(`${route}/${configs.AppSetting.APIPrefix}`)}`);

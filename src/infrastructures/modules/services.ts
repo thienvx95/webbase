@@ -5,6 +5,7 @@ import { IInstallService, InstallService } from "@business/system/service/instal
 import { IMenuService, MenuService } from "@business/common/service/menu/menu.service";
 import { IRoleService, RoleService } from "@business/role/service/role.service";
 import { IPermissionService, PermissionService } from "@business/common/service/permission/permission.serivce";
+import { ISettingService, SettingService } from "@business/common/service/setting/setting.service";
 
 export const SERVICE_TYPES = {
     AuthService: Symbol.for("AuthService"),
@@ -23,8 +24,9 @@ export function services(container: Container): void {
     container.bind<IUserService>(SERVICE_TYPES.UserService).to(UserService);
     container.bind<IInstallService>(SERVICE_TYPES.InstallService).to(InstallService);
     container.bind<IMenuService>(SERVICE_TYPES.MenuService).to(MenuService);
-    container.bind<IRoleService>(SERVICE_TYPES.MenuService).to(RoleService);
-    container.bind<IPermissionService>(SERVICE_TYPES.MenuService).to(PermissionService);
+    container.bind<IRoleService>(SERVICE_TYPES.RoleService).to(RoleService);
+    container.bind<IPermissionService>(SERVICE_TYPES.PermissionService).to(PermissionService);
+    container.bind<ISettingService>(SERVICE_TYPES.SettingService).to(SettingService);
 }
 
-export { IInstallService , IAuthService, IGoogleAuthService, IUserService, IMenuService, IRoleService, IPermissionService }
+export { IInstallService , IAuthService, IGoogleAuthService, IUserService, IMenuService, IRoleService, IPermissionService, ISettingService }

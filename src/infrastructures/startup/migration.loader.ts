@@ -9,7 +9,7 @@ export const MigrationLoader: ILoader = async (
   if (settings) {
     const configs = settings.getData<ISystemConfig>('configs');
     if (configs.DataSettings.DbProvider == DbProvider.MongoDB) {
-        MongoMigration.run();
-      }
+      await MongoMigration.run();
+    }
   }
 };
