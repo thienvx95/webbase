@@ -13,11 +13,8 @@ import { DataBaseCustomNames } from "@core/enums/dbCustomeNames";
   })
   export class MigrationDb extends BaseEntity {
     @prop()
-    version: string;
+    fileName: string;
     
     @prop()
-    name: string;
-
-    @prop()
-    isInstall: boolean;
+    appliedAt: string;
   }

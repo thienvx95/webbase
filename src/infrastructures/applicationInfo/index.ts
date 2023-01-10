@@ -1,6 +1,7 @@
 import { SystemConfig } from "@core/configuration";
 import { ApplicationVersion } from "@core/constants";
 import { ApplicationInfo } from "@entities/application/applicationInfo.entity";
+import { MigrationDb } from "@entities/data/migrationDb.entity";
 import { getModelForClass, ReturnModelType } from "@typegoose/typegoose";
 import { BeAnObject } from "@typegoose/typegoose/lib/types";
 import { CallbackError, Types } from "mongoose";
@@ -12,10 +13,11 @@ export interface IApplication {
 export class Application implements IApplication {
     private _cache = new Map<string, ApplicationInfo>();
     private _applicationModel: ReturnModelType<typeof ApplicationInfo, BeAnObject>
+    private _migrationModel: ReturnModelType<typeof MigrationDb, BeAnObject>
     private static _instance: Application;
     constructor(){
         this._applicationModel = getModelForClass(ApplicationInfo);
-        this.init();
+        this._migrationModel = getModelForClass(MigrationDb);
     }
 
     public static get isInstall(): boolean {
@@ -31,27 +33,32 @@ export class Application implements IApplication {
         return Application._instance;
       }
 
-    init(): void {
-		this._applicationModel.findOne({}, {}, (err: CallbackError, data: any) => {
-            if(err) return;
-            if(data){
-                this._cache.set('applicationInfo', data);
-                return;
-            }
-
-            this._applicationModel.create({ 
+    async init(): Promise<void> {
+        const migrationDbId = await this.getLastestDbMigrationVersion();
+        const application = await this._applicationModel.findOne({}).exec();
+        if(application){
+            await this._applicationModel.updateOne({ version: ApplicationVersion },  { 
+                nodeVersion: process.version, 
+                dbVersion: SystemConfig.DbVersion,
+                dbProvider: SystemConfig.DbProvider,
+                version: ApplicationVersion,
+                databaseMigration: migrationDbId,
+            }, {}).exec();
+            this._cache.set('applicationInfo', application);
+            return;
+        } else {
+            const newModel = await this._applicationModel.create({ 
                 _id: new Types.ObjectId(),
                 isInstall: false, 
                 nodeVersion: process.version, 
                 dbVersion: SystemConfig.DbVersion,
                 dbProvider: SystemConfig.DbProvider,
                 version: ApplicationVersion,
-                databaseMigration: '',
-            }, (err: CallbackError, data: any) => { 
-                if(err) return;
-                this._cache.set('applicationInfo', data);
-              });
-        });
+                databaseMigration: migrationDbId,
+            });
+            this._cache.set('applicationInfo', newModel);
+            return;
+        }
 	}
 
 	get(isReload = false): ApplicationInfo {
@@ -63,6 +70,10 @@ export class Application implements IApplication {
         this.get(true);
     }
 
+    private getLastestDbMigrationVersion = async (): Promise<string> => {
+        const lastestVersion = await this._migrationModel.findOne().sort({ appliedAt: -1 }).exec();
+        return lastestVersion?._id?.toString();
+    }
     private setValue = (_id: string, value: ApplicationInfo): void => {
         this._cache.set(_id, value);
     };

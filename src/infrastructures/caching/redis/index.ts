@@ -43,13 +43,14 @@ export class RedisCache implements ICacheBase {
   async getAsync<T>(key: string, fetcher?: () => Promise<T>): Promise<T> 
   async getAsync<T>(key: string, fetcher?: () => Promise<T>, cacheTime?: number): Promise<T>{
     cacheTime = cacheTime ?? (this.siteSettings.get('Cache_Time') ?? CacheTime ) as number;
-    const result = await this.cache.get(key);
+    const cacheKey = `${this.config.Prefix}_${key}`;
+    const result = await this.cache.get(cacheKey);
     if(result){
         return JSON.parse(result);
     }
     if(fetcher){
         const fetchData = await fetcher()
-        this.cache.setEx(`${this.config.Prefix}${key}`, cacheTime, JSON.stringify(fetchData));
+        this.cache.setEx(cacheKey, cacheTime, JSON.stringify(fetchData));
         return fetchData;
     }
     return null;

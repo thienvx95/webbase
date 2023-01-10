@@ -2,6 +2,7 @@ import { join } from 'path';
 import crypto from "crypto";
 import { ValidationError } from 'class-validator';
 import { ErrorInfoRegex } from '@core/constants';
+import { CacheKey } from '@core/enums/cacheKey.enum';
 
 export const getOsEnv = (key: string): string => {
   if (typeof process.env[key] === 'undefined') {
@@ -86,3 +87,6 @@ export const getMethodError = (error: Error): string => {
   }
   return method;
 }
+
+export const stringFormat = (str: CacheKey, ...args: string[]): string =>
+  str.replace(/{(\d+)}/g, (_match, index) => args[index] || '')

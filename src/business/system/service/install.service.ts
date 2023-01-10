@@ -75,7 +75,7 @@ export class InstallService implements IInstallService {
       {
         _id: 'DASHBOARD_ADMIN',
         authority: [Roles.Admin],
-        name: 'admin',
+        name: 'Admin',
         icon: 'crown',
         layout: false,
         sortOrder: 0
@@ -87,7 +87,7 @@ export class InstallService implements IInstallService {
         _id: 'DASHBOARD_ADMIN_ACCOUNT_MANAGEMENT',
         authority: [Roles.Admin],
         path: '/dashboard/admin/account-management/',
-        name: 'account-management',
+        name: 'AccountManagement',
         parentId: "DASHBOARD_ADMIN",
         sortOrder: 0
       },
@@ -98,7 +98,7 @@ export class InstallService implements IInstallService {
         _id: 'DASHBOARD_ADMIN_USER_LIST_PAGE',
         authority: [Roles.Admin],
         path: '/dashboard/admin/account-management/users',
-        name: 'user-list',
+        name: 'Users',
         parentId: "DASHBOARD_ADMIN_ACCOUNT_MANAGEMENT",
         sortOrder: 0
       },
@@ -110,7 +110,7 @@ export class InstallService implements IInstallService {
         _id: 'DASHBOARD_ADMIN_ROLE_LIST_PAGE',
         authority: [Roles.Admin],
         path: '/dashboard/admin/account-management/roles',
-        name: 'role-list',
+        name: 'Roles',
         parentId: "DASHBOARD_ADMIN_ACCOUNT_MANAGEMENT",
         sortOrder: 0
       },
@@ -122,7 +122,7 @@ export class InstallService implements IInstallService {
         _id: 'DASHBOARD_ADMIN_CONFIGURATION',
         authority: [Roles.Admin],
         path: '/dashboard/admin/configuration/',
-        name: 'configuration',
+        name: 'Configuration',
         parentId: "DASHBOARD_ADMIN",
         sortOrder: 0
       },
@@ -134,7 +134,7 @@ export class InstallService implements IInstallService {
         _id: 'DASHBOARD_ADMIN_MENU_LIST_PAGE',
         authority: [Roles.Admin],
         path: '/dashboard/admin/configuration/menus',
-        name: 'menu-list',
+        name: 'Menus',
         parentId: "DASHBOARD_ADMIN_CONFIGURATION",
         sortOrder: 0
       },
@@ -146,7 +146,7 @@ export class InstallService implements IInstallService {
         _id: 'DASHBOARD_ADMIN_SYSTEM',
         authority: [Roles.Admin],
         path: '/dashboard/admin/system/',
-        name: 'system',
+        name: 'System',
         parentId: "DASHBOARD_ADMIN",
         sortOrder: 0
       },
@@ -158,7 +158,7 @@ export class InstallService implements IInstallService {
         _id: 'DASHBOARD_ADMIN_SETTING_LIST_PAGE',
         authority: [Roles.Admin],
         path: '/dashboard/admin/system/settings',
-        name: 'settings',
+        name: 'Settings',
         parentId: "DASHBOARD_ADMIN_SYSTEM",
         sortOrder: 0
       },

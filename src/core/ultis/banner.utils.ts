@@ -1,30 +1,32 @@
-import * as chalk from "chalk";
 import { SystemConfig } from '@core/configuration';
 import { Logging } from '@core/log';
+import { Application } from "@infrastructures/applicationInfo";
 
 export const banner = (): void =>  {
     const log = Logging.getInstance('Startup');
     const configs = SystemConfig.Configs;
+    const application = Application.getInstance().get();
     const route = `${configs.AppInfo.Schema}://${configs.AppInfo.Host}:${configs.AppInfo.Port}`;
-    chalk
     log.info('-------------------------------------------------------');
-    log.info(`Environment       : ${chalk.red(configs.Node)}`);
-    log.info(`Node version      : ${chalk.blue(process.version)}`);
-    log.info(`Database Provider : ${chalk.blue(SystemConfig.DbProvider)}`);
-    log.info(`Database Version  : ${chalk.blue(SystemConfig.DbVersion)}`);
-    log.info(`Storage Provider  : ${chalk.blue(configs.StorageProvider)}`);
-    log.info(`Cache Provider    : ${chalk.blue(configs.CacheProvider)}`);
-    log.info(`Log Level         : ${chalk.blue(configs.LoggingSetting.Level)}`);
-    log.info(`Server Info       : ${chalk.magenta(route)}`);
-    log.info(`API Info          : ${chalk.magenta(`${route}/${configs.AppSetting.APIPrefix}`)}`);
+    log.info(`Environment       : ${configs.Node}`);
+    log.info(`App version       : ${application.version}`);
+    log.info(`Node version      : ${process.version}`);
+    log.info(`Database Provider : ${SystemConfig.DbProvider}`);
+    log.info(`Database Version  : ${SystemConfig.DbVersion}`);
+    log.info(`Migration Version : ${application.databaseMigration}`);
+    log.info(`Storage Provider  : ${configs.StorageProvider}`);
+    log.info(`Cache Provider    : ${configs.CacheProvider}`);
+    log.info(`Log Level         : ${configs.LoggingSetting.Level}`);
+    log.info(`Server Info       : ${route}`);
+    log.info(`API Info          : ${route}/${configs.AppSetting.APIPrefix}`);
     if (configs.SwaggerSetting.Enable) {
-        log.info(`Swagger           : ${chalk.magenta(`${route}${configs.SwaggerSetting.Route}`)}`);
+        log.info(`Swagger           : ${route}${configs.SwaggerSetting.Route}`);
     }
     if (configs.StatusMonitorSetting.Enable) {
-        log.info(`Monitor           : ${chalk.magenta(`${route}${configs.StatusMonitorSetting.Route}`)}`);
+        log.info(`Monitor           : ${route}${configs.StatusMonitorSetting.Route}`);
     }
     if (configs.QueueMonitorSetting.Enable) {
-        log.info(`Queue             : ${chalk.magenta(`${route}${configs.QueueMonitorSetting.Route}`)}`);
+        log.info(`Queue             : ${route}${configs.QueueMonitorSetting.Route}`);
     }
     log.info('-------------------------------------------------------');
 }

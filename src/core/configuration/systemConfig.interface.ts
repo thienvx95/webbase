@@ -69,7 +69,7 @@ export interface QueueMonitorSetting {
 export interface ReditSetting {
   Url?: string;
   Port?: number;
-  Host?: string;
+  Username?: string;
   Db?: number;
   Password?: string;
   Prefix?: string;
