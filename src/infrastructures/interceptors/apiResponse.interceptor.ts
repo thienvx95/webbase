@@ -6,9 +6,9 @@ import { Interceptor, InterceptorInterface, Action } from "routing-controllers";
 @Interceptor()
 export class APIResponseInterceptor implements InterceptorInterface {
   intercept(_action: Action, content: any): ResponseResult {
-    const result = new ResponseResult();
-    result.data = content;
-    result.success = true;
-    return result;
+    return {
+      data:content,
+      success: true,
+    } as ResponseResult;
   }
 }

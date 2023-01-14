@@ -9,7 +9,10 @@ export enum ErrorEnum {
     Token_Expired = 170,
     UnAuthorized_Access = 180,
     Api_Rate_Limit = 190,
-    Error_Upload_Files = 200
+    Error_Upload_Files = 200,
+    Error_Update = 210,
+    Error_Create = 220,
+    Error_Delete = 220,
 }
 
 export const ErrorMessageMapping = new Map<ErrorEnum, string>([
@@ -24,4 +27,7 @@ export const ErrorMessageMapping = new Map<ErrorEnum, string>([
     [ErrorEnum.UnAuthorized_Access,"Unauthorized Access"],
     [ErrorEnum.Api_Rate_Limit,"Too many requests, please try again later."],
     [ErrorEnum.Error_Upload_Files,"Error to upload files"],
+    [ErrorEnum.Error_Create, "Created failed!"],
+    [ErrorEnum.Error_Update, "Updated failed!"],
+    [ErrorEnum.Error_Delete, "Deleted failed!"],
 ])

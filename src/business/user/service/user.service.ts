@@ -80,7 +80,8 @@ export class UserService implements IUserService {
         password: passworDefault,
         username: ticket.email,
         roles: ['Member'],
-        fullname: ticket.name,
+        firstName: ticket.given_name,
+        lastName: ticket.family_name,
         avatar: ticket.picture,
         language: ticket.locale,
         services: {
@@ -94,7 +95,8 @@ export class UserService implements IUserService {
       await this.create(user);
     } else {
       const user = new User({
-        fullname: ticket.name,
+        firstName: ticket.family_name,
+        lastName: ticket.given_name,
         avatar: ticket.picture,
         language: ticket.locale,
         services: {
@@ -119,7 +121,7 @@ export class UserService implements IUserService {
 
   async update(_id: string, user: User): Promise<boolean> {
     this._log.info('Update user id: ' + _id);
-    const result = await this.userRepository.update({ _id }, user);
+    const result = await this.userRepository.updateOne(_id, user);
     if (result) {
       this.eventDispatcher.dispatch(events.user.updated, user);
     }

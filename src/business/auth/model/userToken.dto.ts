@@ -1,9 +1,10 @@
+import { BaseDto } from '@business/common/model/base.dto';
 import {
   IsString,
   IsDate
 } from 'class-validator';
 
-export class UserTokenDto {
+export class UserTokenDto extends BaseDto {
   @IsString()
   token?: string;
   @IsDate()

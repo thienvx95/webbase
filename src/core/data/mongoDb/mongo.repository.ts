@@ -1,4 +1,4 @@
-import { FilterQuery, QueryOptions, ProjectionType, UpdateQuery } from 'mongoose';
+import { FilterQuery, QueryOptions, ProjectionType, UpdateQuery, Types } from 'mongoose';
 import { ReturnModelType, DocumentType, getModelForClass } from '@typegoose/typegoose';
 import { AnyParamConstructor, BeAnObject } from '@typegoose/typegoose/lib/types';
 import { HttpStatus, HttpStatusError } from '@core/exception/httpStatusError';
@@ -74,7 +74,7 @@ export class MongoRepository<T = BaseEntity> implements IRepository<T> {
    */
   async updateOne(id: string, entity: T): Promise<boolean> {
     try {
-      const result = await this._model.updateOne({ _id: id }, { $setOnInsert: { ...entity } } , { upsert: false}).exec();
+      const result = await this._model.updateOne({ _id: new Types.ObjectId(id) }, { $set: { ...entity } } , { upsert: false}).exec();
       return result.matchedCount > 0;
     } catch (e) {
       this.handleError(e);
@@ -196,7 +196,7 @@ export class MongoRepository<T = BaseEntity> implements IRepository<T> {
    * @param options - optional
    */
   async findById(_id: string, projection?: ProjectionType<DocumentType<T>> | null, options?: QueryOptions): Promise<DocumentType<T>> {
-    return await this._model.findById(_id, projection, options);
+    return await this._model.findById(new Types.ObjectId(_id), projection, options);
   }
 
   public async findPaging(

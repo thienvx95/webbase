@@ -1,12 +1,12 @@
 import { ICacheBase } from '../cacheBase.interface';
-import { RedisClientType, createClient } from 'redis';
+import Redis from 'ioredis';
 import { SystemConfig } from '@core/configuration';
 import { Logging } from '@core/log';
 import { SiteSettings } from '@infrastructures/siteSetting';
 import { CacheTime } from '@core/constants';
 
 export class RedisCache implements ICacheBase {
-  private cache: RedisClientType;
+  private cache: Redis;
   private readonly log = Logging.getInstance('RedisCache');
   private readonly config = SystemConfig.Configs.ReditSetting;
   private readonly siteSettings = SiteSettings.getInstance();
@@ -21,8 +21,12 @@ export class RedisCache implements ICacheBase {
   }
 
   public async init(): Promise<void> {
-    this.cache = createClient({
-      url: `redis://${this.config.Username}:${this.config.Password}@${this.config.Url}:${this.config.Port}`,
+    this.cache = new Redis({
+      port: this.config.Port, // Redis port
+      host: this.config.Url, // Redis host
+      username: this.config.Username, // needs Redis >= 6
+      password: this.config.Password,
+      db: this.config.Db, // Defaults to 0
     });
     this.cache.on('connect', () => {
       this.log.info(`Redis connection established`);
@@ -30,46 +34,53 @@ export class RedisCache implements ICacheBase {
 
     this.cache.on('error', (error) => {
       this.log.error(`Redis error, service degraded: ${error}`);
-    });
+    });  
 
-    this.cache.on('reconnecting', () => this.log.info(`Redis reconnecting'`));
-
-    await this.cache.connect();
-
-    this.cache.flushDb();
+    this.cache.flushdb();
   }
 
-  async getAsync<T>(key: string): Promise<T> 
-  async getAsync<T>(key: string, fetcher?: () => Promise<T>): Promise<T> 
-  async getAsync<T>(key: string, fetcher?: () => Promise<T>, cacheTime?: number): Promise<T>{
-    cacheTime = cacheTime ?? (this.siteSettings.get('Cache_Time') ?? CacheTime ) as number;
+  async getAsync<T>(key: string): Promise<T>;
+  async getAsync<T>(key: string, fetcher?: () => Promise<T>): Promise<T>;
+  async getAsync<T>(
+    key: string,
+    fetcher?: () => Promise<T>,
+    cacheTime?: number,
+  ): Promise<T> {
+    cacheTime =
+      cacheTime ??
+      ((this.siteSettings.get('Cache_Time') ?? CacheTime) as number);
     const cacheKey = `${this.config.Prefix}_${key}`;
     const result = await this.cache.get(cacheKey);
-    if(result){
-        return JSON.parse(result);
+    if (result) {
+      return JSON.parse(result);
     }
-    if(fetcher){
-        const fetchData = await fetcher()
-        this.cache.setEx(cacheKey, cacheTime, JSON.stringify(fetchData));
-        return fetchData;
+    if (fetcher) {
+      const fetchData = await fetcher();
+      this.cache.setex(cacheKey, cacheTime, JSON.stringify(fetchData));
+      return fetchData;
     }
     return null;
   }
 
   async removeAsync(key: string): Promise<void> {
-   await this.cache.del(key);
+    await this.cache.del(key);
   }
   async removeByPrefix(prefix: string): Promise<void> {
-    for await (const key of this.cache.scanIterator({
-        TYPE: 'string', // `SCAN` only
-        MATCH: `*${prefix}*`,
-        COUNT: 100
-      })) {
-        // use the key!
-        await  this.removeAsync(key);
-      }
+    for await (const key of this.cache.scanStream({
+      type: 'string', // `SCAN` only
+      match: `*${prefix}*`,
+      count: 100,
+    })) {
+      // use the key!
+      await this.removeAsync(key);
+    }
   }
   async clear(): Promise<void> {
-    this.cache.flushAll();
+    this.cache.flushall();
+  }
+  disconnect(): void {
+    if (this.cache) {
+      this.cache.disconnect(false);
+    }
   }
 }

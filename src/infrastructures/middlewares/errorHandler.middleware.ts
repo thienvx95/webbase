@@ -23,10 +23,11 @@ type Errors = {
 export class ErrorHandlerMiddleware implements ExpressErrorMiddlewareInterface {
   public error(error: Errors, _req: Request, res: Response): Response {
     const log = Logging.getInstance('ErrorHandler');
-    const responseResult = new ResponseResult();
-    responseResult.success = false;
-    responseResult.message = error.message;
-    responseResult.code = error.code;
+    const responseResult = { 
+      success: false,
+      message: error.message,
+      code: error.code,
+    } as ResponseResult;
     
     if (error.statusCode && error.statusCode !== HttpStatus.InternalServerError) {
       if(error.errors){

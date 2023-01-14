@@ -6,4 +6,5 @@ export interface ICacheBase
     removeAsync(key: string): Promise<void>;
     removeByPrefix(prefix: string): Promise<void>;
     clear(): Promise<void>;
+    disconnect(): void;
 }

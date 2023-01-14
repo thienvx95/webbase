@@ -11,9 +11,9 @@ export const CurrentUserChecker = async (action: Action): Promise<Session> => {
 
   const [, token] = header.split(" ");
   try {
-    const { roles, sub } = verify(token, SystemConfig.Configs.AppSetting.SecretKey) as JwtPayload;
+    const { roles, id } = verify(token, SystemConfig.Configs.AppSetting.SecretKey) as JwtPayload;
     return {
-      _id: sub,
+      _id: id,
       roles,
     };
   } catch(e) {

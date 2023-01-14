@@ -7,11 +7,11 @@ import {
   } from '@typegoose/typegoose';
   import { Exclude } from 'class-transformer';
   import * as uniqueValidator from 'mongoose-unique-validator';
-  import { DATABASE } from '@core/constants';
   import { BaseEntity } from '../base.entity';
   import { Role } from '../roles/role.entity';
 import { DataBaseCustomNames } from '@core/enums/dbCustomeNames';
 import { AutoMap } from '@automapper/classes';
+import { Address } from '@entities/common/address';
   
   export interface IUserServices {
     google?: IGoogleService;
@@ -23,15 +23,6 @@ import { AutoMap } from '@automapper/classes';
     refresh_token?: string;
   }
 
-  
-//   @pre<User>('save', function (_next: any) {
-//     if (!this.isModified('password')) {
-//       return _next();
-//     }
-//     PasswordUtil.encryptPassword(2, this.password).then((x) => {
-//       this.password = x;
-//     });
-//   })
   @modelOptions({
     options: { allowMixed: Severity.ALLOW, customName: DataBaseCustomNames.Users },
     schemaOptions: {
@@ -66,45 +57,40 @@ import { AutoMap } from '@automapper/classes';
       text: true,
       index: true,
     })
-    username!: string;
+    username?: string;
   
     @Exclude()
     @prop({ required: true })
     password!: string;
   
     @AutoMap()
-    @prop({ required: true })
-    fullname!: string;
-  
+    @prop()
+    firstName?: string;
+
+    @AutoMap()
+    @prop()
+    lastName?:string;
+
     @AutoMap()
     @prop()
     avatar?: string;
   
     @AutoMap()
     @prop()
-    address: string;
-  
+    address?: Address;
+
     @AutoMap()
-    @prop({
-      enum: [DATABASE.GENDER.FEMALE, DATABASE.GENDER.MALE],
-      default: 'Male',
-    })
-    gender: string;
-  
-    @AutoMap()
-    @prop({ default: Date.now() })
-    dob: Date;
-  
-        @AutoMap()
     @prop()
     services?: IUserServices;
   
     @prop()
     lastLogin?: Date;
   
+    @AutoMap()
     @prop({ default: 'en' })
     language?: string;
   
+    @AutoMap(() => [String])
     @prop({ ref: Role, type: String })
     public roles: Ref<Role>[];
   

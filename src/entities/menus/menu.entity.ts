@@ -18,7 +18,7 @@ export class Menu extends BaseEntity<string> {
   @prop()
   access?: string | string[];
 
-  @AutoMap()
+  @AutoMap(() => [String])
   @prop()
   authority: string[];
 

@@ -1,13 +1,9 @@
 import { AutoMap } from "@automapper/classes";
-import { IsNotEmpty, IsArray, IsString } from "class-validator";
+import { IsArray } from "class-validator";
+import { BaseDto } from "../base.dto";
 
-export class MenuDto {
-    @AutoMap()
-    @IsString()
-    @IsNotEmpty()
-    id: string;
-
-    @AutoMap()
+export class MenuDto extends BaseDto {
+    @AutoMap(() => [String])
     @IsArray()
     authority: string[];
     

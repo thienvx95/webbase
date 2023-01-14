@@ -6,12 +6,17 @@ export class ChangePasswordRequest {
   @IsString()
   currentPassword: string;
 
+  @Matches(/^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9])(?=.*?[#?!@$ %^&*-]).{8,}$/, {
+    message:
+      "InvalidPasswordFormat",
+  })
   @IsNotEmpty()
   @IsString()
   @MinLength(4)
   @MaxLength(20)
   @Matches(PasswordRegex, {message: "Password too weak"})
   newPassword: string;
+
 
   @IsNotEmpty()
   @IsString()

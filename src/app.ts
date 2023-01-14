@@ -12,9 +12,10 @@ import {
   QueueMonitorLoader,
   ExpressLoader,
   MigrationLoader,
-  CacheLoader
+  CacheLoader,
 } from '@infrastructures/startup';
 import { ApiRateLimitLoader } from '@infrastructures/startup/apiRateLimit.loader';
+import { RedisCache } from '@infrastructures/caching/redis';
 
 bootstrapMicroframework({
   loaders: [
@@ -30,15 +31,23 @@ bootstrapMicroframework({
     QueueMonitorLoader,
     PublicLoader,
     AutoMapperLoader,
-    ExpressLoader
+    ExpressLoader,
   ],
   config: {
     showBootstrapTime: true,
     debug: false,
   },
-})
-  .catch((e) =>{
-    const log = Logging.getInstance('System');
-    log.error(`Application is crashed: ${e.name}: ${e.message} ${e.stack}`)
-  }
-  );
+}).catch((e) => {
+  const log = Logging.getInstance('System');
+  log.error(`Application is crashed: ${e.name}: ${e.message} ${e.stack}`);
+  RedisCache.getInstance().disconnect();
+});
+
+
+process.on('SIGINT', cleanup);
+process.on('SIGTERM', cleanup);
+
+function cleanup():void {
+  RedisCache.getInstance().disconnect();
+  process.exit();
+};

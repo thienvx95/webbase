@@ -1,10 +1,7 @@
 import { AutoMap } from "@automapper/classes";
+import { BaseDto } from "@business/common/model/base.dto";
 import { IsNotEmpty, IsOptional } from "class-validator";
-export class RoleDto {
-  @AutoMap()
-  @IsNotEmpty()
-  id?: string;
-
+export class RoleDto extends BaseDto {
   @AutoMap()
   @IsNotEmpty()
   name?: string;

@@ -2,6 +2,8 @@ import type { Types } from 'mongoose';
 import { prop, plugin, modelOptions, Severity } from '@typegoose/typegoose';
 import { mongoosePlugin } from 'mongo-cursor-pagination';
 import { AutoMap } from '@automapper/classes';
+
+type BaseId =  Types.ObjectId | string;
 @modelOptions({
   options: { allowMixed: Severity.ALLOW },
   schemaOptions: {
@@ -9,9 +11,9 @@ import { AutoMap } from '@automapper/classes';
   },
 })
 @plugin(mongoosePlugin)
-export class BaseEntity<T = Types.ObjectId> {
+export class BaseEntity<T = BaseId> {
 
-  @AutoMap()
+  @AutoMap(() => String)
   @prop({ auto: true })
   _id?: T;
 

@@ -12,7 +12,7 @@ import {
 import { ResponseSchema } from 'routing-controllers-openapi';
 import { UserService } from '@business/user/service/user.service';
 import { Roles } from '@core/enums/role.enum';
-import { ChangePasswordRequest, UserDto } from '../model';
+import { ChangePasswordRequest, UpdateProfileRequest, UserDto } from '../model';
 import { User } from '@entities/index';
 import { Session, UserTokenDto } from '@business/auth/model';
 import {
@@ -20,13 +20,18 @@ import {
   PaginateResult,
 } from '@business/common/model';
 import { inject, injectable } from 'inversify';
-import { SERVICE_TYPES } from '@infrastructures/modules/services';
+import { SERVICE_TYPES, COMMON_TYPES } from '@infrastructures/modules';
+import { ICacheBase } from '@infrastructures/caching/cacheBase.interface';
+import { stringFormat } from '@core/ultis';
+import { CacheKey } from '@core/enums/cacheKey.enum';
+import { ErrorEnum, HttpStatus, HttpStatusError } from '@core/exception/httpStatusError';
 
 @JsonController('/user')
 @injectable()
 export class UserController {
   constructor(
     @inject(SERVICE_TYPES.UserService) private userService: UserService,
+    @inject(COMMON_TYPES.MemoryCache) private memoryCache: ICacheBase,
   ) {}
 
   @Authorized([Roles.Admin])
@@ -47,7 +52,7 @@ export class UserController {
   @Get('/me')
   @ResponseSchema(UserDto)
   async findMe(@CurrentUser() session: Session): Promise<UserDto> {
-    return await this.userService.findById(session._id);
+    return this.memoryCache.getAsync(stringFormat(CacheKey.GetCurrentUser, session._id), () => this.userService.findById(session._id));
   }
 
   // @Authorized([Roles.User])
@@ -69,7 +74,7 @@ export class UserController {
   }
 
   @Authorized([Roles.User])
-  @Post()
+  @Put()
   @ResponseSchema(UserDto)
   async create(
     @Body() body: UserDto,
@@ -83,7 +88,7 @@ export class UserController {
   }
 
   @Authorized([Roles.Admin])
-  @Put()
+  @Post()
   @ResponseSchema(UserDto)
   async update(
     @Body() body: UserDto,
@@ -97,20 +102,25 @@ export class UserController {
   }
 
   @Authorized([Roles.User])
-  @Put('/changeProfile')
+  @Post('/changeProfile')
   async changeProfile(
-    @Body() body: UserDto,
+    @Body() body: UpdateProfileRequest,
     @CurrentUser() session: Session,
-  ): Promise<boolean> {
+  ): Promise<string> {
     const user = new User({
       ...body,
-      createdBy: session._id,
+      updatedBy: session._id,
     });
-    return await this.userService.update(session._id, user);
+    const result = await this.userService.update(session._id, user);
+    if(result){
+      this.memoryCache.removeAsync(stringFormat(CacheKey.GetCurrentUser, session._id));
+      return '';
+    }
+    throw new HttpStatusError(HttpStatus.Ok, ErrorEnum.Error_Update);
   }
 
   @Authorized([Roles.User])
-  @Put('/changePassword')
+  @Post('/changePassword')
   async ChangePassword(
     @Body() body: ChangePasswordRequest,
     @CurrentUser() session: Session,

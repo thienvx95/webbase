@@ -1,19 +1,14 @@
 import { IsString, IsBoolean, IsArray, IsNotEmpty } from "class-validator";
 import { AutoMap } from "@automapper/classes";
+import { BaseDto } from "../base.dto";
 
-export class PermissionDto {
-
-    @AutoMap()
-    @IsString()
-    @IsNotEmpty()
-    id?: string;
-
-    @AutoMap()
+export class PermissionDto extends BaseDto {
+    @AutoMap(() => String)
     @IsString()
     @IsNotEmpty()
     function: string;
     
-    @AutoMap()
+    @AutoMap(() => [String])
     @IsArray()
     @IsNotEmpty()
     roles: string[];

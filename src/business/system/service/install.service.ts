@@ -186,7 +186,8 @@ export class InstallService implements IInstallService {
       email: 'admin@webapp.com',
       password: defaultPassword,
       username: 'admin',
-      fullname: 'admin',
+      firstName: 'Benjamin',
+      lastName: 'Vu',
       avatar:
         'https://gravatar.com/avatar/64e1b8d34f425d19e1ee2ea7236d3028?s=40&d=retro',
       roles: [Roles.Admin, Roles.User],
@@ -197,7 +198,8 @@ export class InstallService implements IInstallService {
       email: 'user@webapp.com',
       password: defaultPassword,
       username: 'user',
-      fullname: 'user',
+      firstName: "David",
+      lastName: "Silva",
       avatar:
         'https://gravatar.com/avatar/64e1b8d34f425d19e1ee2ea7236d3028?s=40&d=retro',
       roles: [Roles.User],

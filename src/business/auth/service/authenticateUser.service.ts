@@ -65,7 +65,8 @@ export class AuthenticateUserService implements IAuthService {
     const token = await TokenUtil.generateToken(
       new JwtPayload(this.autoMapper.Map(user, User, UserDto)),
     );
-    
+    user.lastLogin = new Date();
+    user.save();
     const refreshToken = await this.generateRefreshToken(user._id, ipAddress);
     return {
       token,
