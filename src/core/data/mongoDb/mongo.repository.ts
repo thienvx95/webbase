@@ -1,4 +1,4 @@
-import { FilterQuery, QueryOptions, ProjectionType, UpdateQuery, Types } from 'mongoose';
+import { FilterQuery, QueryOptions, ProjectionType, UpdateQuery } from 'mongoose';
 import { ReturnModelType, DocumentType, getModelForClass } from '@typegoose/typegoose';
 import { AnyParamConstructor, BeAnObject } from '@typegoose/typegoose/lib/types';
 import { HttpStatus, HttpStatusError } from '@core/exception/httpStatusError';
@@ -7,6 +7,7 @@ import { ErrorEnum } from '@core/enums/error.enum';
 import { PaginateOptions, PaginateResult } from '@business/common/model';
 import { BaseEntity } from '@entities/base.entity';
 import { BuildQuery } from '@business/common/utils/buildQuery';
+import { Logging } from '@core/log';
 
 export interface IPaginateModel<T> {
   paginate(options: PaginateOptions): PaginateResult<DocumentType<T>>;
@@ -22,6 +23,7 @@ export class MongoRepository<T = BaseEntity> implements IRepository<T> {
    * @param error - Error mongoose
    */
   private handleError = (error: any): any => {
+    Logging.getInstance('Repository').error(`${JSON.stringify(error)}`, 'HandleError')
     if (error.code && error.code === 11000) {
       throw new HttpStatusError(HttpStatus.BadRequest, ErrorEnum.Duplicate_Record);
     }
@@ -74,7 +76,7 @@ export class MongoRepository<T = BaseEntity> implements IRepository<T> {
    */
   async updateOne(id: string, entity: T): Promise<boolean> {
     try {
-      const result = await this._model.updateOne({ _id: new Types.ObjectId(id) }, { $set: { ...entity } } , { upsert: false}).exec();
+      const result = await this._model.updateOne({ _id: id }, { $set: { ...entity } } , { upsert: false}).exec();
       return result.matchedCount > 0;
     } catch (e) {
       this.handleError(e);
@@ -196,7 +198,7 @@ export class MongoRepository<T = BaseEntity> implements IRepository<T> {
    * @param options - optional
    */
   async findById(_id: string, projection?: ProjectionType<DocumentType<T>> | null, options?: QueryOptions): Promise<DocumentType<T>> {
-    return await this._model.findById(new Types.ObjectId(_id), projection, options);
+    return await this._model.findById(_id, projection, options);
   }
 
   public async findPaging(

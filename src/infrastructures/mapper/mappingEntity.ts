@@ -22,4 +22,10 @@ export function MapEntityToDto(autoMapper: AutoMapper): void {
   autoMapper.createMap(Role, RoleDto);
   autoMapper.createMap(Permission, PermissionDto);
   autoMapper.createMap(Setting, SettingDto);
+  // Example
+  // autoMapper.createMap(BaseEntity, BaseDto,
+  //   forMember(
+  //   (destination) => destination.id,
+  //   mapFrom((source) => source._id.toString()),
+  // ));
 }

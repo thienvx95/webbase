@@ -6,6 +6,7 @@ import {
 import { User } from './user.entity';
 import { BaseEntity } from '../base.entity';
 import { DataBaseCustomNames } from '@core/enums/dbCustomeNames';
+import { AutoMap } from '@automapper/classes';
 
 @modelOptions({
   options: { customName: DataBaseCustomNames.UserTokens },
@@ -16,26 +17,35 @@ export class UserToken extends BaseEntity {
     super();
     Object.assign(this, init);
   }
-  @prop({ ref: User })
-  public user: Ref<User>;
 
+  
+  @AutoMap(() => [String])
+  @prop({ ref: User, type: String })
+  user: Ref<User>;
+
+  @AutoMap()
   @prop({ required: true })
-  public token: string;
+  token: string;
 
+  @AutoMap()
   @prop({ required: true })
-  public expires: Date;
+  expires: Date;
 
+  @AutoMap()
   @prop({ required: true })
-  public createdByIp: string;
+  createdByIp: string;
 
+  @AutoMap()
   @prop()
-  public revoked?: Date;
+  revoked?: Date;
 
+  @AutoMap()
   @prop()
-  public revokedByIp?: string;
+  revokedByIp?: string;
 
+  @AutoMap()
   @prop()
-  public replacedByToken?: string;
+  replacedByToken?: string;
 
   public isExpired(): boolean {
     return Date.now() >= new Date(this.expires).getTime();

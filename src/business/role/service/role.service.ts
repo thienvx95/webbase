@@ -51,7 +51,7 @@ export class RoleService implements IRoleService {
       'Create',
     );
     const newRole = await this.roleRepository.insertOne({
-        _id: role.id,
+        _id: role._id,
         description: role.description,
         createdBy: session._id,
     });

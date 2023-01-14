@@ -12,7 +12,7 @@ import { AutoMap } from "@automapper/classes";
   options: {  allowMixed: Severity.ALLOW, customName: DataBaseCustomNames.Menus },
   schemaOptions: { timestamps: true },
 })
-export class Menu extends BaseEntity<string> {
+export class Menu extends BaseEntity {
 
   @AutoMap()
   @prop()

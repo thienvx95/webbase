@@ -1,5 +1,5 @@
 import { Container } from 'inversify';
-import { IRepository, Types } from '@core/data/repository.interface';
+import { IRepository } from '@core/data/repository.interface';
 import { MongoRepository } from '@core/data/mongoDb/mongo.repository';
 import { DbProvider } from '@core/enums/dbProvider.enum';
 import {
@@ -99,4 +99,4 @@ export function repositories(container: Container): void {
   });
 }
 
-export { IRepository, Types };
+export { IRepository };

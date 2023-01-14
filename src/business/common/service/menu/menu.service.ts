@@ -72,17 +72,17 @@ export class MenuService implements IMenuService {
   private buildDateTree = (data: MenuDto[], isMenus = true): MenuDto[] => {
     const hashTable = Object.create(null);
     if (isMenus) {
-      data.forEach((x) => (hashTable[x.id] = { ...x, children: [] }));
+      data.forEach((x) => (hashTable[x._id] = { ...x, children: [] }));
     } else {
       data.forEach(
-        (x) => (hashTable[x.id] = { key: x.id, title: x.name, children: [] }),
+        (x) => (hashTable[x._id] = { key: x._id, title: x.name, children: [] }),
       );
     }
 
     const dataTree: MenuDto[] = [];
     data.forEach((x) => {
-      if (x.parentId) hashTable[x.parentId]?.children?.push(hashTable[x.id]);
-      else dataTree.push(hashTable[x.id]);
+      if (x.parentId) hashTable[x.parentId]?.children?.push(hashTable[x._id]);
+      else dataTree.push(hashTable[x._id]);
     });
     return dataTree;
   };

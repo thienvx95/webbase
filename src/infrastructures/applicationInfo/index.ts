@@ -4,7 +4,7 @@ import { ApplicationInfo } from "@entities/application/applicationInfo.entity";
 import { MigrationDb } from "@entities/data/migrationDb.entity";
 import { getModelForClass, ReturnModelType } from "@typegoose/typegoose";
 import { BeAnObject } from "@typegoose/typegoose/lib/types";
-import { CallbackError, Types } from "mongoose";
+import { CallbackError } from "mongoose";
 
 export interface IApplication {
     get(): ApplicationInfo
@@ -48,7 +48,6 @@ export class Application implements IApplication {
             return;
         } else {
             const newModel = await this._applicationModel.create({ 
-                _id: new Types.ObjectId(),
                 isInstall: false, 
                 nodeVersion: process.version, 
                 dbVersion: SystemConfig.DbVersion,

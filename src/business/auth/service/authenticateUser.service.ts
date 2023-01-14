@@ -15,7 +15,7 @@ import {
 import { PasswordUtil, TokenUtil } from '@core/ultis';
 import { UserDto } from '@business/user/model';
 import { injectable, inject } from 'inversify';
-import { REPOSITORY_TYPES, IRepository, Types } from '@infrastructures/modules/repositories';
+import { REPOSITORY_TYPES, IRepository } from '@infrastructures/modules/repositories';
 import { COMMON_TYPES, IAutoMapper } from '@infrastructures/modules/common';
 
 export interface IAuthService{
@@ -172,7 +172,7 @@ export class AuthenticateUserService implements IAuthService {
   };
 
   private generateRefreshToken = async (
-    userId: Types.ObjectId,
+    userId: string,
     ip: string,
   ): Promise<UserToken> => {
     const existToken = await this.userTokenRepository.findOne({
@@ -188,7 +188,6 @@ export class AuthenticateUserService implements IAuthService {
       }
       const newRefreshToken = await this.userTokenRepository.insertOne(
         new UserToken({
-          _id: new Types.ObjectId(),
           user: userId,
           token: TokenUtil.randomTokenString(),
           expires: new Date(

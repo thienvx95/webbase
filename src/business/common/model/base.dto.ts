@@ -3,7 +3,7 @@ import { IsNotEmpty, IsString } from "class-validator";
 
 export class BaseDto{
     @IsString()
+    @AutoMap()
     @IsNotEmpty()
-    @AutoMap(() => String)
-    id?: string;
+    _id?: string;
 }

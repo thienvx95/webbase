@@ -38,7 +38,7 @@ import { injectable } from 'inversify';
       destination: ModelIdentifier<K>,
       ...mappingConfigFns: (MappingConfiguration<T, K> | undefined)[]
     ): Mapping<T, K> {
-      return createMap(this._mapper, source, destination, ...mappingConfigFns);
+      return createMap(this._mapper, source, destination,...mappingConfigFns);
     }
   
     public Map<T, K>(

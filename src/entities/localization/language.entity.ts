@@ -11,7 +11,7 @@ import { DataBaseCustomNames } from "@core/enums/dbCustomeNames";
     options: {  allowMixed: Severity.ALLOW, customName: DataBaseCustomNames.Languages },
     schemaOptions: { timestamps: true },
   })
-  export class Language extends BaseEntity<string> {
+  export class Language extends BaseEntity {
     constructor(init?: Partial<string>){
       super();
       Object.assign(this, init);

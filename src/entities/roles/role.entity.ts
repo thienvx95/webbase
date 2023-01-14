@@ -10,7 +10,7 @@ import { DataBaseCustomNames } from "@core/enums/dbCustomeNames";
   options: {  allowMixed: Severity.ALLOW, customName: DataBaseCustomNames.Roles },
   schemaOptions: { timestamps: true },
 })
-export class Role extends BaseEntity<string> {
+export class Role extends BaseEntity {
   @prop()
   public description?: string;
 

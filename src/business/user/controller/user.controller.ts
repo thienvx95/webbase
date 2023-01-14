@@ -98,7 +98,7 @@ export class UserController {
       ...body,
       createdBy: session._id,
     });
-    return await this.userService.update(body.id, user);
+    return await this.userService.update(body._id, user);
   }
 
   @Authorized([Roles.User])

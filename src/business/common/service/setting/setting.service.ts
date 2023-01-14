@@ -49,7 +49,7 @@ export class SettingService implements ISettingService {
     const result = await this.settingRepository.bulkWrite(
       settings.map((data) => ({
         updateOne: {
-          filter: { _id: data.id },
+          filter: { _id: data._id },
           update: { $set: { value: data.value, updatedBy: session._id } },
         },
       })),
