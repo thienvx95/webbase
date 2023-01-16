@@ -13,9 +13,9 @@ import { ResponseSchema } from 'routing-controllers-openapi';
 import { Roles } from '@core/enums/role.enum';
 import { Session } from '@business/auth/model';
 import { inject, injectable } from 'inversify';
-import { SERVICE_TYPES } from '@infrastructures/modules/services';
-import { RoleService } from '../service/role.service';
 import RoleDto from '../model/role.dto';
+import { SERVICE_TYPES } from '@infrastructures/modules';
+import { RoleService } from '../service/role.service';
 
 @JsonController('/role')
 @injectable()

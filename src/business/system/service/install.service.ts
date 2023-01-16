@@ -6,12 +6,10 @@ import { Roles } from '@core/enums/role.enum';
 import { Language } from '@entities/localization/language.entity';
 import * as settingsData from '../../../data/setting.json';
 import { inject, injectable } from 'inversify';
-import { IRepository, REPOSITORY_TYPES } from '@infrastructures/modules/repositories';
-import { COMMON_TYPES, ISiteSettings } from '@infrastructures/modules/common';
+import { IInstallService, ISiteSettings, IRepository } from '@business/core/interface';
+import { REPOSITORY_TYPES, COMMON_TYPES } from '@infrastructures/modules';
 
-export interface IInstallService {
-  install(): Promise<boolean>;
-}
+
 @injectable()
 export class InstallService implements IInstallService {
   constructor(

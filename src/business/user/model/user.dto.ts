@@ -7,8 +7,9 @@ import {
   Length,
 } from 'class-validator';
 import { AutoMap } from '@automapper/classes';
-import { Address } from '@entities/common/address';
 import { BaseDto } from '@business/common/model/base.dto';
+import { AddressDto } from '@business/common/model/address/address.dto';
+import { UserExternalService } from './userExternalService.dto';
 export class UserDto extends BaseDto  {
   @AutoMap()
   @IsNotEmpty()
@@ -33,9 +34,12 @@ export class UserDto extends BaseDto  {
   @Length(0, 50)
   email?: string;
 
-  @AutoMap(() => Address)
+  @AutoMap()
   @IsOptional()
-  public address?: Address;
+  address?: AddressDto;
+
+  @IsOptional()
+  services?: UserExternalService;
 
   @AutoMap(() => [String])
   @IsNotEmpty()

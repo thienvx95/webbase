@@ -2,24 +2,12 @@ import { Logging } from '@core/log';
 import { MenuDto } from '@business/common/model';
 import { Menu } from 'entities';
 import { inject, injectable } from 'inversify';
-import {
-  IRepository,
-  REPOSITORY_TYPES,
-} from '@infrastructures/modules/repositories';
-import { COMMON_TYPES, IAutoMapper, IEventDispatcher } from '@infrastructures/modules/common';
 import { Session } from '@business/auth/model';
 import { isEmpty } from 'lodash';
-import { EditMenuDto } from '@business/common/model/menu/editMenu.dto';
-import { events } from '@infrastructures/events';
-import { TreeMenus } from '@business/common/model/menu/treeMenu.dto';
-
-export interface IMenuService {
-  getMenuCurrentUser(session: Session): Promise<MenuDto[]>;
-  findById(id: string): Promise<MenuDto>; 
-  update(_id: string, menu: EditMenuDto, session: Session): Promise<boolean>;
-  findAllTreeMenu(): Promise<TreeMenus[]>;
-}
-
+import { EditMenuDto, TreeMenus } from '@business/common/model';
+import { events } from '@business/core/events';
+import { COMMON_TYPES, REPOSITORY_TYPES } from '@infrastructures/modules';
+import { IAutoMapper, IEventDispatcher, IMenuService, IRepository } from '@business/core/interface';
 @injectable()
 export class MenuService implements IMenuService {
   private readonly _log = Logging.getInstance('MenuService');

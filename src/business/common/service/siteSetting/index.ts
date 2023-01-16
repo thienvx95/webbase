@@ -1,12 +1,9 @@
+import { ISiteSettings } from '@business/core/interface/common/siteSetting/siteSetting.interface';
 import { Setting, SettingValue } from '@entities/settings/setting.entity';
 import { getModelForClass, ReturnModelType } from '@typegoose/typegoose';
 import { BeAnObject } from '@typegoose/typegoose/lib/types';
 import { injectable } from 'inversify';
 import { isEmpty } from 'lodash';
-
-export interface ISiteSettings {
-  get(_id: string, isReload?: boolean): SettingValue;
-}
 
 @injectable()
 export class SiteSettings implements ISiteSettings {

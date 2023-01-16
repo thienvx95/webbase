@@ -1,4 +1,5 @@
 import { Container } from 'inversify';
+import { REPOSITORY_TYPES } from './index';
 import { IRepository } from '@core/data/repository.interface';
 import { MongoRepository } from '@core/data/mongoDb/mongo.repository';
 import { DbProvider } from '@core/enums/dbProvider.enum';
@@ -15,18 +16,6 @@ import {
 } from 'entities';
 import { SystemConfig } from '@core/configuration';
 import { IBinding, LifeTime } from './binding.interfaces';
-
-export const REPOSITORY_TYPES = {
-  UserRepository: Symbol.for('UserRepository'),
-  UserTokenRepository: Symbol.for('UserTokenRepository'),
-  LanguageRepository: Symbol.for('LanguageRepository'),
-  RoleRepository: Symbol.for('RoleRepository'),
-  SettingRepository: Symbol.for('SettingRepository'),
-  MenuRepository: Symbol.for('MenuRepository'),
-  DomainHostRepository: Symbol.for('DomainHostRepository'),
-  FileUploadRepository: Symbol.for('FileUploadRepository'),
-  PermissionRepository: Symbol.for('PermissionRepository'),
-};
 
 export const bindingRepositories: Array<IBinding> = [
   {
@@ -98,5 +87,3 @@ export function repositories(container: Container): void {
     }
   });
 }
-
-export { IRepository };

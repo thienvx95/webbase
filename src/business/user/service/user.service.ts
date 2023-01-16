@@ -1,5 +1,5 @@
 import { HttpStatusError, HttpStatus, ErrorEnum } from '@core/exception/httpStatusError';
-import { events } from '@infrastructures/events';
+import { events } from '@business/core/events';
 import { TokenPayload } from 'google-auth-library';
 import { GetTokenResponse } from 'google-auth-library/build/src/auth/oauth2client';
 import { gravatar, PasswordUtil } from '@core/ultis';
@@ -8,25 +8,9 @@ import { PaginateOptions, PaginateResult } from '@business/common/model';
 import { User, UserToken } from 'entities';
 import { ChangePasswordRequest, UserDto, UserTokenDto } from '@business/user/model';
 import { inject, injectable } from 'inversify';
-import { IRepository, REPOSITORY_TYPES } from '@infrastructures/modules/repositories';
-import { COMMON_TYPES, IAutoMapper, IEventDispatcher, ISiteSettings } from '@infrastructures/modules/common';
-
-export interface IUserService {
-  find(): Promise<UserDto[]>;
-  findById(id: string): Promise<UserDto>;
-  findPaging(option: PaginateOptions): Promise<PaginateResult<UserDto>>;
-  findByEmail(email: string): Promise<UserDto>;
-  findCreateOrUpdateGooleUser(
-    ticket: TokenPayload,
-    res: GetTokenResponse,
-  ): Promise<void>;
-  create(user: User): Promise<UserDto>;
-  update(_id: string, user: User): Promise<boolean>;
-  updateByEmail(email: string, user: User): Promise<boolean>;
-  delete(_id: string): Promise<boolean>;
-  changePassword(_id: string, req: ChangePasswordRequest): Promise<boolean>;
-  getTokenByUserId(userId: string): Promise<UserTokenDto[]>;
-}
+import { Session } from '@business/auth/model';
+import { IAutoMapper, IEventDispatcher, IRepository, ISiteSettings, IUserService } from '@business/core/interface';
+import { COMMON_TYPES, REPOSITORY_TYPES } from '@infrastructures/modules';
 
 @injectable()
 export class UserService implements IUserService {
@@ -75,7 +59,7 @@ export class UserService implements IUserService {
     });
     if (!existUser) {
       const passworDefault = this.siteSettings.get("Password_Default") as string;
-      const user = new User({
+      const user = {
         email: ticket.email,
         password: passworDefault,
         username: ticket.email,
@@ -91,10 +75,12 @@ export class UserService implements IUserService {
             refresh_token: res.tokens.refresh_token,
           },
         },
+      } as UserDto
+      await this.create(user,{
+        _id: ticket.sub,
       });
-      await this.create(user);
     } else {
-      const user = new User({
+      const user = {
         firstName: ticket.family_name,
         lastName: ticket.given_name,
         avatar: ticket.picture,
@@ -106,30 +92,43 @@ export class UserService implements IUserService {
             refresh_token: res.tokens.refresh_token,
           },
         },
-      });
-      await this.updateByEmail(ticket.email, user);
+      } as UserDto
+      await this.updateByEmail(ticket.email, user, { _id: ticket.sub });
     }
   }
 
-  async create(user: User): Promise<UserDto> {
+  async create(dto: UserDto, session: Session): Promise<UserDto> {
     this._log.info('Create a new user');
-    user.avatar = gravatar(40, user.email);
+    const user = new User({
+      ...dto,
+      avatar: gravatar(40, dto.email),
+      createdBy: session._id,
+    });
+
     const newUser = await this.userRepository.insertOne(user);
     this.eventDispatcher.dispatch(events.user.created, newUser);
     return this.autoMapper.Map(newUser, User, UserDto);
   }
 
-  async update(_id: string, user: User): Promise<boolean> {
+  async update(_id: string, dto: UserDto, session: Session): Promise<boolean> {
     this._log.info('Update user id: ' + _id);
+    const user = new User({
+      ...dto,
+      updatedBy: session._id,
+    });
     const result = await this.userRepository.updateOne(_id, user);
     if (result) {
-      this.eventDispatcher.dispatch(events.user.updated, user);
+      this.eventDispatcher.dispatch(events.user.updated, dto);
     }
     return result;
   }
 
-  async updateByEmail(email: string, user: User): Promise<boolean> {
+  async updateByEmail(email: string, dto: UserDto, session: Session): Promise<boolean> {
     this._log.info('Update user email: ' + email);
+    const user = new User({
+      ...dto,
+      updatedBy: session._id,
+    });
     const result = await this.userRepository.update({ email: email }, user);
     if (result) {
       this.eventDispatcher.dispatch(events.user.updated, user);

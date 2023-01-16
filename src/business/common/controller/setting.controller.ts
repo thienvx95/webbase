@@ -10,12 +10,10 @@ import {
 import { ResponseSchema } from 'routing-controllers-openapi';
 import { Session } from '@business/auth/model';
 import { inject, injectable } from 'inversify';
-import {
-  SERVICE_TYPES,
-} from '@infrastructures/modules/services';
 import { SettingDto } from '../model';
 import { Roles } from '@core/enums/role.enum';
-import { ISettingService } from '../service/setting/setting.service';
+import { ISettingService } from '@business/core/interface';
+import { SERVICE_TYPES } from '@infrastructures/modules';
 
 @injectable()
 @JsonController('/setting')

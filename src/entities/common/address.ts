@@ -1,16 +1,23 @@
-import { AutoMap } from "@automapper/classes";
+import { AutoMap } from '@automapper/classes';
+import { prop } from '@typegoose/typegoose';
 
 export class Address {
-    @AutoMap()
-    address1?: string;
-    @AutoMap()
-    address2?: string;
-    @AutoMap()
-    zipCode?: string;
-    @AutoMap()
-    province?: string;
-    @AutoMap()
-    city?: string;
-    @AutoMap()
-    country?: string;
+  @AutoMap()
+  @prop()
+  address1?: string;
+  @AutoMap()
+  @prop()
+  address2?: string;
+  @AutoMap()
+  @prop()
+  zipCode?: string;
+  @AutoMap()
+  @prop()
+  province?: string;
+  @AutoMap()
+  @prop()
+  city?: string;
+  @AutoMap()
+  @prop()
+  country?: string;
 }

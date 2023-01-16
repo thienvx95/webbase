@@ -14,7 +14,8 @@ export interface AppInfo {
 export interface S3Config {
   BucketName?: string;
   DefaultRegion?: string;
-  DefaultFilesACL?: string;
+  AWSAccessKeyId?: string;
+  AWSSecretAccessKey?: string;
 }
 
 export interface AppSetting {

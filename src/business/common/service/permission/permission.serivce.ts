@@ -1,28 +1,11 @@
 import { Logging } from '@core/log';
 import { PermissionDto } from '@business/common/model';
 import { inject, injectable } from 'inversify';
-import {
-  IRepository,
-  REPOSITORY_TYPES,
-} from '@infrastructures/modules/repositories';
-import {
-  COMMON_TYPES,
-  IAutoMapper,
-  IEventDispatcher,
-} from '@infrastructures/modules/common';
 import { Session } from '@business/auth/model';
-import { events } from '@infrastructures/events';
+import { events } from '@business/core/events';
 import { Permission } from '@entities/permissions/permission.entity';
-
-export interface IPermissionService {
-  findAll(): Promise<PermissionDto[]>;
-  findById(id: string): Promise<PermissionDto>;
-  update(
-    _id: string,
-    permission: PermissionDto,
-    session: Session,
-  ): Promise<boolean>;
-}
+import { IAutoMapper, IEventDispatcher, IPermissionService, IRepository } from '@business/core/interface';
+import { REPOSITORY_TYPES, COMMON_TYPES } from '@infrastructures/modules';
 
 @injectable()
 export class PermissionService implements IPermissionService {

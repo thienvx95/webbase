@@ -8,30 +8,36 @@ import {
   Post,
   Put,
   CurrentUser,
+  UploadedFile,
 } from 'routing-controllers';
 import { ResponseSchema } from 'routing-controllers-openapi';
-import { UserService } from '@business/user/service/user.service';
 import { Roles } from '@core/enums/role.enum';
 import { ChangePasswordRequest, UpdateProfileRequest, UserDto } from '../model';
-import { User } from '@entities/index';
 import { Session, UserTokenDto } from '@business/auth/model';
 import {
+  FileUploadDto,
   PaginateOptions,
   PaginateResult,
 } from '@business/common/model';
 import { inject, injectable } from 'inversify';
 import { SERVICE_TYPES, COMMON_TYPES } from '@infrastructures/modules';
-import { ICacheBase } from '@infrastructures/caching/cacheBase.interface';
 import { stringFormat } from '@core/ultis';
 import { CacheKey } from '@core/enums/cacheKey.enum';
-import { ErrorEnum, HttpStatus, HttpStatusError } from '@core/exception/httpStatusError';
+import {
+  ErrorEnum,
+  HttpStatus,
+  HttpStatusError,
+} from '@core/exception/httpStatusError';
+import { IFileUploader, IUserService } from '@infrastructures/modules/services';
+import { ICacheBase } from '@infrastructures/modules/common';
 
 @JsonController('/user')
 @injectable()
 export class UserController {
   constructor(
-    @inject(SERVICE_TYPES.UserService) private userService: UserService,
+    @inject(SERVICE_TYPES.UserService) private userService: IUserService,
     @inject(COMMON_TYPES.MemoryCache) private memoryCache: ICacheBase,
+    @inject(SERVICE_TYPES.FileUploader) private fileUploader: IFileUploader,
   ) {}
 
   @Authorized([Roles.Admin])
@@ -52,17 +58,20 @@ export class UserController {
   @Get('/me')
   @ResponseSchema(UserDto)
   async findMe(@CurrentUser() session: Session): Promise<UserDto> {
-    return this.memoryCache.getAsync(stringFormat(CacheKey.GetCurrentUser, session._id), () => this.userService.findById(session._id));
+    return this.memoryCache.getAsync(
+      stringFormat(CacheKey.GetCurrentUser, session._id),
+      () => this.userService.findById(session._id),
+    );
   }
 
-  // @Authorized([Roles.User])
-  // @Get('/uploadAvatar')
-  // @ResponseSchema(UserDto)
-  // async uploadAvatar(
-  //   @UploadedFile('file') file: Express.Multer.File,
-  // ): Promise<FileUploadDto[]> {
-  //   return await this.fileUploader.upload([file]);
-  // }
+  @Authorized([Roles.User])
+  @Get('/uploadAvatar')
+  @ResponseSchema(UserDto)
+  async uploadAvatar(
+    @UploadedFile('file') file: Express.Multer.File,
+  ): Promise<FileUploadDto[]> {
+    return await this.fileUploader.upload([file]);
+  }
 
   @Authorized([Roles.Admin])
   @Post('/paging')
@@ -80,11 +89,7 @@ export class UserController {
     @Body() body: UserDto,
     @CurrentUser() session: Session,
   ): Promise<boolean> {
-    const user = new User({
-      ...body,
-      createdBy: session._id,
-    });
-    return (await this.userService.create(user)) !== null;
+    return (await this.userService.create(body, session)) !== null;
   }
 
   @Authorized([Roles.Admin])
@@ -94,11 +99,7 @@ export class UserController {
     @Body() body: UserDto,
     @CurrentUser() session: Session,
   ): Promise<boolean> {
-    const user = new User({
-      ...body,
-      createdBy: session._id,
-    });
-    return await this.userService.update(body._id, user);
+    return await this.userService.update(body._id, body, session);
   }
 
   @Authorized([Roles.User])
@@ -107,16 +108,15 @@ export class UserController {
     @Body() body: UpdateProfileRequest,
     @CurrentUser() session: Session,
   ): Promise<string> {
-    const user = new User({
-      ...body,
-      updatedBy: session._id,
-    });
-    const result = await this.userService.update(session._id, user);
-    if(result){
-      this.memoryCache.removeAsync(stringFormat(CacheKey.GetCurrentUser, session._id));
+    const result = await this.userService.update(session._id, body, session);
+    if (result) {
+      this.memoryCache.removeAsync(
+        stringFormat(CacheKey.GetCurrentUser, session._id),
+      );
       return '';
     }
     throw new HttpStatusError(HttpStatus.Ok, ErrorEnum.Error_Update);
+    
   }
 
   @Authorized([Roles.User])

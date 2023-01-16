@@ -1,6 +1,6 @@
 import { isEmpty } from 'lodash';
 import { toBool } from '@core/ultis';
-import { PaginateOptions } from '../model/pagingation/paginateOptions';
+import { PaginateOptions } from '../../common/model/pagingation/paginateOptions';
 
 export class BuildQuery {
     static convertToQuery(option: PaginateOptions): PaginateOptions {

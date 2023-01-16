@@ -2,9 +2,11 @@ import { ICacheBase } from '../cacheBase.interface';
 import Redis from 'ioredis';
 import { SystemConfig } from '@core/configuration';
 import { Logging } from '@core/log';
-import { SiteSettings } from '@infrastructures/siteSetting';
+import { SiteSettings } from '@business/common/service/siteSetting';
 import { CacheTime } from '@core/constants';
+import { injectable } from 'inversify';
 
+@injectable()
 export class RedisCache implements ICacheBase {
   private cache: Redis;
   private readonly log = Logging.getInstance('RedisCache');
@@ -63,7 +65,8 @@ export class RedisCache implements ICacheBase {
   }
 
   async removeAsync(key: string): Promise<void> {
-    await this.cache.del(key);
+    const cacheKey = `${this.config.Prefix}_${key}`;
+    await this.cache.del(cacheKey);
   }
   async removeByPrefix(prefix: string): Promise<void> {
     for await (const key of this.cache.scanStream({

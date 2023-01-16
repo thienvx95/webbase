@@ -2,7 +2,7 @@ import { EventSubscriber, On } from 'event-dispatch';
 
 import { Logging } from '@core/log';
 import { User } from '@entities/users/user.entity';
-import { events } from '@infrastructures/events';
+import { events } from '@business/core/events';
 
 @EventSubscriber()
 export class UserEventSubscriber {

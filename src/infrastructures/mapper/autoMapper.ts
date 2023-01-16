@@ -9,20 +9,7 @@ import {
   import { classes } from '@automapper/classes';
   import { isEmpty } from 'lodash';
 import { injectable } from 'inversify';
-  
-  export interface IAutoMapper{
-    Map<T, K>(
-      sourceObject: T,
-      source: any,
-      destination: ModelIdentifier<K>,
-    ): K
-    MapArray<T, K>(
-      sourceObject: T[],
-      source: any,
-      destination: ModelIdentifier<K>,
-    ): K[]
-  }
-
+import { IAutoMapper } from '@business/core/interface';
   @injectable()
   export class AutoMapper implements IAutoMapper {
     private static instance: AutoMapper;

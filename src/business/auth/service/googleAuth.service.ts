@@ -1,12 +1,9 @@
-import { COMMON_TYPES, ISiteSettings } from '@infrastructures/modules/common';
+import { IGoogleAuthService, ISiteSettings } from '@business/core/interface';
+import { COMMON_TYPES } from '@infrastructures/modules';
 import { OAuth2Client, LoginTicket } from 'google-auth-library';
 import { GetTokenResponse } from 'google-auth-library/build/src/auth/oauth2client';
 import { inject, injectable } from 'inversify';
 
-export interface IGoogleAuthService {
-  getToken(code: string): Promise<GetTokenResponse>;
-  verifyToken(token: string): Promise<LoginTicket>;
-}
 @injectable()
 export class GoogleAuthService implements IGoogleAuthService {
   private googleAuthClient: OAuth2Client;

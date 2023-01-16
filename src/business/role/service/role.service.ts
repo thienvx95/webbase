@@ -1,27 +1,12 @@
 import { Logging } from '@core/log';
 import { Role } from 'entities';
 import { inject, injectable } from 'inversify';
-import {
-  IRepository,
-  REPOSITORY_TYPES,
-} from '@infrastructures/modules/repositories';
-import {
-  COMMON_TYPES,
-  IAutoMapper,
-  IEventDispatcher,
-} from '@infrastructures/modules/common';
 import { Session } from '@business/auth/model';
-import { events } from '@infrastructures/events';
-import RoleDto from '../model/role.dto';
+import { events } from '@business/core/events';
+import { RoleDto } from '../model/role.dto';
 import { Roles } from '@core/enums/role.enum';
-
-export interface IRoleService {
-  findAll(): Promise<RoleDto[]>;
-  findById(id: string): Promise<RoleDto>;
-  create(role: RoleDto, session: Session): Promise<boolean>;
-  update(_id: string, role: RoleDto, session: Session): Promise<boolean>;
-  delete(_id: string, session: Session): Promise<boolean>;
-}
+import { IAutoMapper, IEventDispatcher, IRepository, IRoleService } from '@business/core/interface';
+import { REPOSITORY_TYPES, COMMON_TYPES } from '@infrastructures/modules';
 
 @injectable()
 export class RoleService implements IRoleService {

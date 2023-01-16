@@ -6,7 +6,7 @@ import { IRepository } from '../repository.interface';
 import { ErrorEnum } from '@core/enums/error.enum';
 import { PaginateOptions, PaginateResult } from '@business/common/model';
 import { BaseEntity } from '@entities/base.entity';
-import { BuildQuery } from '@business/common/utils/buildQuery';
+import { BuildQuery } from '@business/core/utils/buildQuery';
 import { Logging } from '@core/log';
 
 export interface IPaginateModel<T> {

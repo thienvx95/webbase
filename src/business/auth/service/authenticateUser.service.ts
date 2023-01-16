@@ -15,16 +15,8 @@ import {
 import { PasswordUtil, TokenUtil } from '@core/ultis';
 import { UserDto } from '@business/user/model';
 import { injectable, inject } from 'inversify';
-import { REPOSITORY_TYPES, IRepository } from '@infrastructures/modules/repositories';
-import { COMMON_TYPES, IAutoMapper } from '@infrastructures/modules/common';
-
-export interface IAuthService{
-    authenticate(request: AuthRequest, ipAddress: string): Promise<AuthResponse>
-    authenticateByOAuth(email: string, ipAddress: string): Promise<AuthResponse>
-    revokeByToken(refreshToken: RefreshTokenRequest, ipAddress: string): Promise<boolean>
-    revokeByUserId(id: string, ipAddress: string): Promise<boolean>
-    refreshToken(refreshToken: RefreshTokenRequest, ipAddress: string): Promise<AuthResponse>
-}
+import { IAuthService, IAutoMapper, IRepository } from '@business/core/interface';
+import { REPOSITORY_TYPES, COMMON_TYPES } from '@infrastructures/modules';
 
 @injectable()
 export class AuthenticateUserService implements IAuthService {

@@ -13,9 +13,12 @@ import { UserDto } from '@business/user/model';
 import { UserTokenDto } from '@business/auth/model';
 import { BaseEntity } from '@entities/base.entity';
 import { BaseDto } from '@business/common/model/base.dto';
+import { Address } from '@entities/common/address';
+import { AddressDto } from '@business/common/model/address/address.dto';
 
 export function MapEntityToDto(autoMapper: AutoMapper): void {
   autoMapper.createMap(BaseEntity, BaseDto);
+  autoMapper.createMap(Address, AddressDto);
   autoMapper.createMap(User, UserDto);
   autoMapper.createMap(UserToken, UserTokenDto);
   autoMapper.createMap(Menu, MenuDto);

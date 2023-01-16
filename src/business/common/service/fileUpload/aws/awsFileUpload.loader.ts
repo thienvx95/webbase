@@ -1,25 +1,33 @@
 import { HttpStatusError, HttpStatus, ErrorEnum } from "@core/exception/httpStatusError";
-import S3 from "aws-sdk/clients/s3";
-import isEmpty from "lodash/isEmpty";
-import { IFileUploadService } from "../fileUpload.service";
+import { GlobalConfigInstance } from "aws-sdk/lib/config";
+import * as S3 from "aws-sdk/clients/s3"; 
+import { isEmpty } from "lodash";
 import { SystemConfig } from "@core/configuration";
-import { IFileUploader } from "../fileupload.interface";
 import { FileUploadDto } from "@business/common/model";
-import { injectable } from "inversify";
+import { inject, injectable } from "inversify";
+import { SERVICE_TYPES } from "@infrastructures/modules";
+import { IFileUploader, IFileUploadService } from "@business/core/interface";
 
 @injectable()
 export class AWSFileUploadSerivce implements IFileUploader {
   private client: S3;
+  private awsConfig: GlobalConfigInstance;
   private readonly _configs = SystemConfig.Configs;
   private _bucketName;
 
   constructor(
-    private FileUploadService: IFileUploadService,
+    @inject(SERVICE_TYPES.FileUploadService) private fileUploadService: IFileUploadService
   ) {
+    this.awsConfig.update({
+      accessKeyId: this._configs.S3Config.AWSAccessKeyId,
+      secretAccessKey: this._configs.S3Config.AWSSecretAccessKey,
+      region: this._configs.S3Config.DefaultRegion
+    })
+
     this.client = new S3({
       region: this._configs.S3Config.DefaultRegion,
     });
-    this._bucketName = this._configs.S3Config.BucketName ;
+    this._bucketName = this._configs.S3Config.BucketName;
   }
 
   private generateFileKey(file: FileUploadDto, timestamp: number): string {
@@ -35,7 +43,6 @@ export class AWSFileUploadSerivce implements IFileUploader {
         Key: fileKey,
         ContentType: file.type,
         Body: file.content,
-        ACL:this._configs.S3Config.DefaultFilesACL,
       })
       .promise();
    
@@ -53,7 +60,7 @@ export class AWSFileUploadSerivce implements IFileUploader {
           throw new HttpStatusError(HttpStatus.BadRequest, ErrorEnum.Error_Upload_Files);
         }
 
-        this.FileUploadService.createMulti(result);
+        this.fileUploadService.createMulti(result);
         return result;
       }
       return [];

@@ -1,53 +1,53 @@
-import { events } from '@infrastructures/events';
+import { events } from '@business/core/events';
 import { isEmpty } from 'lodash';
 import { FileUpload } from '@entities/index';
 import { Logging } from '@core/log';
 import { FileUploadDto } from '@business/common/model';
 import { inject, injectable } from 'inversify';
-import { REPOSITORY_TYPES, IRepository } from '@infrastructures/modules/repositories';
-import { COMMON_TYPES, IEventDispatcher, IAutoMapper } from '@infrastructures/modules/common';
-
-export interface IFileUploadService {
-  find(): Promise<FileUploadDto[]>;
-  findById(id: string): Promise<FileUploadDto>;
-  createMulti(fileUpload: FileUploadDto[]): Promise<FileUploadDto[]>;
-  update(_id: string, fileUpload: FileUpload): Promise<boolean>;
-  update(_id: string, fileUpload: FileUpload): Promise<boolean>;
-  delete(_id: string): Promise<boolean>;
-}
+import { IAutoMapper, IEventDispatcher, IFileUploadService, IRepository } from '@business/core/interface';
+import { COMMON_TYPES, REPOSITORY_TYPES } from '@infrastructures/modules';
 
 @injectable()
 export class FileUploadService implements IFileUploadService {
-    private log = Logging.getInstance('FileUploadService');
+  private log = Logging.getInstance('FileUploadService');
   constructor(
-    @inject(REPOSITORY_TYPES.FileUploadRepository) private fileUploadRepository: IRepository<FileUpload>,
-    @inject(COMMON_TYPES.EventDispatcher) private eventDispatcher: IEventDispatcher,
+    @inject(REPOSITORY_TYPES.FileUploadRepository)
+    private fileUploadRepository: IRepository<FileUpload>,
+    @inject(COMMON_TYPES.EventDispatcher)
+    private eventDispatcher: IEventDispatcher,
     @inject(COMMON_TYPES.AutoMapper) private autoMapper: IAutoMapper,
   ) {}
 
   async find(): Promise<FileUploadDto[]> {
     this.log.info('Find all FileUploads');
     const models = await this.fileUploadRepository.find({});
-    return !isEmpty(models) ? this.autoMapper.MapArray(models, typeof FileUpload, FileUploadDto) : [];
+    return !isEmpty(models)
+      ? this.autoMapper.MapArray(models, typeof FileUpload, FileUploadDto)
+      : [];
   }
 
   async findById(id: string): Promise<FileUploadDto> {
     this.log.info('Find one fileUpload id: ' + id);
     const model = await this.fileUploadRepository.findById(id);
-    return !isEmpty(model) ? this.autoMapper.Map(model, typeof FileUpload, FileUploadDto) : {};
+    return !isEmpty(model)
+      ? this.autoMapper.Map(model, typeof FileUpload, FileUploadDto)
+      : {};
   }
 
-  async createMulti(
-    fileUpload: FileUploadDto[],
-  ): Promise<FileUploadDto[]> {
+  async createMulti(fileUpload: FileUploadDto[]): Promise<FileUploadDto[]> {
     this.log.info('Create new FileUpload');
-    const fileUploadModel = this.autoMapper.MapArray(fileUpload, FileUploadDto, FileUpload);
+    const fileUploadModel = this.autoMapper.MapArray(
+      fileUpload,
+      FileUploadDto,
+      FileUpload,
+    );
     const newFileUpload = await this.fileUploadRepository.insertMany(
-        fileUploadModel,
+      fileUploadModel,
     );
     this.eventDispatcher.dispatch(events.fileUpload.created, newFileUpload);
     return !isEmpty(newFileUpload)
-      ? this.autoMapper.MapArray(newFileUpload, FileUpload, FileUploadDto) : [];
+      ? this.autoMapper.MapArray(newFileUpload, FileUpload, FileUploadDto)
+      : [];
   }
 
   async update(_id: string, fileUpload: FileUpload): Promise<boolean> {

@@ -1,6 +1,6 @@
 import { Logging } from '@core/log';
 import { EventSubscriber, On } from 'event-dispatch';
-import { events } from '@infrastructures/events';
+import { events } from '@business/core/events';
 import { FileUpload as FileUploadModel } from '@entities/index';
 @EventSubscriber()
 export class FileUploadEventSubscriber {

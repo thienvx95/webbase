@@ -10,12 +10,10 @@ import {
 import { ResponseSchema } from 'routing-controllers-openapi';
 import { Session } from '@business/auth/model';
 import { inject, injectable } from 'inversify';
-import {
-  IPermissionService,
-  SERVICE_TYPES,
-} from '@infrastructures/modules/services';
 import { PermissionDto } from '../model';
 import { Roles } from '@core/enums/role.enum';
+import { IPermissionService } from '@business/core/interface';
+import { SERVICE_TYPES } from '@infrastructures/modules';
 
 @injectable()
 @JsonController('/permission')

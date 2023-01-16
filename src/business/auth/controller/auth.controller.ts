@@ -8,8 +8,6 @@ import {
 } from 'routing-controllers';
 import { Request } from 'express';
 import { ResponseSchema } from 'routing-controllers-openapi';
-import { IAuthService, IGoogleAuthService } from '@business/auth/service';
-import { IUserService } from '@business/user/service/user.service';
 import {
   AuthRequest,
   AuthResponse,
@@ -17,8 +15,8 @@ import {
   RefreshTokenRequest,
 } from '@business/auth/model';
 import { inject, injectable } from 'inversify';
-import { SERVICE_TYPES } from '@infrastructures/modules/services';
-
+import { SERVICE_TYPES } from '@infrastructures/modules';
+import { IAuthService, IGoogleAuthService, IUserService } from '@business/core/interface';
 
 @injectable()
 @JsonController('/auth')

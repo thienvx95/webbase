@@ -4,11 +4,11 @@ import {
   } from 'routing-controllers';
   import { ResponseSchema } from 'routing-controllers-openapi';
   import { inject, injectable } from 'inversify';
-import { COMMON_TYPES } from '@infrastructures/modules/common';
 import { ICacheBase } from '@infrastructures/caching/cacheBase.interface';
 import { CacheKey } from '@core/enums/cacheKey.enum';
 import { CountryDto } from '../model/geographic/country.dto';
 import * as countries from '../../../data/countries.json';
+import { COMMON_TYPES } from '@infrastructures/modules';
 
   @injectable()
   @JsonController('/geographic')

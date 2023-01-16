@@ -6,10 +6,8 @@ import {
     Length,
   } from 'class-validator';
   import { Address } from '@entities/common/address';
-  export class UpdateProfileRequest {
-    @IsNotEmpty()
-    id?: string;
-  
+import { BaseDto } from '@business/common/model/base.dto';
+  export class UpdateProfileRequest extends BaseDto {
     @IsNotEmpty()
     @IsString()
     @Length(0, 50)

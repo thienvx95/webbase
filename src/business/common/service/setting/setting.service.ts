@@ -1,25 +1,11 @@
 import { Logging } from '@core/log';
 import { SettingDto } from '@business/common/model';
 import { inject, injectable } from 'inversify';
-import {
-  IRepository,
-  REPOSITORY_TYPES,
-} from '@infrastructures/modules/repositories';
-import {
-  COMMON_TYPES,
-  IAutoMapper,
-  IEventDispatcher,
-} from '@infrastructures/modules/common';
 import { Session } from '@business/auth/model';
-import { events } from '@infrastructures/events';
+import { events } from '@business/core/events';
 import { Setting } from '@entities/settings/setting.entity';
-
-export interface ISettingService {
-  findGroup(): Promise<SettingDto[]>;
-  findByGroup(id: string): Promise<SettingDto[]>;
-  update(settings: SettingDto[], session: Session): Promise<boolean>;
-}
-
+import { IAutoMapper, IEventDispatcher, IRepository, ISettingService } from '@business/core/interface';
+import { REPOSITORY_TYPES, COMMON_TYPES } from '@infrastructures/modules';
 @injectable()
 export class SettingService implements ISettingService {
   private readonly _log = Logging.getInstance('SettingService');

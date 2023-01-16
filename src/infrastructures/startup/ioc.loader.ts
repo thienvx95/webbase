@@ -2,7 +2,8 @@ import { ILoader, ISettings } from '@microframework';
 import { useContainer } from 'routing-controllers';
 import { Container } from 'inversify';
 import { InversifyAdapter } from '@infrastructures/adapter/inversify.adapter';
-import { repositories, services } from '@infrastructures/modules';
+import { repositories } from '@infrastructures/modules/repositories';
+import { services } from '@infrastructures/modules/services';
 import { common } from '@infrastructures/modules/common';
 
 export const IocLoader: ILoader = async (settings: ISettings | undefined) => {

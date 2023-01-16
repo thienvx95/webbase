@@ -1,5 +1,6 @@
+import { IInstallService } from '@business/core/interface';
 import { SystemConfig } from '@core/configuration';
-import { SERVICE_TYPES, IInstallService } from '@infrastructures/modules/services';
+import { SERVICE_TYPES } from '@infrastructures/modules';
 import { inject, injectable } from 'inversify';
 import { Post, JsonController, Param } from 'routing-controllers';
 

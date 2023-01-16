@@ -4,7 +4,6 @@ import { toNumber, toBool, getOsEnv, normalizePort } from '@core/ultis';
 import { ISystemConfig } from './systemConfig.interface';
 import { DbProvider } from '@core/enums/dbProvider.enum';
 import { StorageProvider } from '@core/enums/storageProvider.enum';
-import { S3UploaderFactory } from '@core/factory.constant';
 import { CacheProvider } from '@core/enums/cacheProvider.enum.';
 
 export class SystemConfig {
@@ -43,13 +42,6 @@ export class SystemConfig {
 
   public static SetDatabaseVersion(dbVersion: string): void{
      this.getInstance().setDatabaseVersion(dbVersion);
-  }
-
-  public static get getUploaderServiceId(): string{
-    if(this.Configs.StorageProvider === StorageProvider.S3){
-      return S3UploaderFactory;
-    }
-    return '';
   }
 
   private setDatabaseVersion = (dbVersion: string): void => {
@@ -125,8 +117,9 @@ export class SystemConfig {
       },
       S3Config: {
         BucketName: getOsEnv('S3_BUCKET_NAME'),
-        DefaultFilesACL: getOsEnv('S3_DEFAULT_REGION'),
-        DefaultRegion: getOsEnv('S3_DEFAULT_FILES_ACL'),
+        AWSAccessKeyId: getOsEnv('S3_AWS_ACCESS_KEY_ID'),
+        AWSSecretAccessKey: getOsEnv('S3_AWS_SECRET_ACCESS_KEY'),
+        DefaultRegion: getOsEnv('S3_DEFAULT_REGION'),
       },
       Dirs: {
         Controllers: getOsEnv('CONTROLLERS'),
