@@ -2,14 +2,14 @@ import { Container } from 'inversify';
 import { COMMON_TYPES } from './index';
 import {
   EventDispatcher,
-  IEventDispatcher,
 } from '@business/core/events/eventDispatcher';
-import { AutoMapper, IAutoMapper } from '@infrastructures/mapper/autoMapper';
-import { SiteSettings, ISiteSettings } from '@business/common/service/siteSetting';
+import { AutoMapper } from '@infrastructures/mapper/autoMapper';
+import { SiteSettings } from '@business/common/service/siteSetting';
 import { ICacheBase } from '@infrastructures/caching/cacheBase.interface';
 import { RedisCache } from '@infrastructures/caching/redis';
 import { SystemConfig } from '@core/configuration';
 import { CacheProvider } from '@core/enums/cacheProvider.enum.';
+import { IEventDispatcher, IAutoMapper, ISiteSettings } from '@business/core/interface';
 
 export function common(container: Container): void {
   container

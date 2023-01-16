@@ -6,29 +6,23 @@ import {
   AuthenticateUserService,
   GoogleAuthService,
 } from '@business/auth/service/index';
-import { IUserService, UserService } from '@business/user/service/user.service';
 import {
+  IUserService,
   IInstallService,
-  InstallService,
-} from '@business/system/service/install.service';
-import {
   IMenuService,
-  MenuService,
-} from '@business/common/service/menu/menu.service';
-import { IRoleService, RoleService } from '@business/role/service/role.service';
-import {
+  IRoleService,
   IPermissionService,
-  PermissionService,
-} from '@business/common/service/permission/permission.serivce';
-import {
   ISettingService,
-  SettingService,
-} from '@business/common/service/setting/setting.service';
-import {
-  FileUploadService,
   IFileUploadService,
-} from '@business/common/service/fileUpload/fileUpload.service';
-import { IFileUploader } from '@business/core/interface/common/fileUpload/fileupload.interface';
+  IFileUploader,
+} from '@business/core/interface';
+import { UserService } from '@business/user/service/user.service';
+import { InstallService } from '@business/system/service/install.service';
+import { MenuService } from '@business/common/service/menu/menu.service';
+import { RoleService } from '@business/role/service/role.service';
+import { PermissionService } from '@business/common/service/permission/permission.serivce';
+import { SettingService } from '@business/common/service/setting/setting.service';
+import { FileUploadService } from '@business/common/service/fileUpload/fileUpload.service';
 import { SystemConfig } from '@core/configuration';
 import { StorageProvider } from '@core/enums/storageProvider.enum';
 import { AWSFileUploadSerivce } from '@business/common/service/fileUpload/aws/awsFileUpload.loader';
