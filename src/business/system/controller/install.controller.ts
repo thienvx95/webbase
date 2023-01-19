@@ -1,11 +1,12 @@
 import { IInstallService } from '@business/core/interface';
 import { SystemConfig } from '@core/configuration';
+import { RoutingAPI } from '@core/constants';
 import { SERVICE_TYPES } from '@infrastructures/modules';
 import { inject, injectable } from 'inversify';
 import { Post, JsonController, Param } from 'routing-controllers';
 
 @injectable()
-@JsonController('/install')
+@JsonController(RoutingAPI.Install)
 export class InstallController {
   private _installService: IInstallService;
   constructor(@inject(SERVICE_TYPES.InstallService) installService: IInstallService) {

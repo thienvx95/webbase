@@ -17,9 +17,10 @@ import {
 import { inject, injectable } from 'inversify';
 import { SERVICE_TYPES } from '@infrastructures/modules';
 import { IAuthService, IGoogleAuthService, IUserService } from '@business/core/interface';
+import { RoutingAPI } from '@core/constants';
 
 @injectable()
-@JsonController('/auth')
+@JsonController(RoutingAPI.Auth)
 export class AuthController {
   constructor(
     @inject(SERVICE_TYPES.AuthService) private authService: IAuthService,

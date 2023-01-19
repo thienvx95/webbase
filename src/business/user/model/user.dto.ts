@@ -9,7 +9,7 @@ import {
 import { AutoMap } from '@automapper/classes';
 import { BaseDto } from '@business/common/model/base.dto';
 import { AddressDto } from '@business/common/model/address/address.dto';
-import { UserExternalService } from './userExternalService.dto';
+import { UserExternalServiceDto } from './userExternalService.dto';
 export class UserDto extends BaseDto  {
   @AutoMap()
   @IsNotEmpty()
@@ -39,7 +39,7 @@ export class UserDto extends BaseDto  {
   address?: AddressDto;
 
   @IsOptional()
-  services?: UserExternalService;
+  services?: UserExternalServiceDto;
 
   @AutoMap(() => [String])
   @IsNotEmpty()

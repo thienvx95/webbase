@@ -14,9 +14,10 @@ import { PermissionDto } from '../model';
 import { Roles } from '@core/enums/role.enum';
 import { IPermissionService } from '@business/core/interface';
 import { SERVICE_TYPES } from '@infrastructures/modules';
+import { RoutingAPI } from '@core/constants';
 
 @injectable()
-@JsonController('/permission')
+@JsonController(RoutingAPI.Permission)
 @Authorized([Roles.Admin])
 export class PermissionController {
   constructor(

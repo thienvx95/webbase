@@ -12,6 +12,6 @@ export class GoogleService {
 export class UserExternalService {
   @prop(() => GoogleService)  
   google?: GoogleService;
-  @prop()  
-  facebook?: any;
+  // @prop()  
+  // facebook?: any;
 }

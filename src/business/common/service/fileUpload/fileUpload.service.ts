@@ -1,5 +1,4 @@
 import { events } from '@business/core/events';
-import { isEmpty } from 'lodash';
 import { FileUpload } from '@entities/index';
 import { Logging } from '@core/log';
 import { FileUploadDto } from '@business/common/model';
@@ -18,20 +17,21 @@ export class FileUploadService implements IFileUploadService {
     @inject(COMMON_TYPES.AutoMapper) private autoMapper: IAutoMapper,
   ) {}
 
+  async findByKey(key: string): Promise<FileUploadDto> {
+    const model = await this.fileUploadRepository.findOne({ path: key });
+    return this.autoMapper.Map(model, FileUpload, FileUploadDto);
+  }
+
   async find(): Promise<FileUploadDto[]> {
     this.log.info('Find all FileUploads');
     const models = await this.fileUploadRepository.find({});
-    return !isEmpty(models)
-      ? this.autoMapper.MapArray(models, typeof FileUpload, FileUploadDto)
-      : [];
+    return this.autoMapper.MapArray(models, FileUpload, FileUploadDto);
   }
 
   async findById(id: string): Promise<FileUploadDto> {
     this.log.info('Find one fileUpload id: ' + id);
     const model = await this.fileUploadRepository.findById(id);
-    return !isEmpty(model)
-      ? this.autoMapper.Map(model, typeof FileUpload, FileUploadDto)
-      : {};
+    return this.autoMapper.Map(model, FileUpload, FileUploadDto)
   }
 
   async createMulti(fileUpload: FileUploadDto[]): Promise<FileUploadDto[]> {
@@ -45,9 +45,7 @@ export class FileUploadService implements IFileUploadService {
       fileUploadModel,
     );
     this.eventDispatcher.dispatch(events.fileUpload.created, newFileUpload);
-    return !isEmpty(newFileUpload)
-      ? this.autoMapper.MapArray(newFileUpload, FileUpload, FileUploadDto)
-      : [];
+    return this.autoMapper.MapArray(newFileUpload, FileUpload, FileUploadDto);
   }
 
   async update(_id: string, fileUpload: FileUpload): Promise<boolean> {

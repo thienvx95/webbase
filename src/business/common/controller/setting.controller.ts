@@ -14,9 +14,10 @@ import { SettingDto } from '../model';
 import { Roles } from '@core/enums/role.enum';
 import { ISettingService } from '@business/core/interface';
 import { SERVICE_TYPES } from '@infrastructures/modules';
+import { RoutingAPI } from '@core/constants';
 
 @injectable()
-@JsonController('/setting')
+@JsonController(RoutingAPI.Setting)
 @Authorized([Roles.Admin])
 export class SettingController {
   constructor(

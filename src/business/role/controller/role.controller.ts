@@ -16,8 +16,9 @@ import { inject, injectable } from 'inversify';
 import RoleDto from '../model/role.dto';
 import { SERVICE_TYPES } from '@infrastructures/modules';
 import { RoleService } from '../service/role.service';
+import { RoutingAPI } from '@core/constants';
 
-@JsonController('/role')
+@JsonController(RoutingAPI.Role)
 @injectable()
 @Authorized([Roles.Admin])
 export class RoleController {

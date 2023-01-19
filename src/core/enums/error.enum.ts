@@ -13,6 +13,7 @@ export enum ErrorEnum {
     Error_Update = 210,
     Error_Create = 220,
     Error_Delete = 220,
+    Not_Found = 404,
 }
 
 export const ErrorMessageMapping = new Map<ErrorEnum, string>([
@@ -30,4 +31,5 @@ export const ErrorMessageMapping = new Map<ErrorEnum, string>([
     [ErrorEnum.Error_Create, "Created failed!"],
     [ErrorEnum.Error_Update, "Updated failed!"],
     [ErrorEnum.Error_Delete, "Deleted failed!"],
-])
+    [ErrorEnum.Not_Found, "Not Found!"]
+]);

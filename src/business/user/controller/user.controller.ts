@@ -20,7 +20,6 @@ import {
   PaginateResult,
 } from '@business/common/model';
 import { inject, injectable } from 'inversify';
-import { SERVICE_TYPES, COMMON_TYPES } from '@infrastructures/modules';
 import { stringFormat } from '@core/ultis';
 import { CacheKey } from '@core/enums/cacheKey.enum';
 import {
@@ -28,10 +27,12 @@ import {
   HttpStatus,
   HttpStatusError,
 } from '@core/exception/httpStatusError';
-import { IFileUploader, IUserService } from '@infrastructures/modules/services';
-import { ICacheBase } from '@infrastructures/modules/common';
+import { ICacheBase, IFileUploader, IUserService } from '@business/core/interface';
+import { COMMON_TYPES, SERVICE_TYPES } from '@infrastructures/modules';
+import { RoutingAPI } from '@core/constants';
+import { fileUploadOptions } from '@business/core/utils/uploadOptions';
 
-@JsonController('/user')
+@JsonController(RoutingAPI.User)
 @injectable()
 export class UserController {
   constructor(
@@ -65,10 +66,9 @@ export class UserController {
   }
 
   @Authorized([Roles.User])
-  @Get('/uploadAvatar')
-  @ResponseSchema(UserDto)
+  @Post('/uploadAvatar')
   async uploadAvatar(
-    @UploadedFile('file') file: Express.Multer.File,
+    @UploadedFile('image', {  options: fileUploadOptions() }) file: Express.Multer.File,
   ): Promise<FileUploadDto[]> {
     return await this.fileUploader.upload([file]);
   }

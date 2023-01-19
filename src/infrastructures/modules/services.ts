@@ -1,12 +1,6 @@
 import { Container } from 'inversify';
 import { SERVICE_TYPES } from './index';
 import {
-  IAuthService,
-  IGoogleAuthService,
-  AuthenticateUserService,
-  GoogleAuthService,
-} from '@business/auth/service/index';
-import {
   IUserService,
   IInstallService,
   IMenuService,
@@ -15,6 +9,8 @@ import {
   ISettingService,
   IFileUploadService,
   IFileUploader,
+  IGoogleAuthService,
+  IAuthService,
 } from '@business/core/interface';
 import { UserService } from '@business/user/service/user.service';
 import { InstallService } from '@business/system/service/install.service';
@@ -26,6 +22,8 @@ import { FileUploadService } from '@business/common/service/fileUpload/fileUploa
 import { SystemConfig } from '@core/configuration';
 import { StorageProvider } from '@core/enums/storageProvider.enum';
 import { AWSFileUploadSerivce } from '@business/common/service/fileUpload/aws/awsFileUpload.loader';
+import { AuthenticateUserService } from '@business/auth/service/authenticateUser.service';
+import { GoogleAuthService } from '@business/auth/service/googleAuth.service';
 
 export function services(container: Container): void {
   container

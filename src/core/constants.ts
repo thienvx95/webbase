@@ -90,3 +90,15 @@ export const DATABASE = {
   export const ApplicationVersion = '1.0.0';
 
   export const CacheTime = 600;
+
+  export const RoutingAPI = {
+    Auth: `/api/auth`,
+    User: `/api/user`,
+    Geographic: `/api/geographic`,
+    Menu: `/api/menu`,
+    Permission: `/api/permission`,
+    Setting: `/api/setting`,
+    Role: `/api/role`,
+    Install: `/api/install`,
+    FileUpload: `/fileupload`,
+  }

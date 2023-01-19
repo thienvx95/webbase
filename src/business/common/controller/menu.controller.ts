@@ -20,8 +20,9 @@ import { CacheKey } from '@core/enums/cacheKey.enum';
 import { stringFormat } from '@core/ultis';
 import { SERVICE_TYPES, COMMON_TYPES } from '@infrastructures/modules';
 import { IMenuService, ICacheBase } from '@business/core/interface'
+import { RoutingAPI } from '@core/constants';
   @injectable()
-  @JsonController('/menu')
+  @JsonController(RoutingAPI.Menu)
   export class MenuController {
     constructor(
       @inject(SERVICE_TYPES.MenuService) private menuService: IMenuService,

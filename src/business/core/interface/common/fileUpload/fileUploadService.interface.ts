@@ -4,6 +4,7 @@ import { FileUpload } from "@entities/index";
 export interface IFileUploadService {
     find(): Promise<FileUploadDto[]>;
     findById(id: string): Promise<FileUploadDto>;
+    findByKey(key: string): Promise<FileUploadDto>;
     createMulti(fileUpload: FileUploadDto[]): Promise<FileUploadDto[]>;
     update(_id: string, fileUpload: FileUpload): Promise<boolean>;
     update(_id: string, fileUpload: FileUpload): Promise<boolean>;

@@ -9,9 +9,10 @@ import { CacheKey } from '@core/enums/cacheKey.enum';
 import { CountryDto } from '../model/geographic/country.dto';
 import * as countries from '../../../data/countries.json';
 import { COMMON_TYPES } from '@infrastructures/modules';
+import { RoutingAPI } from '@core/constants';
 
   @injectable()
-  @JsonController('/geographic')
+  @JsonController(RoutingAPI.Geographic)
   export class GeographicController {
     constructor(
       @inject(COMMON_TYPES.MemoryCache) private memoryCache: ICacheBase,

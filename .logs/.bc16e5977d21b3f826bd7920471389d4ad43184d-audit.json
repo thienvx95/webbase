@@ -6,16 +6,6 @@
     "auditLog": "G:\\Project\\WebBase\\webbase\\.logs\\.bc16e5977d21b3f826bd7920471389d4ad43184d-audit.json",
     "files": [
         {
-            "date": 1673113139686,
-            "name": "G:\\Project\\WebBase\\webbase\\.logs\\2023-01-08.log",
-            "hash": "b8ee35d6ccc429e58a7153aaa31a9b699a464ab5bcff0f3d49e20cd153de460a"
-        },
-        {
-            "date": 1673228727970,
-            "name": "G:\\Project\\WebBase\\webbase\\.logs\\2023-01-09.log",
-            "hash": "85fbff3219a3869ba0fc5bfe288d6c90dd785aff13f49e1c6df8e2d6c67747d4"
-        },
-        {
             "date": 1673360677291,
             "name": "G:\\Project\\WebBase\\webbase\\.logs\\2023-01-10.log",
             "hash": "4952b5c4257becd5e8035c8dffe434d9aa8b4e8c48c28cc095652c8c48af6f53"
@@ -54,6 +44,16 @@
             "date": 1673888956613,
             "name": "G:\\Project\\WebBase\\webbase\\.logs\\2023-01-17.log",
             "hash": "67709c64631d6f1387ba7a45641dab463783d359ad037ba1d2037a85bff91129"
+        },
+        {
+            "date": 1674042958342,
+            "name": "G:\\Project\\WebBase\\webbase\\.logs\\2023-01-18.log",
+            "hash": "ba1e27dd5f5273326772eff59cea6f0c0badd3d2d2e3788fa89120f9bf9348f7"
+        },
+        {
+            "date": 1674094806888,
+            "name": "G:\\Project\\WebBase\\webbase\\.logs\\2023-01-19.log",
+            "hash": "18ef65c853e9646a37723ed308ce7be76059b68a2ed3a3bf1f838bd3ac7b1e49"
         }
     ],
     "hashType": "sha256"

@@ -1,5 +1,6 @@
 import { FileUploadDto } from '@business/common/model';
 
 export interface IFileUploader {
-  upload: (files: FileUploadDto[]) => Promise<FileUploadDto[]>;
+  upload: (files: Express.Multer.File[]) => Promise<FileUploadDto[]>;
+  get: (path: string) => Promise<any>;
 }

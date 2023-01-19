@@ -39,7 +39,7 @@ export const SwaggerLoader: ILoader = async (
         },
         servers: [
           {
-            url: `${configs.AppInfo.Schema}://${configs.AppInfo.Host}:${configs.AppInfo.Port}/${configs.AppSetting.APIPrefix}`,
+            url: `${configs.AppInfo.Schema}://${configs.AppInfo.Host}:${configs.AppInfo.Port}/`,
           },
         ],
       },
