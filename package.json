@@ -67,6 +67,7 @@
         "routing-controllers": "^0.10.0",
         "routing-controllers-openapi": "^4.0.0",
         "serve-favicon": "^2.5.0",
+        "sharp": "^0.31.3",
         "swagger-ui-express": "^4.6.0",
         "uuid": "^9.0.0",
         "winston": "^3.8.2",

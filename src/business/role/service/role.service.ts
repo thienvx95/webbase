@@ -5,8 +5,14 @@ import { Session } from '@business/auth/model';
 import { events } from '@business/core/events';
 import { RoleDto } from '../model/role.dto';
 import { Roles } from '@core/enums/role.enum';
-import { IAutoMapper, IEventDispatcher, IRepository, IRoleService } from '@business/core/interface';
+import {
+  IAutoMapper,
+  IEventDispatcher,
+  IRepository,
+  IRoleService,
+} from '@business/core/interface';
 import { REPOSITORY_TYPES, COMMON_TYPES } from '@infrastructures/modules';
+import { ErrorEnum } from '@core/enums/error.enum';
 
 @injectable()
 export class RoleService implements IRoleService {
@@ -30,39 +36,55 @@ export class RoleService implements IRoleService {
     return this.autoMapper.Map(model, Role, RoleDto);
   }
 
-  async create(role: RoleDto, session: Session): Promise<boolean> {
+  async create(
+    role: RoleDto,
+    session: Session,
+    out: (errorCode: number) => number,
+  ): Promise<boolean> {
     this._log.info(
       `Role ${JSON.stringify(role)} - By ${session._id}`,
       'Create',
     );
     const newRole = await this.roleRepository.insertOne({
-        _id: role._id,
-        description: role.description,
-        createdBy: session._id,
+      _id: role._id,
+      description: role.description,
+      createdBy: session._id,
     });
     if (newRole) {
       this.eventDispatcher.dispatch(events.role.created, newRole);
       return true;
     }
+    out(ErrorEnum.Error_Create);
     return false;
   }
 
-  async update(_id: string, role: RoleDto, session: Session): Promise<boolean> {
+  async update(
+    _id: string,
+    role: RoleDto,
+    session: Session,
+    out: (errorCode: number) => number,
+  ): Promise<boolean> {
     this._log.info(
       `Role id: ${_id} - Data: ${JSON.stringify(role)} - By ${session._id}`,
       'Update',
     );
-    const result = await this.roleRepository.updateOne(
-        _id,
-      { description: role.description, updatedBy: session._id },
-    );
+    const result = await this.roleRepository.updateOne(_id, {
+      description: role.description,
+      updatedBy: session._id,
+    });
     if (result) {
       this.eventDispatcher.dispatch(events.role.updated, role);
+    } else {
+      out(ErrorEnum.Error_Update);
     }
     return result;
   }
 
-  async delete(_id: string, session: Session): Promise<boolean> {
+  async delete(
+    _id: string,
+    session: Session,
+    out: (errorCode: number) => number,
+  ): Promise<boolean> {
     this._log.info(`Role Id: ${_id} - By ${session._id}`, 'Delete');
     if (_id == Roles.Admin || _id == Roles.User) {
       return false;
@@ -71,6 +93,8 @@ export class RoleService implements IRoleService {
     const result = await this.roleRepository.deleteOne({ _id });
     if (result) {
       this.eventDispatcher.dispatch(events.role.deleted, _id);
+    } else {
+      out(ErrorEnum.Error_Delete);
     }
     return result;
   }

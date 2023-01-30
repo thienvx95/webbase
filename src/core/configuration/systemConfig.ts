@@ -23,30 +23,35 @@ export class SystemConfig {
   }
 
   public static get DbProvider(): DbProvider {
-    const configs =  this.getInstance()._configs;
-    return configs.DataSettings.DbProvider
+    const configs = this.getInstance()._configs;
+    return configs.DataSettings.DbProvider;
   }
 
   public static get CacheProvider(): CacheProvider {
-    const configs =  this.getInstance()._configs;
+    const configs = this.getInstance()._configs;
     return configs.CacheProvider;
   }
 
   public static get DbVersion(): string {
-    return this.getInstance().DatabaseVersion
+    return this.getInstance().DatabaseVersion;
   }
 
-  public static get Configs():ISystemConfig{
-     return this.getInstance()._configs;
+  public static get Configs(): ISystemConfig {
+    return this.getInstance()._configs;
   }
 
-  public static SetDatabaseVersion(dbVersion: string): void{
-     this.getInstance().setDatabaseVersion(dbVersion);
+  public static SetDatabaseVersion(dbVersion: string): void {
+    this.getInstance().setDatabaseVersion(dbVersion);
   }
 
   private setDatabaseVersion = (dbVersion: string): void => {
-    this.DatabaseVersion = dbVersion
-  }; 
+    this.DatabaseVersion = dbVersion;
+  };
+
+  public static getCurrentDomain = (): string => {
+    const configs = this.getInstance()._configs;
+    return `${configs.AppInfo.Schema}://${configs.AppInfo.Host}:${configs.AppInfo.Port}`;
+  };
 
   private getConfig(): ISystemConfig {
     const pathEnv = `${path}/.env${
@@ -86,7 +91,7 @@ export class SystemConfig {
       DataSettings: {
         DbProvider: DbProvider[getOsEnv('DB_PROVIDER')],
         ConnectionString: getOsEnv('CONNECTION_URL'),
-        DbName: getOsEnv('DB_NAME')
+        DbName: getOsEnv('DB_NAME'),
       },
       QueueMonitorSetting: {
         Enable: toBool(getOsEnv('QUEUE_MONITOR_ENABLED')),
@@ -128,7 +133,7 @@ export class SystemConfig {
         Subscribers: getOsEnv('SUBSCRIBERS'),
       },
       StorageProvider: StorageProvider[getOsEnv('STORAGE_PROVIDER')],
-      InstallKey: getOsEnv('INSTALL_KEY')
+      InstallKey: getOsEnv('INSTALL_KEY'),
     };
   }
 }

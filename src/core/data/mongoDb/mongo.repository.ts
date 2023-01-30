@@ -1,6 +1,18 @@
-import { FilterQuery, QueryOptions, ProjectionType, UpdateQuery } from 'mongoose';
-import { ReturnModelType, DocumentType, getModelForClass } from '@typegoose/typegoose';
-import { AnyParamConstructor, BeAnObject } from '@typegoose/typegoose/lib/types';
+import {
+  FilterQuery,
+  QueryOptions,
+  ProjectionType,
+  UpdateQuery,
+} from 'mongoose';
+import {
+  ReturnModelType,
+  DocumentType,
+  getModelForClass,
+} from '@typegoose/typegoose';
+import {
+  AnyParamConstructor,
+  BeAnObject,
+} from '@typegoose/typegoose/lib/types';
 import { HttpStatus, HttpStatusError } from '@core/exception/httpStatusError';
 import { IRepository } from '../repository.interface';
 import { ErrorEnum } from '@core/enums/error.enum';
@@ -14,18 +26,27 @@ export interface IPaginateModel<T> {
 }
 
 export class MongoRepository<T = BaseEntity> implements IRepository<T> {
-  private readonly _model: IPaginateModel<T> & ReturnModelType<AnyParamConstructor<T>>;
-  constructor(_class: { new(): T ;} ) {
-    this._model = getModelForClass(_class) as IPaginateModel<T> & ReturnModelType<AnyParamConstructor<T>>;
+  private readonly _model: IPaginateModel<T> &
+    ReturnModelType<AnyParamConstructor<T>>;
+  constructor(_class: { new (): T }) {
+    this._model = getModelForClass(_class) as IPaginateModel<T> &
+      ReturnModelType<AnyParamConstructor<T>>;
   }
+
   /**
    * Handle Error Mongoose
    * @param error - Error mongoose
    */
   private handleError = (error: any): any => {
-    Logging.getInstance('Repository').error(`${JSON.stringify(error)}`, 'HandleError')
+    Logging.getInstance('Repository').error(
+      `${JSON.stringify(error)}`,
+      'HandleError',
+    );
     if (error.code && error.code === 11000) {
-      throw new HttpStatusError(HttpStatus.BadRequest, ErrorEnum.Duplicate_Record);
+      throw new HttpStatusError(
+        HttpStatus.BadRequest,
+        ErrorEnum.Duplicate_Record,
+      );
     }
     throw error;
   };
@@ -55,13 +76,20 @@ export class MongoRepository<T = BaseEntity> implements IRepository<T> {
     }
   }
 
-    /**
+  /**
    * Insert entity if not exist
    * @param entities - array model
    */
-  async insertIfNotExist(filter: FilterQuery<DocumentType<T>>, entity: T): Promise<boolean> {
+  async insertIfNotExist(
+    filter: FilterQuery<DocumentType<T>>,
+    entity: T,
+  ): Promise<boolean> {
     try {
-      const existEntity = await this._model.updateOne(filter, { $setOnInsert: { ...entity } } , { upsert: true});
+      const existEntity = await this._model.updateOne(
+        filter,
+        { $setOnInsert: { ...entity } },
+        { upsert: true },
+      );
       return existEntity.upsertedCount > 0;
     } catch (e) {
       return this.handleError(e);
@@ -76,7 +104,9 @@ export class MongoRepository<T = BaseEntity> implements IRepository<T> {
    */
   async updateOne(id: string, entity: T): Promise<boolean> {
     try {
-      const result = await this._model.updateOne({ _id: id }, { $set: { ...entity } } , { upsert: false}).exec();
+      const result = await this._model
+        .updateOne({ _id: id }, { $set: { ...entity } }, { upsert: false })
+        .exec();
       return result.matchedCount > 0;
     } catch (e) {
       this.handleError(e);
@@ -89,7 +119,10 @@ export class MongoRepository<T = BaseEntity> implements IRepository<T> {
    * @param entity - entity
    * @returns
    */
-   async update(filter: FilterQuery<DocumentType<T, BeAnObject>>, update: UpdateQuery<DocumentType<T, BeAnObject>>): Promise<boolean> {
+  async update(
+    filter: FilterQuery<DocumentType<T, BeAnObject>>,
+    update: UpdateQuery<DocumentType<T, BeAnObject>>,
+  ): Promise<boolean> {
     try {
       const result = await this._model.updateOne(filter, update).exec();
       return result.matchedCount > 0;
@@ -98,7 +131,7 @@ export class MongoRepository<T = BaseEntity> implements IRepository<T> {
       return false;
     }
   }
-  
+
   /**
    * Update many entities
    * @param entities - array model
@@ -113,7 +146,7 @@ export class MongoRepository<T = BaseEntity> implements IRepository<T> {
     }
   }
 
-    /**
+  /**
    * Bulk Write entities
    * @param writes - array model
    */
@@ -156,14 +189,29 @@ export class MongoRepository<T = BaseEntity> implements IRepository<T> {
     }
   }
 
-  
   /**
    * Delete many entities
    * @param entities - array model
    */
-   async deleteById(id: string): Promise<boolean> {
+  async deleteById(id: string): Promise<boolean> {
     try {
-      const result = await this._model.deleteOne({ _id: id}).exec();
+      const result = await this._model.deleteOne({ _id: id }).exec();
+      return result.deletedCount > 0;
+    } catch (e) {
+      this.handleError(e);
+      return false;
+    }
+  }
+
+  /**
+   * Delete filter
+   * @param entities - array model
+   */
+  async delete(
+    filter: FilterQuery<DocumentType<T, BeAnObject>>,
+  ): Promise<boolean> {
+    try {
+      const result = await this._model.deleteMany(filter).exec();
       return result.deletedCount > 0;
     } catch (e) {
       this.handleError(e);
@@ -177,7 +225,11 @@ export class MongoRepository<T = BaseEntity> implements IRepository<T> {
    * @param projection - projection entity
    * @param options - optional
    */
-  async find(filter: FilterQuery<DocumentType<T>>, projection?: ProjectionType<DocumentType<T>>, options?: QueryOptions): Promise<DocumentType<T>[]> {
+  async find(
+    filter: FilterQuery<DocumentType<T>>,
+    projection?: ProjectionType<DocumentType<T>>,
+    options?: QueryOptions,
+  ): Promise<DocumentType<T>[]> {
     return await this._model.find(filter, projection, options);
   }
 
@@ -187,7 +239,11 @@ export class MongoRepository<T = BaseEntity> implements IRepository<T> {
    * @param projection - projection entity
    * @param options - optional
    */
-  async findOne(filter: FilterQuery<DocumentType<T>>, projection?: ProjectionType<DocumentType<T>> | null, options?: QueryOptions): Promise<DocumentType<T>> {
+  async findOne(
+    filter: FilterQuery<DocumentType<T>>,
+    projection?: ProjectionType<DocumentType<T>> | null,
+    options?: QueryOptions,
+  ): Promise<DocumentType<T>> {
     return await this._model.findOne(filter, projection, options);
   }
 
@@ -197,14 +253,17 @@ export class MongoRepository<T = BaseEntity> implements IRepository<T> {
    * @param projection - projection entity
    * @param options - optional
    */
-  async findById(_id: string, projection?: ProjectionType<DocumentType<T>> | null, options?: QueryOptions): Promise<DocumentType<T>> {
+  async findById(
+    _id: string,
+    projection?: ProjectionType<DocumentType<T>> | null,
+    options?: QueryOptions,
+  ): Promise<DocumentType<T>> {
     return await this._model.findById(_id, projection, options);
   }
 
   public async findPaging(
     option: PaginateOptions,
-  ): Promise<PaginateResult<DocumentType<T>>> 
-  {
-      return await this._model.paginate(BuildQuery.convertToQuery(option));
+  ): Promise<PaginateResult<DocumentType<T>>> {
+    return await this._model.paginate(BuildQuery.convertToQuery(option));
   }
 }

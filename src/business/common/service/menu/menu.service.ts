@@ -8,6 +8,7 @@ import { EditMenuDto, TreeMenus } from '@business/common/model';
 import { events } from '@business/core/events';
 import { COMMON_TYPES, REPOSITORY_TYPES } from '@infrastructures/modules';
 import { IAutoMapper, IEventDispatcher, IMenuService, IRepository } from '@business/core/interface';
+import { ErrorEnum } from '@core/enums/error.enum';
 @injectable()
 export class MenuService implements IMenuService {
   private readonly _log = Logging.getInstance('MenuService');
@@ -45,15 +46,14 @@ export class MenuService implements IMenuService {
     return this.autoMapper.Map(model, Menu, MenuDto);
   }
 
-  async update(_id: string, menu: EditMenuDto, session: Session): Promise<boolean> {
+  async update(_id: string, menu: EditMenuDto, session: Session, out: (errorCode: number) => number): Promise<boolean> {
     this._log.info(`Menu id: ${_id} - data: ${JSON.stringify(menu)} By ${session._id}` , 'update');
-    const result = await this.menuRepository.update({ _id }, {
-        
-    });
+    const result = await this.menuRepository.update({ _id }, {  });
     if(result){
       this.eventDispatcher.dispatch(events.menu.updated, menu);
+    } else {
+      out(ErrorEnum.Error_Update)
     }
-
     return result;
   }
 

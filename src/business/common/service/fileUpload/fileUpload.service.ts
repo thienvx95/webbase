@@ -3,8 +3,16 @@ import { FileUpload } from '@entities/index';
 import { Logging } from '@core/log';
 import { FileUploadDto } from '@business/common/model';
 import { inject, injectable } from 'inversify';
-import { IAutoMapper, IEventDispatcher, IFileUploadService, IRepository } from '@business/core/interface';
+import {
+  IAutoMapper,
+  IEventDispatcher,
+  IFileUploadService,
+  IRepository,
+} from '@business/core/interface';
 import { COMMON_TYPES, REPOSITORY_TYPES } from '@infrastructures/modules';
+import { UploadType } from '@core/enums/uploadType.enum';
+import { Session } from '@business/auth/model';
+import { v4 as uuidv4 } from 'uuid';
 
 @injectable()
 export class FileUploadService implements IFileUploadService {
@@ -16,6 +24,19 @@ export class FileUploadService implements IFileUploadService {
     private eventDispatcher: IEventDispatcher,
     @inject(COMMON_TYPES.AutoMapper) private autoMapper: IAutoMapper,
   ) {}
+
+  async findByTypeAndUserId(
+    userId: string,
+    type: UploadType,
+    exceptId?: string,
+  ): Promise<FileUploadDto[]> {
+    const models = await this.fileUploadRepository.find({
+      userId: userId,
+      type: type,
+      _id: { $ne: exceptId },
+    });
+    return this.autoMapper.MapArray(models, FileUpload, FileUploadDto);
+  }
 
   async findByKey(key: string): Promise<FileUploadDto> {
     const model = await this.fileUploadRepository.findOne({ path: key });
@@ -31,16 +52,26 @@ export class FileUploadService implements IFileUploadService {
   async findById(id: string): Promise<FileUploadDto> {
     this.log.info('Find one fileUpload id: ' + id);
     const model = await this.fileUploadRepository.findById(id);
-    return this.autoMapper.Map(model, FileUpload, FileUploadDto)
+    return this.autoMapper.Map(model, FileUpload, FileUploadDto);
   }
 
-  async createMulti(fileUpload: FileUploadDto[]): Promise<FileUploadDto[]> {
+  async createMulti(
+    fileUpload: FileUploadDto[],
+    type: UploadType,
+    session: Session,
+  ): Promise<FileUploadDto[]> {
     this.log.info('Create new FileUpload');
     const fileUploadModel = this.autoMapper.MapArray(
       fileUpload,
       FileUploadDto,
       FileUpload,
     );
+    fileUploadModel.forEach((x) => {
+      (x.type = type.toString()),
+        (x.public = true),
+        (x.userId = session._id),
+        (x._id = uuidv4());
+    });
     const newFileUpload = await this.fileUploadRepository.insertMany(
       fileUploadModel,
     );

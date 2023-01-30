@@ -4,8 +4,14 @@ import { inject, injectable } from 'inversify';
 import { Session } from '@business/auth/model';
 import { events } from '@business/core/events';
 import { Setting } from '@entities/settings/setting.entity';
-import { IAutoMapper, IEventDispatcher, IRepository, ISettingService } from '@business/core/interface';
+import {
+  IAutoMapper,
+  IEventDispatcher,
+  IRepository,
+  ISettingService,
+} from '@business/core/interface';
 import { REPOSITORY_TYPES, COMMON_TYPES } from '@infrastructures/modules';
+import { ErrorEnum } from '@core/enums/error.enum';
 @injectable()
 export class SettingService implements ISettingService {
   private readonly _log = Logging.getInstance('SettingService');
@@ -30,7 +36,11 @@ export class SettingService implements ISettingService {
     return this.autoMapper.MapArray(result, Setting, SettingDto);
   }
 
-  async update(settings: SettingDto[], session: Session): Promise<boolean> {
+  async update(
+    settings: SettingDto[],
+    session: Session,
+    out: (errorCode: number) => number,
+  ): Promise<boolean> {
     this._log.info('Update settings: ');
     const result = await this.settingRepository.bulkWrite(
       settings.map((data) => ({
@@ -43,6 +53,8 @@ export class SettingService implements ISettingService {
 
     if (result) {
       this.eventDispatcher.dispatch(events.setting.updated, settings);
+    } else {
+      out(ErrorEnum.Error_Update);
     }
 
     return result;

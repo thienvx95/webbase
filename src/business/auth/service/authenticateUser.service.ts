@@ -35,25 +35,15 @@ export class AuthenticateUserService implements IAuthService {
   ): Promise<AuthResponse> => {
     this.log.info('Login user: ' + username);
     const user = await this.userRepository.findOne({ username });
-    if (!user) {
-      throw new HttpStatusError(HttpStatus.Ok, ErrorEnum.Login_Invalid);
-    }
-    
-    if (!user.isActive) {
-      throw new HttpStatusError(HttpStatus.Ok, ErrorEnum.Login_Invalid);
-    }
+    if (!user) return null;
+    if (!user.isActive) return null;
     
     const isMatch = await PasswordUtil.validatePassword({
       requestPassword: password,
       storedPassword: user.password,
     });
 
-    if (!isMatch) {
-      throw new HttpStatusError(
-        HttpStatus.Ok,
-        ErrorEnum.Password_Not_Match,
-      );
-    }
+    if (!isMatch) return null;
     const token = await TokenUtil.generateToken(
       new JwtPayload(this.autoMapper.Map(user, User, UserDto)),
     );
@@ -72,13 +62,8 @@ export class AuthenticateUserService implements IAuthService {
   ): Promise<AuthResponse> => {
     this.log.info('Login user: ' + email);
     const user = await this.userRepository.findOne({ email: email });
-    if (!user) {
-      throw new HttpStatusError(HttpStatus.BadRequest, ErrorEnum.Login_Invalid);
-    }
-
-    if (!user.isActive) {
-      throw new HttpStatusError(HttpStatus.BadRequest, ErrorEnum.Login_Invalid);
-    }
+    if (!user) return null;
+    if (!user.isActive) return null;
     const token = await TokenUtil.generateToken(
       new JwtPayload(this.autoMapper.Map(user, User, UserDto)),
     );
@@ -113,6 +98,7 @@ export class AuthenticateUserService implements IAuthService {
   refreshToken = async (
     { token }: RefreshTokenRequest,
     ipAddress: string,
+    out: (errorCode: number) => number
   ): Promise<AuthResponse> => {
     this.log.info('Refresh Token Ip:' + ipAddress);
     const refreshToken = await this.getRefreshToken(token);
@@ -120,17 +106,13 @@ export class AuthenticateUserService implements IAuthService {
 
     const existUser = await this.userRepository.findOne({ _id: user });
     if (!existUser) {
-      throw new HttpStatusError(
-        HttpStatus.Ok,
-        ErrorEnum.User_Not_Found,
-      );
+      out(ErrorEnum.User_Not_Found);
+      return null;
     }
 
     if (!existUser.isActive) {
-      throw new HttpStatusError(
-        HttpStatus.Ok,
-        ErrorEnum.Login_Inactive,
-      );
+      out(ErrorEnum.Login_Inactive);
+      return null;
     }
 
     const newGenerateToken = TokenUtil.randomTokenString();
