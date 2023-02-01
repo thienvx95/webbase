@@ -39,6 +39,8 @@ export class FileUploadController {
       'Content-Type': content.ContentType,
       'Content-Length': content.ContentLength,
       'Cross-Origin-Resource-Policy': 'cross-origin',
+      'Cache-Control': 'public, max-age=86400',
+      Expires: new Date(Date.now() + 86400000).toUTCString(),
     });
     return content?.Body;
   })
