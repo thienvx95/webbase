@@ -51,12 +51,10 @@ export class RoleController extends BaseController {
     @Body() body: RoleDto,
     @CurrentUser() session: Session,
   ): Promise<ResponseResult<boolean>> {
-    const errorCode = 0;
-    const result = await this.roleService.create(
-      body,
-      session,
-      () => errorCode,
-    );
+    let errorCode = 0;
+    const result = await this.roleService.create(body, session, (error) => {
+      errorCode = error;
+    });
     return this.Ok(result, null, errorCode);
   }
 
@@ -67,13 +65,10 @@ export class RoleController extends BaseController {
     @Body() body: RoleDto,
     @CurrentUser() session: Session,
   ): Promise<ResponseResult<boolean>> {
-    const errorCode = 0;
-    const result = await this.roleService.update(
-      id,
-      body,
-      session,
-      () => errorCode,
-    );
+    let errorCode = 0;
+    const result = await this.roleService.update(id, body, session, (error) => {
+      errorCode = error;
+    });
     return this.Ok(result, null, errorCode);
   }
 
@@ -82,8 +77,10 @@ export class RoleController extends BaseController {
     @Param('id') id: string,
     @CurrentUser() session: Session,
   ): Promise<ResponseResult<boolean>> {
-    const errorCode = 0;
-    const result = await this.roleService.delete(id, session, () => errorCode);
+    let errorCode = 0;
+    const result = await this.roleService.delete(id, session, (error) => {
+      errorCode = error;
+    });
     return this.Ok(result, null, errorCode);
   }
 }

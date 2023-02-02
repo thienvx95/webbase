@@ -39,7 +39,7 @@ export class SettingService implements ISettingService {
   async update(
     settings: SettingDto[],
     session: Session,
-    out: (errorCode: number) => number,
+    out: (errorCode: number) => void,
   ): Promise<boolean> {
     this._log.info('Update settings: ');
     const result = await this.settingRepository.bulkWrite(

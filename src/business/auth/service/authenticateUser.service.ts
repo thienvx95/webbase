@@ -15,7 +15,11 @@ import {
 import { PasswordUtil, TokenUtil } from '@core/ultis';
 import { UserDto } from '@business/user/model';
 import { injectable, inject } from 'inversify';
-import { IAuthService, IAutoMapper, IRepository } from '@business/core/interface';
+import {
+  IAuthService,
+  IAutoMapper,
+  IRepository,
+} from '@business/core/interface';
 import { REPOSITORY_TYPES, COMMON_TYPES } from '@infrastructures/modules';
 
 @injectable()
@@ -24,8 +28,10 @@ export class AuthenticateUserService implements IAuthService {
   private configs = SystemConfig.Configs;
 
   constructor(
-    @inject(REPOSITORY_TYPES.UserRepository) private userRepository: IRepository<User>,
-    @inject(REPOSITORY_TYPES.UserTokenRepository) private userTokenRepository: IRepository<UserToken>,
+    @inject(REPOSITORY_TYPES.UserRepository)
+    private userRepository: IRepository<User>,
+    @inject(REPOSITORY_TYPES.UserTokenRepository)
+    private userTokenRepository: IRepository<UserToken>,
     @inject(COMMON_TYPES.AutoMapper) private autoMapper: IAutoMapper,
   ) {}
 
@@ -37,7 +43,7 @@ export class AuthenticateUserService implements IAuthService {
     const user = await this.userRepository.findOne({ username });
     if (!user) return null;
     if (!user.isActive) return null;
-    
+
     const isMatch = await PasswordUtil.validatePassword({
       requestPassword: password,
       storedPassword: user.password,
@@ -98,7 +104,7 @@ export class AuthenticateUserService implements IAuthService {
   refreshToken = async (
     { token }: RefreshTokenRequest,
     ipAddress: string,
-    out: (errorCode: number) => number
+    out: (errorCode: number) => void,
   ): Promise<AuthResponse> => {
     this.log.info('Refresh Token Ip:' + ipAddress);
     const refreshToken = await this.getRefreshToken(token);
@@ -132,14 +138,14 @@ export class AuthenticateUserService implements IAuthService {
     };
   };
 
-  private getRefreshToken = async (token: string) : Promise<UserToken> => {
+  private getRefreshToken = async (token: string): Promise<UserToken> => {
     const refreshTokens = await this.userTokenRepository.findOne({ token });
     if (!refreshTokens) {
       throw new HttpStatusError(HttpStatus.Ok, ErrorEnum.Invalid_Token);
     }
 
     if (!refreshTokens.isActive()) {
-        throw new HttpStatusError(HttpStatus.Ok, ErrorEnum.Invalid_Token);
+      throw new HttpStatusError(HttpStatus.Ok, ErrorEnum.Invalid_Token);
     }
 
     return refreshTokens;
@@ -150,28 +156,28 @@ export class AuthenticateUserService implements IAuthService {
     ip: string,
   ): Promise<UserToken> => {
     const existToken = await this.userTokenRepository.findOne({
-        user: userId,
-        createdByIp: ip,
-      })
-      if (existToken) {
-        if (existToken.isActive()) {
-          return existToken;
-        } else {
-          await this.userTokenRepository.deleteById(existToken._id.toString());
-        }
+      user: userId,
+      createdByIp: ip,
+    });
+    if (existToken) {
+      if (existToken.isActive()) {
+        return existToken;
+      } else {
+        await this.userTokenRepository.deleteById(existToken._id.toString());
       }
-      const newRefreshToken = await this.userTokenRepository.insertOne(
-        new UserToken({
-          user: userId,
-          token: TokenUtil.randomTokenString(),
-          expires: new Date(
-            Date.now() +
-              this.configs.AppSetting.refreshTokenExpriesIn * 8640 * 1000,
-          ),
-          createdByIp: ip,
-        }),
-      );
-  
-      return newRefreshToken;
+    }
+    const newRefreshToken = await this.userTokenRepository.insertOne(
+      new UserToken({
+        user: userId,
+        token: TokenUtil.randomTokenString(),
+        expires: new Date(
+          Date.now() +
+            this.configs.AppSetting.refreshTokenExpriesIn * 8640 * 1000,
+        ),
+        createdByIp: ip,
+      }),
+    );
+
+    return newRefreshToken;
   };
 }

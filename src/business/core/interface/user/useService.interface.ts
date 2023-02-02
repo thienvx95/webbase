@@ -16,25 +16,25 @@ export interface IUserService {
   create(
     dto: UserDto,
     session: Session,
-    out: (errorCode: number) => number,
+    out: (errorCode: number) => void,
   ): Promise<UserDto>;
   update(
     _id: string,
     dto: UserDto,
     session: Session,
-    out: (errorCode: number) => number,
+    out: (errorCode: number) => void,
   ): Promise<boolean>;
   updateByEmail(
     email: string,
     dto: UserDto,
     session: Session,
-    out: (errorCode: number) => number,
+    out: (errorCode: number) => void,
   ): Promise<boolean>;
-  delete(_id: string, out: (errorCode: number) => number): Promise<boolean>;
+  delete(_id: string, out: (errorCode: number) => void): Promise<boolean>;
   changePassword(
     _id: string,
     req: ChangePasswordRequest,
-    out: (errorCode: number) => number,
+    out: (errorCode: number) => void,
   ): Promise<boolean>;
   getTokenByUserId(userId: string): Promise<UserTokenDto[]>;
 }

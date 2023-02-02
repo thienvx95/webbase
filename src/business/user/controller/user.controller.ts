@@ -127,9 +127,11 @@ export class UserController extends BaseController {
     @Body() body: UserDto,
     @CurrentUser() session: Session,
   ): Promise<ResponseResult<boolean>> {
-    const errorCode = 0;
+    let errorCode = 0;
     const result =
-      (await this.userService.create(body, session, () => errorCode)) !== null;
+      (await this.userService.create(body, session, (error) => {
+        errorCode = error;
+      })) !== null;
     return this.Ok(result, null, errorCode);
   }
 
@@ -140,12 +142,14 @@ export class UserController extends BaseController {
     @Body() body: UserDto,
     @CurrentUser() session: Session,
   ): Promise<ResponseResult<boolean>> {
-    const errorCode = 0;
+    let errorCode = 0;
     const result = await this.userService.update(
       body._id,
       body,
       session,
-      () => errorCode,
+      (error) => {
+        errorCode = error;
+      },
     );
     return this.Ok(result, null, errorCode);
   }
@@ -156,12 +160,14 @@ export class UserController extends BaseController {
     @Body() body: UpdateProfileRequest,
     @CurrentUser() session: Session,
   ): Promise<ResponseResult<string>> {
-    const errorCode = 0;
+    let errorCode = 0;
     const result = await this.userService.update(
       session._id,
       body,
       session,
-      () => errorCode,
+      (error) => {
+        errorCode = error;
+      },
     );
     if (result) {
       this.memoryCache.removeAsync(
@@ -177,11 +183,13 @@ export class UserController extends BaseController {
     @Body() body: ChangePasswordRequest,
     @CurrentUser() session: Session,
   ): Promise<ResponseResult<boolean>> {
-    const errorCode = 0;
+    let errorCode = 0;
     const result = await this.userService.changePassword(
       session._id,
       body,
-      () => errorCode,
+      (error) => {
+        errorCode = error;
+      },
     );
     return this.Ok(result, null, errorCode);
   }
@@ -189,8 +197,10 @@ export class UserController extends BaseController {
   @Authorized([Roles.Admin])
   @Delete('/:id')
   async delete(@Param('id') id: string): Promise<ResponseResult<boolean>> {
-    const errorCode = 0;
-    const result = await this.userService.delete(id, () => errorCode);
+    let errorCode = 0;
+    const result = await this.userService.delete(id, (error) => {
+      errorCode = error;
+    });
     return this.Ok(result, null, errorCode);
   }
 }

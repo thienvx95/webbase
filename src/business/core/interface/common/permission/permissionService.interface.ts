@@ -8,6 +8,6 @@ export interface IPermissionService {
     _id: string,
     permission: PermissionDto,
     session: Session,
-    out: (errorCode: number) => number,
+    out: (errorCode: number) => void,
   ): Promise<boolean>;
 }

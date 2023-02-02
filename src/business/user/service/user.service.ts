@@ -122,7 +122,7 @@ export class UserService implements IUserService {
   async create(
     dto: UserDto,
     session: Session,
-    out: (errorCode: number) => number,
+    out: (errorCode: number) => void,
   ): Promise<UserDto> {
     this._log.info('Create a new user');
     const user = new User({
@@ -145,7 +145,7 @@ export class UserService implements IUserService {
     _id: string,
     dto: UserDto,
     session: Session,
-    out: (errorCode: number) => number,
+    out: (errorCode: number) => void,
   ): Promise<boolean> {
     this._log.info('Update user id: ' + _id);
     const user = new User({
@@ -165,7 +165,7 @@ export class UserService implements IUserService {
     email: string,
     dto: UserDto,
     session: Session,
-    out: (errorCode: number) => number,
+    out: (errorCode: number) => void,
   ): Promise<boolean> {
     this._log.info('Update user email: ' + email);
     const user = new User({
@@ -183,7 +183,7 @@ export class UserService implements IUserService {
 
   async delete(
     _id: string,
-    out: (errorCode: number) => number,
+    out: (errorCode: number) => void,
   ): Promise<boolean> {
     this._log.info('Delete a user');
     const result = await this.userRepository.deleteById(_id.toString());
@@ -198,7 +198,7 @@ export class UserService implements IUserService {
   async changePassword(
     _id: string,
     req: ChangePasswordRequest,
-    out: (errorCode: number) => number,
+    out: (errorCode: number) => void,
   ): Promise<boolean> {
     this._log.info('Change password user id: ' + _id);
     const user = await this.userRepository.findById(_id);

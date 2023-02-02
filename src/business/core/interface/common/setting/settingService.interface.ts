@@ -7,6 +7,6 @@ export interface ISettingService {
   update(
     settings: SettingDto[],
     session: Session,
-    out: (errorCode: number) => number,
+    out: (errorCode: number) => void,
   ): Promise<boolean>;
 }

@@ -67,13 +67,10 @@ export class MenuController extends BaseController {
     @Body() body: EditMenuDto,
     @CurrentUser() session: Session,
   ): Promise<ResponseResult<boolean>> {
-    const errorCode = 0;
-    const result = await this.menuService.update(
-      id,
-      body,
-      session,
-      () => errorCode,
-    );
+    let errorCode = 0;
+    const result = await this.menuService.update(id, body, session, (error) => {
+      errorCode = error;
+    });
     return this.Ok(result, null, errorCode);
   }
 }

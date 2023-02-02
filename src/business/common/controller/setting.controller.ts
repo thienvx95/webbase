@@ -52,12 +52,10 @@ export class SettingController extends BaseController {
     @Body() body: Array<SettingDto>,
     @CurrentUser() session: Session,
   ): Promise<ResponseResult<boolean>> {
-    const errorCode = 0;
-    const result = await this.settingService.update(
-      body,
-      session,
-      () => errorCode,
-    );
+    let errorCode = 0;
+    const result = await this.settingService.update(body, session, (error) => {
+      errorCode = error;
+    });
     return this.Ok(result, null, errorCode);
   }
 }

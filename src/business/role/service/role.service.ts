@@ -39,7 +39,7 @@ export class RoleService implements IRoleService {
   async create(
     role: RoleDto,
     session: Session,
-    out: (errorCode: number) => number,
+    out: (errorCode: number) => void,
   ): Promise<boolean> {
     this._log.info(
       `Role ${JSON.stringify(role)} - By ${session._id}`,
@@ -62,7 +62,7 @@ export class RoleService implements IRoleService {
     _id: string,
     role: RoleDto,
     session: Session,
-    out: (errorCode: number) => number,
+    out: (errorCode: number) => void,
   ): Promise<boolean> {
     this._log.info(
       `Role id: ${_id} - Data: ${JSON.stringify(role)} - By ${session._id}`,
@@ -83,7 +83,7 @@ export class RoleService implements IRoleService {
   async delete(
     _id: string,
     session: Session,
-    out: (errorCode: number) => number,
+    out: (errorCode: number) => void,
   ): Promise<boolean> {
     this._log.info(`Role Id: ${_id} - By ${session._id}`, 'Delete');
     if (_id == Roles.Admin || _id == Roles.User) {

@@ -7,17 +7,17 @@ export interface IRoleService {
   create(
     role: RoleDto,
     session: Session,
-    out: (errorCode: number) => number,
+    out: (errorCode: number) => void,
   ): Promise<boolean>;
   update(
     _id: string,
     role: RoleDto,
     session: Session,
-    out: (errorCode: number) => number,
+    out: (errorCode: number) => void,
   ): Promise<boolean>;
   delete(
     _id: string,
     session: Session,
-    out: (errorCode: number) => number,
+    out: (errorCode: number) => void,
   ): Promise<boolean>;
 }

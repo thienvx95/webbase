@@ -45,12 +45,14 @@ export class PermissionController extends BaseController {
     @Body() body: PermissionDto,
     @CurrentUser() session: Session,
   ): Promise<ResponseResult<boolean>> {
-    const errorCode = 0;
+    let errorCode = 0;
     const result = await this.permissionService.update(
       id,
       body,
       session,
-      () => errorCode,
+      (error) => {
+        errorCode = error;
+      },
     );
     return this.Ok(result, null, errorCode);
   }

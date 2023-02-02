@@ -80,11 +80,13 @@ export class AuthController extends BaseController {
     @Req() req: Request,
     @Body() auth: RefreshTokenRequest,
   ): Promise<ResponseResult<AuthResponse>> {
-    const errorCode = 0;
+    let errorCode = 0;
     const authen = await this.authService.refreshToken(
       auth,
       req.ip,
-      () => errorCode,
+      (error) => {
+        errorCode = error;
+      },
     );
     if (authen) {
       return this.Ok<AuthResponse>(true, authen);
