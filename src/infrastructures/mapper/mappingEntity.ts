@@ -5,6 +5,7 @@ import {
   Role,
   Setting,
   User,
+  UserLogin,
   UserToken,
 } from '@entities/index';
 import AutoMapper from './autoMapper';
@@ -15,10 +16,10 @@ import {
   SettingDto,
 } from '@business/common/model';
 import { RoleDto } from '@business/role/model/role.dto';
-import { UserDto } from '@business/user/model';
+import { UserDto, UserLoginDto } from '@business/user/model';
 import { UserTokenDto } from '@business/auth/model';
 import { BaseEntity } from '@entities/base.entity';
-import { BaseDto } from '@business/common/model/base.dto';
+import { BaseDto } from '@business/core/model/base.dto';
 import { Address } from '@entities/common/address';
 import { AddressDto } from '@business/common/model/address/address.dto';
 import { afterMap } from '@automapper/core';
@@ -49,11 +50,13 @@ export function MapEntityToDto(autoMapper: AutoMapper): void {
     }),
   );
   autoMapper.createMap(UserToken, UserTokenDto);
+  autoMapper.createMap(UserLogin, UserLoginDto);
   autoMapper.createMap(Menu, MenuDto);
   autoMapper.createMap(Role, RoleDto);
   autoMapper.createMap(Permission, PermissionDto);
   autoMapper.createMap(Setting, SettingDto);
   autoMapper.createMap(FileUpload, FileUploadDto);
+
   // Example
   // autoMapper.createMap(BaseEntity, BaseDto,
   //   forMember(

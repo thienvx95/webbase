@@ -70,15 +70,12 @@ export class User extends BaseEntity {
   avatar?: string;
 
   @AutoMap()
-  @prop({ type: Address})
+  @prop({ type: Address })
   address?: Address;
 
   @AutoMap()
   @prop()
   services?: UserExternalService;
-
-  @prop()
-  lastLogin?: Date;
 
   @AutoMap()
   @prop({ default: 'en' })

@@ -5,12 +5,13 @@ import {
 } from '@core/exception/httpStatusError';
 import { Logging } from '@core/log';
 import { SystemConfig } from '@core/configuration';
-import { User, UserToken } from '@entities/index';
+import { User, UserLogin, UserToken } from '@entities/index';
 import {
   AuthRequest,
   AuthResponse,
   JwtPayload,
   RefreshTokenRequest,
+  Session,
 } from '../model';
 import { PasswordUtil, TokenUtil } from '@core/ultis';
 import { UserDto } from '@business/user/model';
@@ -21,7 +22,7 @@ import {
   IRepository,
 } from '@business/core/interface';
 import { REPOSITORY_TYPES, COMMON_TYPES } from '@infrastructures/modules';
-
+import { v4 } from 'uuid';
 @injectable()
 export class AuthenticateUserService implements IAuthService {
   private log = Logging.getInstance('AuthenticateUserService');
@@ -32,12 +33,14 @@ export class AuthenticateUserService implements IAuthService {
     private userRepository: IRepository<User>,
     @inject(REPOSITORY_TYPES.UserTokenRepository)
     private userTokenRepository: IRepository<UserToken>,
+    @inject(REPOSITORY_TYPES.UserLoginRepository)
+    private userLoginRepository: IRepository<UserLogin>,
     @inject(COMMON_TYPES.AutoMapper) private autoMapper: IAutoMapper,
   ) {}
 
   authenticate = async (
     { username, password }: AuthRequest,
-    ipAddress: string,
+    session: Session,
   ): Promise<AuthResponse> => {
     this.log.info('Login user: ' + username);
     const user = await this.userRepository.findOne({ username });
@@ -53,9 +56,17 @@ export class AuthenticateUserService implements IAuthService {
     const token = await TokenUtil.generateToken(
       new JwtPayload(this.autoMapper.Map(user, User, UserDto)),
     );
-    user.lastLogin = new Date();
-    user.save();
-    const refreshToken = await this.generateRefreshToken(user._id, ipAddress);
+
+    this.userLoginRepository.insertOne({
+      _id: v4(),
+      userId: user._id,
+      ipAddress: session.ip,
+      browser: session.browser,
+      platform: session.platform,
+      os: session.os,
+    });
+
+    const refreshToken = await this.generateRefreshToken(user._id, session.ip);
     return {
       token,
       refreshToken: refreshToken.token,
@@ -64,7 +75,7 @@ export class AuthenticateUserService implements IAuthService {
 
   authenticateByOAuth = async (
     email: string,
-    ipAddress: string,
+    session: Session,
   ): Promise<AuthResponse> => {
     this.log.info('Login user: ' + email);
     const user = await this.userRepository.findOne({ email: email });
@@ -73,7 +84,7 @@ export class AuthenticateUserService implements IAuthService {
     const token = await TokenUtil.generateToken(
       new JwtPayload(this.autoMapper.Map(user, User, UserDto)),
     );
-    const refreshToken = await this.generateRefreshToken(user._id, ipAddress);
+    const refreshToken = await this.generateRefreshToken(user._id, session.ip);
     return {
       token,
       refreshToken: refreshToken.token,

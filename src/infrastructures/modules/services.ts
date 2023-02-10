@@ -17,7 +17,7 @@ import { InstallService } from '@business/system/service/install.service';
 import { MenuService } from '@business/common/service/menu/menu.service';
 import { RoleService } from '@business/role/service/role.service';
 import { PermissionService } from '@business/common/service/permission/permission.serivce';
-import { SettingService } from '@business/common/service/setting/setting.service';
+import { SettingService } from '@business/system/service/setting.service';
 import { FileUploadService } from '@business/common/service/fileUpload/fileUpload.service';
 import { SystemConfig } from '@core/configuration';
 import { StorageProvider } from '@core/enums/storageProvider.enum';

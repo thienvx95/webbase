@@ -1,8 +1,13 @@
 import { join } from 'path';
-import crypto from 'crypto';
+import * as crypto from 'crypto';
 import { ValidationError } from 'class-validator';
 import { ErrorInfoRegex } from '@core/constants';
 import { CacheKey } from '@core/enums/cacheKey.enum';
+import { JwtPayload, Session } from '@business/auth/model';
+import * as useragent from 'express-useragent';
+import { Request } from 'express';
+import { SystemConfig } from '@core/configuration';
+import { verify } from 'jsonwebtoken';
 
 export const getOsEnv = (key: string): string => {
   if (typeof process.env[key] === 'undefined') {
@@ -104,4 +109,29 @@ export const getFileUploadUrl = (path: string, base: string): string => {
     return path;
   }
   return `${base}/file-upload/${path}`;
+};
+
+export const getUserSession = (req: Request, token = null): Session => {
+  const source = req.headers['user-agent'];
+  const ua = useragent.parse(source);
+  if (token) {
+    const { roles, id } = verify(
+      token,
+      SystemConfig.Configs.AppSetting.SecretKey,
+    ) as JwtPayload;
+    return {
+      browser: ua.browser,
+      platform: ua.platform,
+      ip: req.socket.remoteAddress,
+      os: ua.os,
+      roles,
+      _id: id,
+    };
+  }
+  return {
+    browser: ua.browser,
+    platform: ua.platform,
+    ip: req.socket.remoteAddress,
+    os: ua.os,
+  };
 };

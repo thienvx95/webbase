@@ -1,43 +1,43 @@
-import { IsString, IsBoolean, IsArray, IsNotEmpty } from "class-validator";
-import { AutoMap } from "@automapper/classes";
-import { BaseDto } from "../base.dto";
+import { IsString, IsBoolean, IsArray, IsNotEmpty } from 'class-validator';
+import { AutoMap } from '@automapper/classes';
+import { BaseDto } from '../../../core/model/base.dto';
 
 export class PermissionDto extends BaseDto {
-    @AutoMap(() => String)
-    @IsString()
-    @IsNotEmpty()
-    function: string;
-    
-    @AutoMap(() => [String])
-    @IsArray()
-    @IsNotEmpty()
-    roles: string[];
-  
-    @AutoMap()
-    @IsBoolean()
-    @IsNotEmpty()
-    create: boolean;
+  @AutoMap(() => String)
+  @IsString()
+  @IsNotEmpty()
+  function: string;
 
-    @AutoMap()
-    @IsBoolean()
-    @IsNotEmpty()
-    delete: boolean;
-  
-    @AutoMap()
-    @IsBoolean()
-    @IsNotEmpty()
-    update: boolean;
-  
-    @AutoMap()
-    @IsBoolean()
-    @IsNotEmpty()
-    read: boolean;
-  
-    @AutoMap()
-    @IsBoolean()
-    @IsNotEmpty()
-    administer: boolean;
+  @AutoMap(() => [String])
+  @IsArray()
+  @IsNotEmpty()
+  roles: string[];
 
-    @IsBoolean()
-    isActive: boolean
+  @AutoMap()
+  @IsBoolean()
+  @IsNotEmpty()
+  create: boolean;
+
+  @AutoMap()
+  @IsBoolean()
+  @IsNotEmpty()
+  delete: boolean;
+
+  @AutoMap()
+  @IsBoolean()
+  @IsNotEmpty()
+  update: boolean;
+
+  @AutoMap()
+  @IsBoolean()
+  @IsNotEmpty()
+  read: boolean;
+
+  @AutoMap()
+  @IsBoolean()
+  @IsNotEmpty()
+  administer: boolean;
+
+  @IsBoolean()
+  isActive: boolean;
 }

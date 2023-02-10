@@ -3,8 +3,10 @@ import {
   JsonController,
   Body,
   Req,
-  Get,
   Param,
+  Authorized,
+  CurrentUser,
+  Get,
 } from 'routing-controllers';
 import { Request } from 'express';
 import { ResponseSchema } from 'routing-controllers-openapi';
@@ -13,12 +15,14 @@ import {
   AuthResponse,
   GoogleAuthRequest,
   RefreshTokenRequest,
+  Session,
 } from '@business/auth/model';
 import { inject, injectable } from 'inversify';
-import { SERVICE_TYPES } from '@infrastructures/modules';
+import { COMMON_TYPES, SERVICE_TYPES } from '@infrastructures/modules';
 import {
   IAuthService,
   IGoogleAuthService,
+  ISiteSettings,
   IUserService,
 } from '@business/core/interface';
 import {
@@ -27,7 +31,8 @@ import {
   RoutingAPI,
 } from '@business/core/controller/baseController';
 import { ErrorEnum } from '@core/enums/error.enum';
-
+import { getUserSession } from '@core/ultis';
+import { Roles } from '@core/enums/role.enum';
 @injectable()
 @JsonController(RoutingAPI.Auth)
 export class AuthController extends BaseController {
@@ -36,6 +41,7 @@ export class AuthController extends BaseController {
     @inject(SERVICE_TYPES.GoogleAuthService)
     private googleAuthService: IGoogleAuthService,
     @inject(SERVICE_TYPES.UserService) private userService: IUserService,
+    @inject(COMMON_TYPES.SiteSettings) private siteSettings: ISiteSettings,
   ) {
     super();
   }
@@ -46,7 +52,10 @@ export class AuthController extends BaseController {
     @Req() req: Request,
     @Body() auth: AuthRequest,
   ): Promise<ResponseResult<AuthResponse>> {
-    const authen = await this.authService.authenticate(auth, req.ip);
+    const authen = await this.authService.authenticate(
+      auth,
+      getUserSession(req),
+    );
     if (authen) {
       return this.Ok<AuthResponse>(true, authen);
     }
@@ -66,7 +75,7 @@ export class AuthController extends BaseController {
     await this.userService.findCreateOrUpdateGooleUser(ticket, token);
     const authen = await this.authService.authenticateByOAuth(
       ticket.email,
-      req.ip,
+      getUserSession(req),
     );
     if (authen) {
       return this.Ok<AuthResponse>(true, authen);
@@ -94,11 +103,28 @@ export class AuthController extends BaseController {
     return this.Ok<AuthResponse>(false, null, errorCode);
   }
 
-  @Get('/revokeToken/:id')
+  @Authorized([Roles.Admin])
+  @Post('/revokeToken/:id')
   async revokeTokenByUserId(
     @Req() req: Request,
     @Param('id') id: string,
   ): Promise<boolean> {
     return await this.authService.revokeByUserId(id, req.ip);
+  }
+
+  @Authorized([Roles.Admin, Roles.User])
+  @Post('/revokeCurrentUserToken')
+  async revokeCurrentUserId(@CurrentUser() session: Session): Promise<boolean> {
+    return await this.authService.revokeByUserId(session._id, session.ip);
+  }
+
+  @Get('/getGoogleClientId')
+  async getGoogleClientId(): Promise<ResponseResult<string>> {
+    return this.Ok<string>(true, this.siteSettings.get<string>('Google_Id'));
+  }
+
+  @Get('/loginSetting')
+  async getLoginSetting(): Promise<ResponseResult<string>> {
+    return this.Ok<string>(true, this.siteSettings.get<string>('Google_Id'));
   }
 }

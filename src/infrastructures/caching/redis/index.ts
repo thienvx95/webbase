@@ -2,7 +2,7 @@ import { ICacheBase } from '../cacheBase.interface';
 import Redis from 'ioredis';
 import { SystemConfig } from '@core/configuration';
 import { Logging } from '@core/log';
-import { SiteSettings } from '@business/common/service/siteSetting';
+import { SiteSettings } from '@business/system/service/siteSetting.service';
 import { CacheTime } from '@core/constants';
 import { injectable } from 'inversify';
 
@@ -36,7 +36,7 @@ export class RedisCache implements ICacheBase {
 
     this.cache.on('error', (error) => {
       this.log.error(`Redis error, service degraded: ${error}`);
-    });  
+    });
 
     this.cache.flushdb();
   }

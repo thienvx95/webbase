@@ -7,3 +7,4 @@ export { Menu } from './menus/menu.entity';
 export { DomainHost } from './application/domainHost.entity';
 export { Language } from './localization/language.entity';
 export { Permission } from './permissions/permission.entity';
+export { UserLogin } from './users/userLogin.entity';

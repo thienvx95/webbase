@@ -1,29 +1,14 @@
-import { IsBoolean, IsArray, IsString, IsOptional } from 'class-validator';
-
 export class PaginateResult<T> {
-  constructor(model: any) {
-    if (model) {
-      this.hasNext = model.hasNext;
-      this.hasPrevious = model.hasPrevious;
-      this.next = model.next;
-      this.previous = model.previous;
-    }
-  }
-
-  @IsBoolean()
-  hasNext?: boolean;
-
-  @IsBoolean()
-  hasPrevious?: boolean;
-
-  @IsOptional()
-  @IsString()
-  next?: string;
-
-  @IsOptional()
-  @IsString()
-  previous?: string;
-
-  @IsArray()
-  results?: T[];
+  docs: T[];
+  totalDocs: number;
+  limit: number;
+  hasPrevPage: boolean;
+  hasNextPage: boolean;
+  page?: number | undefined;
+  totalPages: number;
+  offset: number;
+  prevPage?: number | null | undefined;
+  nextPage?: number | null | undefined;
+  pagingCounter: number;
+  meta?: any;
 }
