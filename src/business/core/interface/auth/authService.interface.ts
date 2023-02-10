@@ -2,11 +2,12 @@ import {
   AuthRequest,
   AuthResponse,
   RefreshTokenRequest,
+  Session,
 } from '@business/auth/model';
 
 export interface IAuthService {
-  authenticate(request: AuthRequest, ipAddress: string): Promise<AuthResponse>;
-  authenticateByOAuth(email: string, ipAddress: string): Promise<AuthResponse>;
+  authenticate(request: AuthRequest, session: Session): Promise<AuthResponse>;
+  authenticateByOAuth(email: string, session: Session): Promise<AuthResponse>;
   revokeByToken(
     refreshToken: RefreshTokenRequest,
     ipAddress: string,

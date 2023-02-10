@@ -93,6 +93,7 @@ export const CacheTime = 600;
 export const RoutingAPI = {
   Auth: `/api/auth`,
   User: `/api/user`,
+  UserProfile: `/api/userProfile`,
   Geographic: `/api/geographic`,
   Menu: `/api/menu`,
   Permission: `/api/permission`,

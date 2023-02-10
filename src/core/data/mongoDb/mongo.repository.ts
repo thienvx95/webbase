@@ -16,20 +16,27 @@ import {
 import { HttpStatus, HttpStatusError } from '@core/exception/httpStatusError';
 import { IRepository } from '../repository.interface';
 import { ErrorEnum } from '@core/enums/error.enum';
-import { PaginateOptions, PaginateResult } from '@business/common/model';
 import { BaseEntity } from '@entities/base.entity';
 import { BuildQuery } from '@business/core/utils/buildQuery';
 import { Logging } from '@core/log';
+import {
+  PaginateOptions,
+  PaginateRequest,
+  PaginateResult,
+} from '@business/common/model';
 
-export interface IPaginateModel<T> {
-  paginate(options: PaginateOptions): PaginateResult<DocumentType<T>>;
+export interface IPaginateModel {
+  paginate<K>(
+    query: Record<string, unknown>,
+    options: PaginateOptions,
+  ): PaginateResult<K>;
 }
 
 export class MongoRepository<T = BaseEntity> implements IRepository<T> {
-  private readonly _model: IPaginateModel<T> &
+  private readonly _model: IPaginateModel &
     ReturnModelType<AnyParamConstructor<T>>;
   constructor(_class: { new (): T }) {
-    this._model = getModelForClass(_class) as IPaginateModel<T> &
+    this._model = getModelForClass(_class) as IPaginateModel &
       ReturnModelType<AnyParamConstructor<T>>;
   }
 
@@ -261,9 +268,10 @@ export class MongoRepository<T = BaseEntity> implements IRepository<T> {
     return await this._model.findById(_id, projection, options);
   }
 
-  public async findPaging(
-    option: PaginateOptions,
-  ): Promise<PaginateResult<DocumentType<T>>> {
-    return await this._model.paginate(BuildQuery.convertToQuery(option));
+  public async findPaging<K>(
+    request: PaginateRequest,
+  ): Promise<PaginateResult<K>> {
+    const { query, options } = BuildQuery.convertToQuery(request);
+    return await this._model.paginate(query, options);
   }
 }

@@ -9,28 +9,32 @@ import {
 } from 'routing-controllers';
 import { ResponseSchema } from 'routing-controllers-openapi';
 import { inject, injectable } from 'inversify';
-import { SettingDto } from '../model';
+import { SettingDto } from '../../common/model';
 import { Roles } from '@core/enums/role.enum';
-import { ISettingService } from '@business/core/interface';
-import { SERVICE_TYPES } from '@infrastructures/modules';
+import { ISettingService, ISiteSettingPage } from '@business/core/interface';
+import { COMMON_TYPES, SERVICE_TYPES } from '@infrastructures/modules';
 import {
   BaseController,
   RoutingAPI,
   ResponseResult,
   Session,
 } from '@business/core/controller/baseController';
+import { BaseSettingPage } from '../model/setting/base.setting';
+import { PageSettingEnum } from '@core/enums/settingPage.enum';
 
 @injectable()
 @JsonController(RoutingAPI.Setting)
-@Authorized([Roles.Admin])
 export class SettingController extends BaseController {
   constructor(
     @inject(SERVICE_TYPES.SettingService)
     private settingService: ISettingService,
+    @inject(COMMON_TYPES.SiteSettingPage)
+    private siteSettingPage: ISiteSettingPage,
   ) {
     super();
   }
 
+  @Authorized([Roles.Admin])
   @Get('/group')
   @ResponseSchema(SettingDto, { isArray: true })
   async findGroup(): Promise<ResponseResult<SettingDto[]>> {
@@ -38,6 +42,7 @@ export class SettingController extends BaseController {
     return this.Ok(true, data);
   }
 
+  @Authorized([Roles.Admin])
   @Get('/group/:id')
   @ResponseSchema(SettingDto, { isArray: true })
   async findByGroup(
@@ -47,6 +52,7 @@ export class SettingController extends BaseController {
     return this.Ok(true, data);
   }
 
+  @Authorized([Roles.Admin])
   @Post()
   async update(
     @Body() body: Array<SettingDto>,
@@ -57,5 +63,16 @@ export class SettingController extends BaseController {
       errorCode = error;
     });
     return this.Ok(result, null, errorCode);
+  }
+
+  @Get('/getSettingPage/:page')
+  @ResponseSchema(BaseSettingPage)
+  async getPageSettings(
+    @Param('page') page: string,
+  ): Promise<ResponseResult<BaseSettingPage>> {
+    const data = await this.siteSettingPage.getPageSettings(
+      PageSettingEnum[page],
+    );
+    return this.Ok(true, data);
   }
 }

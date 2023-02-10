@@ -7,10 +7,10 @@ import {
   Length,
 } from 'class-validator';
 import { AutoMap } from '@automapper/classes';
-import { BaseDto } from '@business/common/model/base.dto';
+import { BaseDto } from '@business/core/model/base.dto';
 import { AddressDto } from '@business/common/model/address/address.dto';
 import { UserExternalServiceDto } from './userExternalService.dto';
-export class UserDto extends BaseDto  {
+export class UserDto extends BaseDto {
   @AutoMap()
   @IsNotEmpty()
   @IsString()

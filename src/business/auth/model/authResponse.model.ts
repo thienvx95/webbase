@@ -1,6 +1,4 @@
-
-
-import { IsNotEmpty } from "class-validator";
+import { IsNotEmpty } from 'class-validator';
 
 export class AuthResponse {
   @IsNotEmpty()
@@ -8,4 +6,6 @@ export class AuthResponse {
 
   @IsNotEmpty()
   refreshToken: string;
+
+  remmember?: boolean;
 }

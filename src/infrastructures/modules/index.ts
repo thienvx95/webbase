@@ -2,6 +2,7 @@ export const COMMON_TYPES = {
   EventDispatcher: Symbol.for('EventDispatcher'),
   AutoMapper: Symbol.for('AutoMapper'),
   SiteSettings: Symbol.for('SiteSettings'),
+  SiteSettingPage: Symbol.for('SiteSettingPage'),
   MemoryCache: Symbol.for('MemoryCache'),
 };
 
@@ -28,4 +29,5 @@ export const REPOSITORY_TYPES = {
   DomainHostRepository: Symbol.for('DomainHostRepository'),
   FileUploadRepository: Symbol.for('FileUploadRepository'),
   PermissionRepository: Symbol.for('PermissionRepository'),
+  UserLoginRepository: Symbol.for('UserLoginRepository'),
 };

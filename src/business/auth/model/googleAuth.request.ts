@@ -1,9 +1,10 @@
-
-import { IsNotEmpty } from "class-validator";
+import { IsNotEmpty } from 'class-validator';
 
 export class GoogleAuthRequest {
   @IsNotEmpty({
-    message: "Require token",
+    message: 'Require token',
   })
   code: string;
+
+  remember?: boolean;
 }

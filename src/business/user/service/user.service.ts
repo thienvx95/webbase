@@ -4,12 +4,13 @@ import { TokenPayload } from 'google-auth-library';
 import { GetTokenResponse } from 'google-auth-library/build/src/auth/oauth2client';
 import { gravatar, PasswordUtil } from '@core/ultis';
 import { Logging } from '@core/log';
-import { PaginateOptions, PaginateResult } from '@business/common/model';
-import { User, UserToken } from 'entities';
+import { PaginateResult } from '@business/common/model';
+import { User, UserToken, UserLogin } from 'entities';
 import {
   ChangePasswordRequest,
   UserDto,
   UserTokenDto,
+  UserLoginDto,
 } from '@business/user/model';
 import { inject, injectable } from 'inversify';
 import { Session } from '@business/auth/model';
@@ -21,6 +22,7 @@ import {
   IUserService,
 } from '@business/core/interface';
 import { COMMON_TYPES, REPOSITORY_TYPES } from '@infrastructures/modules';
+import { PaginateRequest } from '@business/common/model/pagingation/paginateRequest';
 
 @injectable()
 export class UserService implements IUserService {
@@ -30,6 +32,8 @@ export class UserService implements IUserService {
     private userRepository: IRepository<User>,
     @inject(REPOSITORY_TYPES.UserTokenRepository)
     private userTokenRepository: IRepository<UserToken>,
+    @inject(REPOSITORY_TYPES.UserLoginRepository)
+    private userLoginRepository: IRepository<UserLogin>,
     @inject(COMMON_TYPES.SiteSettings) private siteSettings: ISiteSettings,
     @inject(COMMON_TYPES.EventDispatcher)
     private eventDispatcher: IEventDispatcher,
@@ -41,11 +45,14 @@ export class UserService implements IUserService {
     const models = await this.userRepository.find({});
     return this.autoMapper.MapArray(models, User, UserDto);
   }
-  async findPaging(option: PaginateOptions): Promise<PaginateResult<UserDto>> {
+  async findPaging(
+    paginateRequest: PaginateRequest,
+  ): Promise<PaginateResult<UserDto>> {
     this._log.info('Find users paging');
-    const models = await this.userRepository.findPaging(option);
-    const result = new PaginateResult<UserDto>(models);
-    result.results = this.autoMapper.MapArray(models.results, User, UserDto);
+    const result = await this.userRepository.findPaging<UserDto>(
+      paginateRequest,
+    );
+    result.docs = this.autoMapper.MapArray(result.docs, User, UserDto);
     return result;
   }
 
@@ -185,7 +192,7 @@ export class UserService implements IUserService {
     _id: string,
     out: (errorCode: number) => void,
   ): Promise<boolean> {
-    this._log.info('Delete a user');
+    this._log.info(`Delete a user - userId: ${_id}`);
     const result = await this.userRepository.deleteById(_id.toString());
     if (result) {
       this.eventDispatcher.dispatch(events.user.deleted, _id);
@@ -223,5 +230,47 @@ export class UserService implements IUserService {
   async getTokenByUserId(userId: string): Promise<UserTokenDto[]> {
     const result = await this.userTokenRepository.find({ user: userId });
     return this.autoMapper.MapArray(result, UserToken, UserTokenDto);
+  }
+
+  async getUserLogin(
+    paginateRequest: PaginateRequest,
+  ): Promise<PaginateResult<UserLoginDto>> {
+    const pagingResult =
+      await this.userLoginRepository.findPaging<UserLoginDto>(paginateRequest);
+    pagingResult.docs = this.autoMapper.MapArray(
+      pagingResult.docs,
+      UserLogin,
+      UserLoginDto,
+    );
+    return pagingResult;
+  }
+
+  async deleteUserLoginActivity(
+    id: string,
+    session: Session,
+    out: (errorCode: number) => void,
+  ): Promise<boolean> {
+    this._log.info(`Delete a user login activity - user id: ${session._id}`);
+    const result = await this.userLoginRepository.deleteById(id);
+    if (!result) {
+      out(ErrorEnum.Error_Delete);
+    }
+    return result;
+  }
+
+  async deleteAllUserLoginActivity(
+    session: Session,
+    out: (errorCode: number) => void,
+  ): Promise<boolean> {
+    this._log.info(
+      `Delete all user login activities - user id: ${session._id}`,
+    );
+    const result = await this.userLoginRepository.delete({
+      userId: session._id,
+    });
+    if (!result) {
+      out(ErrorEnum.Error_Delete);
+    }
+    return result;
   }
 }

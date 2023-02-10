@@ -12,10 +12,11 @@ import {
   Menu,
   DomainHost,
   FileUpload,
-  Permission
+  Permission,
 } from 'entities';
 import { SystemConfig } from '@core/configuration';
 import { IBinding, LifeTime } from './binding.interfaces';
+import { UserLogin } from '@entities/users/userLogin.entity';
 
 export const bindingRepositories: Array<IBinding> = [
   {
@@ -63,27 +64,32 @@ export const bindingRepositories: Array<IBinding> = [
     symbol: REPOSITORY_TYPES.PermissionRepository,
     lifeTime: LifeTime.Scoped,
   },
+  {
+    class: UserLogin,
+    symbol: REPOSITORY_TYPES.UserLoginRepository,
+    lifeTime: LifeTime.Scoped,
+  },
 ];
 
 export function repositories(container: Container): void {
-  bindingRepositories.forEach(x => {
+  bindingRepositories.forEach((x) => {
     const model = x.class;
     const regisster = container
-    .bind<IRepository<typeof model>>(x.symbol)
-    .toDynamicValue(() => {
-        if(SystemConfig.DbProvider == DbProvider.MongoDB){
-            return new MongoRepository<typeof model>(model);
+      .bind<IRepository<typeof model>>(x.symbol)
+      .toDynamicValue(() => {
+        if (SystemConfig.DbProvider == DbProvider.MongoDB) {
+          return new MongoRepository<typeof model>(model);
         }
         return null;
-    })
-    if(x.lifeTime == LifeTime.Scoped){
-        regisster.inRequestScope()
+      });
+    if (x.lifeTime == LifeTime.Scoped) {
+      regisster.inRequestScope();
     }
-    if(x.lifeTime == LifeTime.Singleton){
-        regisster.inSingletonScope()
+    if (x.lifeTime == LifeTime.Singleton) {
+      regisster.inSingletonScope();
     }
-    if(x.lifeTime == LifeTime.Transient){
-        regisster.inTransientScope()
+    if (x.lifeTime == LifeTime.Transient) {
+      regisster.inTransientScope();
     }
   });
 }

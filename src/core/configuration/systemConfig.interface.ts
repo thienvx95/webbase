@@ -1,6 +1,6 @@
-import { CacheProvider } from "@core/enums/cacheProvider.enum.";
-import { DbProvider } from "@core/enums/dbProvider.enum";
-import { StorageProvider } from "@core/enums/storageProvider.enum";
+import { CacheProvider } from '@core/enums/cacheProvider.enum';
+import { DbProvider } from '@core/enums/dbProvider.enum';
+import { StorageProvider } from '@core/enums/storageProvider.enum';
 
 export interface AppInfo {
   Name?: string;
@@ -41,7 +41,7 @@ export interface LoggingSetting {
 }
 
 export interface DataSettings {
-  ConnectionString ?: string;
+  ConnectionString?: string;
   DbProvider: DbProvider;
   DbName?: string;
 }
@@ -76,8 +76,8 @@ export interface ReditSetting {
   Prefix?: string;
 }
 export interface ISystemConfig {
-  Node?:string;
-  IsProduction:boolean;
+  Node?: string;
+  IsProduction: boolean;
   AppInfo?: AppInfo;
   AppSetting?: AppSetting;
   DatabaseVersion: string;
@@ -92,11 +92,17 @@ export interface ISystemConfig {
   S3Config?: S3Config;
   Dirs: PathStructure;
   InstallKey: string;
+  GoogleAuth: GoogleAuth;
 }
 
-export interface PathStructure{
+export interface PathStructure {
   Controllers: string;
   Middlewares: string;
   Interceptors: string;
   Subscribers: string;
+}
+
+export interface GoogleAuth {
+  ClientId: string;
+  Secret: string;
 }

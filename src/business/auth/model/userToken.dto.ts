@@ -1,8 +1,5 @@
-import { BaseDto } from '@business/common/model/base.dto';
-import {
-  IsString,
-  IsDate
-} from 'class-validator';
+import { BaseDto } from '@business/core/model/base.dto';
+import { IsString, IsDate } from 'class-validator';
 
 export class UserTokenDto extends BaseDto {
   @IsString()

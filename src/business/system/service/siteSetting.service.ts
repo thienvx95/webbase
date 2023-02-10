@@ -36,8 +36,8 @@ export class SiteSettings implements ISiteSettings {
     );
   }
 
-  get(_id: string, isReload = false): SettingValue {
-    return this.getValue(_id, isReload);
+  get<T>(_id: string, isReload = false): T {
+    return this.getValue(_id, isReload) as T;
   }
 
   private setValue = (_id: string, value: SettingValue): void => {

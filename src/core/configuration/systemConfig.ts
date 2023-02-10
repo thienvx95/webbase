@@ -4,7 +4,7 @@ import { toNumber, toBool, getOsEnv, normalizePort } from '@core/ultis';
 import { ISystemConfig } from './systemConfig.interface';
 import { DbProvider } from '@core/enums/dbProvider.enum';
 import { StorageProvider } from '@core/enums/storageProvider.enum';
-import { CacheProvider } from '@core/enums/cacheProvider.enum.';
+import { CacheProvider } from '@core/enums/cacheProvider.enum';
 
 export class SystemConfig {
   private _configs: ISystemConfig;
@@ -134,6 +134,10 @@ export class SystemConfig {
       },
       StorageProvider: StorageProvider[getOsEnv('STORAGE_PROVIDER')],
       InstallKey: getOsEnv('INSTALL_KEY'),
+      GoogleAuth: {
+        ClientId: getOsEnv('GOOGLE_AUTH_CLIENT_KEY'),
+        Secret: getOsEnv('GOOGLE_AUTH_CLIENT_SECRET'),
+      },
     };
   }
 }

@@ -11,7 +11,7 @@ export const RoutingControllerLoader: ILoader = async (
 ) => {
   if (settings) {
     const configs = settings.getData<ISystemConfig>('configs');
-    
+
     const options: RoutingControllersOptions = {
       authorizationChecker: AuthorizationChecker,
       currentUserChecker: CurrentUserChecker,
@@ -22,7 +22,7 @@ export const RoutingControllerLoader: ILoader = async (
       development: !configs.IsProduction,
     };
     const expressApp = createExpressServer(options);
-    
+
     settings.setData('express_app', expressApp);
   }
 };
