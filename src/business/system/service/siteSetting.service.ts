@@ -23,7 +23,7 @@ export class SiteSettings implements ISiteSettings {
     return SiteSettings._instance;
   }
 
-  init(): void {
+  public init(): void {
     this._settingModel.find(
       { type: { $nin: ['section', 'group'] } },
       (_err, data) => {
@@ -36,7 +36,7 @@ export class SiteSettings implements ISiteSettings {
     );
   }
 
-  get<T>(_id: string, isReload = false): T {
+  public get<T>(_id: string, isReload = false): T {
     return this.getValue(_id, isReload) as T;
   }
 
@@ -44,18 +44,13 @@ export class SiteSettings implements ISiteSettings {
     this._cache.set(_id, value);
   };
 
-  private setFromDB = (_id: string): void => {
-    this._settingModel.findById(
-      _id,
-      { fields: { value: 1 } },
-      {},
-      (err: any, data: any) => {
-        if (err) return;
-        if (data) {
-          this.setValue(_id, data.value);
-        }
-      },
-    );
+  private setFromDB = async (_id: string): Promise<void> => {
+    const result = await this._settingModel.findById(_id, {
+      fields: { value: 1 },
+    });
+    if (result != null) {
+      this.setValue(_id, result.toObject());
+    }
   };
 
   private getValue = (_id: string, isReload = false): SettingValue => {

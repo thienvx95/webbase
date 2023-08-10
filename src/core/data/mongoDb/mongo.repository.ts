@@ -1,3 +1,4 @@
+import { Pagination, PaginationModel } from 'mongoose-paginate-ts';
 import {
   FilterQuery,
   QueryOptions,
@@ -19,24 +20,13 @@ import { ErrorEnum } from '@core/enums/error.enum';
 import { BaseEntity } from '@entities/base.entity';
 import { BuildQuery } from '@business/core/utils/buildQuery';
 import { Logging } from '@core/log';
-import {
-  PaginateOptions,
-  PaginateRequest,
-  PaginateResult,
-} from '@business/common/model';
-
-export interface IPaginateModel {
-  paginate<K>(
-    query: Record<string, unknown>,
-    options: PaginateOptions,
-  ): PaginateResult<K>;
-}
+import { PaginateRequest } from '@business/common/model';
 
 export class MongoRepository<T = BaseEntity> implements IRepository<T> {
-  private readonly _model: IPaginateModel &
+  private readonly _model: Pagination<T> &
     ReturnModelType<AnyParamConstructor<T>>;
   constructor(_class: { new (): T }) {
-    this._model = getModelForClass(_class) as IPaginateModel &
+    this._model = getModelForClass(_class) as Pagination<T> &
       ReturnModelType<AnyParamConstructor<T>>;
   }
 
@@ -63,9 +53,10 @@ export class MongoRepository<T = BaseEntity> implements IRepository<T> {
    * @param entity - model
    * @returns entity
    */
-  async insertOne(entity: T): Promise<DocumentType<T>> {
+  async insertOne(entity: T): Promise<T> {
     try {
-      return await this._model.create({ ...entity });
+      const result = await this._model.create<T>({ ...entity });
+      return result.toObject();
     } catch (e) {
       return this.handleError(e);
     }
@@ -75,9 +66,9 @@ export class MongoRepository<T = BaseEntity> implements IRepository<T> {
    * Insert many entities
    * @param entities - array model
    */
-  async insertMany(entities: T[]): Promise<DocumentType<T>[]> {
+  async insertMany(entities: T[]): Promise<T[]> {
     try {
-      return await this._model.insertMany(entities);
+      return await this._model.insertMany(entities, { lean: true });
     } catch (e) {
       return this.handleError(e);
     }
@@ -268,10 +259,10 @@ export class MongoRepository<T = BaseEntity> implements IRepository<T> {
     return await this._model.findById(_id, projection, options);
   }
 
-  public async findPaging<K>(
+  public async findPaging(
     request: PaginateRequest,
-  ): Promise<PaginateResult<K>> {
-    const { query, options } = BuildQuery.convertToQuery(request);
-    return await this._model.paginate(query, options);
+  ): Promise<PaginationModel<T>> {
+    const options = BuildQuery.convertToQuery(request);
+    return await this._model.paginate(options);
   }
 }

@@ -1,5 +1,5 @@
 import { prop, plugin, modelOptions, Severity } from '@typegoose/typegoose';
-import * as paginate from 'mongoose-paginate-v2';
+import { mongoosePagination } from 'mongoose-paginate-ts';
 import { AutoMap } from '@automapper/classes';
 import { v4 as uuidv4 } from 'uuid';
 @modelOptions({
@@ -8,7 +8,7 @@ import { v4 as uuidv4 } from 'uuid';
     timestamps: true,
   },
 })
-@plugin(paginate)
+@plugin(mongoosePagination)
 export class BaseEntity {
   @AutoMap()
   @prop({ default: uuidv4() })

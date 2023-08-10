@@ -1,6 +1,4 @@
-export { PaginateOptions, PaginateQuery } from './pagingation/PaginateQuery';
 export { PaginateRequest } from './pagingation/paginateRequest';
-export { PaginateResult } from './pagingation/paginateResult';
 export { FileUploadDto } from './fileUpload/fileUpload.dto';
 export { PermissionDto } from './permission/permission.dto';
 export { MenuDto } from './menu/menu.dto';

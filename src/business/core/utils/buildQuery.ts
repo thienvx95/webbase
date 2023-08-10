@@ -1,26 +1,23 @@
 import { isEmpty } from 'lodash';
+import { PaginationOptions } from 'mongoose-paginate-ts';
 import { toBool } from '@core/ultis';
 import { PaginateRequest } from '@business/common/model/pagingation/paginateRequest';
-import { PaginateQuery } from '@business/common/model/pagingation/PaginateQuery';
 
 export class BuildQuery {
-  static convertToQuery(request: PaginateRequest): PaginateQuery {
-    const query = new PaginateQuery();
+  static convertToQuery(request: PaginateRequest): PaginationOptions {
+    let sort = [];
+    const query = {};
     if (!isEmpty(request.sort)) {
-      query.options.sort = [];
       Object.keys(request.sort).forEach((x) => {
-        query.options.sort.push([
-          x,
-          request.sort[x] === 'ascend' ? 'asc' : 'desc',
-        ]);
+        sort.push([x, request.sort[x] === 'ascend' ? 'asc' : 'desc']);
       });
     } else {
-      query.options.sort = [['createdAt', 'desc']];
+      sort = [['createdAt', 'desc']];
     }
     if (!isEmpty(request.search)) {
       Object.keys(request.search).forEach((x) => {
         if (!isEmpty(request.search[x])) {
-          Object.assign(query.query, {
+          Object.assign(query, {
             [`${x}`]: { $regex: `^${request.search[x]}`, $options: 'i' },
           });
         }
@@ -34,13 +31,16 @@ export class BuildQuery {
           if (['isActive'].includes(x)) {
             value = value.map((x) => toBool(x as string));
           }
-          Object.assign(query.query, { [`${x}`]: { $in: value } });
+          Object.assign(query, { [`${x}`]: { $in: value } });
         }
       });
     }
-    query.options.limit = request.limit;
-    query.options.page = request.page;
-    query.options.lean = true;
-    return query;
+    return {
+      sort,
+      query,
+      limit: request.limit,
+      page: request.page,
+      lean: true,
+    };
   }
 }

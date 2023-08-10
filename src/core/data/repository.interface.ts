@@ -7,7 +7,7 @@ import {
 } from 'mongoose';
 import { DocumentType } from '@typegoose/typegoose';
 import { PaginateRequest } from '@business/common/model/pagingation/paginateRequest';
-import { PaginateResult } from '@business/common/model';
+import { PaginationModel } from 'mongoose-paginate-ts';
 
 export { Types };
 export type IRepository<T> = IWrite<T> & IRead<T>;
@@ -46,5 +46,5 @@ export interface IRead<T> {
     projection?: ProjectionType<DocumentType<T>> | null,
     options?: QueryOptions,
   ): Promise<DocumentType<T>>;
-  findPaging<K>(option: PaginateRequest): Promise<PaginateResult<K>>;
+  findPaging(option: PaginateRequest): Promise<PaginationModel<T>>;
 }
