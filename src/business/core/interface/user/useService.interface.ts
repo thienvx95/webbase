@@ -1,5 +1,5 @@
 import { Session, UserTokenDto } from '@business/auth/model';
-import { PaginateResult } from '@business/common/model';
+import { PaginationModel } from 'mongoose-paginate-ts';
 import { PaginateRequest } from '@business/common/model/pagingation/paginateRequest';
 import {
   ChangePasswordRequest,
@@ -14,7 +14,7 @@ export interface IUserService {
   findById(id: string): Promise<UserDto>;
   findPaging(
     paginateRequest: PaginateRequest,
-  ): Promise<PaginateResult<UserDto>>;
+  ): Promise<PaginationModel<UserDto>>;
   findByEmail(email: string): Promise<UserDto>;
   findCreateOrUpdateGooleUser(
     ticket: TokenPayload,
@@ -46,7 +46,7 @@ export interface IUserService {
   getTokenByUserId(userId: string): Promise<UserTokenDto[]>;
   getUserLogin(
     paginateRequest: PaginateRequest,
-  ): Promise<PaginateResult<UserLoginDto>>;
+  ): Promise<PaginationModel<UserLoginDto>>;
   deleteUserLoginActivity(
     id: string,
     session: Session,

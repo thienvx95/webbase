@@ -4,7 +4,7 @@ import { TokenPayload } from 'google-auth-library';
 import { GetTokenResponse } from 'google-auth-library/build/src/auth/oauth2client';
 import { gravatar, PasswordUtil } from '@core/ultis';
 import { Logging } from '@core/log';
-import { PaginateResult } from '@business/common/model';
+import { PaginationModel } from 'mongoose-paginate-ts';
 import { User, UserToken, UserLogin } from 'entities';
 import {
   ChangePasswordRequest,
@@ -47,7 +47,7 @@ export class UserService implements IUserService {
   }
   async findPaging(
     paginateRequest: PaginateRequest,
-  ): Promise<PaginateResult<UserDto>> {
+  ): Promise<PaginationModel<UserDto>> {
     this._log.info('Find users paging');
     const result = await this.userRepository.findPaging<UserDto>(
       paginateRequest,
@@ -234,7 +234,7 @@ export class UserService implements IUserService {
 
   async getUserLogin(
     paginateRequest: PaginateRequest,
-  ): Promise<PaginateResult<UserLoginDto>> {
+  ): Promise<PaginationModel<UserLoginDto>> {
     const pagingResult =
       await this.userLoginRepository.findPaging<UserLoginDto>(paginateRequest);
     pagingResult.docs = this.autoMapper.MapArray(

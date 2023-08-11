@@ -13,7 +13,7 @@ import { ResponseSchema } from 'routing-controllers-openapi';
 import { Roles } from '@core/enums/role.enum';
 import { UserDto } from '../model';
 import { Session, UserTokenDto } from '@business/auth/model';
-import { PaginateResult } from '@business/common/model';
+import { PaginationModel } from 'mongoose-paginate-ts';
 import { inject, injectable } from 'inversify';
 import { IUserService } from '@business/core/interface';
 import { SERVICE_TYPES } from '@infrastructures/modules';
@@ -53,10 +53,10 @@ export class UserController extends BaseController {
 
   @Authorized([Roles.Admin])
   @Post('/paging')
-  @ResponseSchema(ResponseResult<PaginateResult<UserDto>>)
+  @ResponseSchema(ResponseResult<PaginationModel<UserDto>>)
   async findPaging(
     @Body() body: PaginateRequest,
-  ): Promise<ResponseResult<PaginateResult<UserDto>>> {
+  ): Promise<ResponseResult<PaginationModel<UserDto>>> {
     const data = await this.userService.findPaging(body);
     return this.Ok(true, data);
   }
