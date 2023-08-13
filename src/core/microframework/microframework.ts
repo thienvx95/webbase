@@ -4,16 +4,15 @@ import { IConfig, ILoader } from './microframework.interface';
 import { NotBootstrappedError } from './error/notBootstrappedError';
 import { Logging } from '@core/log';
 
-export interface IMicroframework{
-    config(config: IConfig | string | string[]): this
-    registerLoader(loader: ILoader): this
-    registerLoaders(loaders: ILoader[]): this
-    bootstrap(): Promise<this>
-    shutdown(): Promise<this>
+export interface IMicroframework {
+  config(config: IConfig | string | string[]): this;
+  registerLoader(loader: ILoader): this;
+  registerLoaders(loaders: ILoader[]): this;
+  bootstrap(): Promise<this>;
+  shutdown(): Promise<this>;
 }
 
 export class Microframework implements IMicroframework {
-
   private frameworkConfig?: IConfig;
   private allConfiguration: any = {};
   private loaders: ILoader[] = [];
@@ -22,13 +21,20 @@ export class Microframework implements IMicroframework {
   config(config: IConfig | string | string[]): this {
     const appRootDir = path;
     if (typeof config == 'string') {
-      this.allConfiguration = require(appRootDir + '/' + config + '.json') || {};
-      if (this.allConfiguration.microframework) this.frameworkConfig = this.allConfiguration.microframework;
+      this.allConfiguration =
+        require(appRootDir + '/' + config + '.json') || {};
+      if (this.allConfiguration.microframework)
+        this.frameworkConfig = this.allConfiguration.microframework;
     } else if (Array.isArray(config)) {
       // string[]
       if (config.length > 0) {
         this.allConfiguration = {};
-        Object.assign(this.allConfiguration, ...config.map(conf => require(appRootDir + '/' + conf + '.json') || {}));
+        Object.assign(
+          this.allConfiguration,
+          ...config.map(
+            (conf) => require(appRootDir + '/' + conf + '.json') || {},
+          ),
+        );
       }
     } else {
       this.frameworkConfig = config;
@@ -43,7 +49,7 @@ export class Microframework implements IMicroframework {
   }
 
   registerLoaders(loaders: ILoader[]): this {
-    ((loaders as ILoader[]) || []).forEach(loader => {
+    ((loaders as ILoader[]) || []).forEach((loader) => {
       if (loader instanceof Array) {
         this.loaders.push(...loader);
       } else {
@@ -52,22 +58,36 @@ export class Microframework implements IMicroframework {
     });
     return this;
   }
-  
+
   bootstrap(): Promise<this> {
     this.frameworkSettings = new Settings();
     const bootstrapTime = +new Date();
-    return this.runInSequence<ILoader,ISettings>(this.loaders, loader => {
-      const loaderResult = loader(this.frameworkSettings);
-      return loaderResult instanceof Promise ? loaderResult : Promise.resolve();
-    })
-    .then(() => {
-        if (this.frameworkConfig && this.frameworkConfig.showBootstrapTime){
-          const _logging = Logging.getInstance('Microframwork');
-          _logging.info(`Application is up and running. It took ${
-            +new Date() - bootstrapTime - (this.frameworkConfig.bootstrapTimeout || 0)
-          } ms to bootstrap the app.`)
-        }
+    return this.createBootstrapTimeout()
+      .then(() => {
+        return this.runInSequence<ILoader, ISettings>(
+          this.loaders,
+          (loader) => {
+            if (this.frameworkSettings && this.frameworkConfig.showLoaderInit) {
+              this.log(`Load ${loader.name}.`);
+            }
 
+            const loaderResult = loader(this.frameworkSettings);
+            return loaderResult instanceof Promise
+              ? loaderResult
+              : Promise.resolve();
+          },
+        );
+      })
+      .then(() => {
+        if (this.frameworkConfig && this.frameworkConfig.showBootstrapTime) {
+          this.log(
+            `Application is up and running. It took ${
+              +new Date() -
+              bootstrapTime -
+              (this.frameworkConfig.bootstrapTimeout || 0)
+            } ms to bootstrap the app.`,
+          );
+        }
 
         return this;
       });
@@ -76,10 +96,15 @@ export class Microframework implements IMicroframework {
   shutdown(): Promise<this> {
     if (!this.frameworkSettings) throw new NotBootstrappedError();
 
-    return this.runInSequence(this.frameworkSettings.getShutdownHandlers(), handler => {
-      const handlerResult = handler();
-      return handlerResult instanceof Promise ? handlerResult : Promise.resolve();
-    }).then(() => this);
+    return this.runInSequence(
+      this.frameworkSettings.getShutdownHandlers(),
+      (handler) => {
+        const handlerResult = handler();
+        return handlerResult instanceof Promise
+          ? handlerResult
+          : Promise.resolve();
+      },
+    ).then(() => this);
   }
 
   get settings(): ISettings {
@@ -88,7 +113,10 @@ export class Microframework implements IMicroframework {
     return this.frameworkSettings;
   }
 
-  private runInSequence<T, U>(collection: T[], callback: (item: T) => Promise<U>): Promise<U[]> {
+  private runInSequence<T, U>(
+    collection: T[],
+    callback: (item: T) => Promise<U>,
+  ): Promise<U[]> {
     const results: U[] = [];
     return collection
       .reduce((promise, item) => {
@@ -96,12 +124,26 @@ export class Microframework implements IMicroframework {
           .then(() => {
             return callback(item);
           })
-          .then(result => {
+          .then((result) => {
             results.push(result);
           });
       }, Promise.resolve())
       .then(() => {
         return results;
       });
+  }
+
+  private createBootstrapTimeout(): Promise<void> {
+    return new Promise<void>((ok) => {
+      if (!this.frameworkConfig || !this.frameworkConfig.bootstrapTimeout)
+        return ok();
+
+      setTimeout(ok, this.frameworkConfig.bootstrapTimeout);
+    });
+  }
+
+  private log(message: string): void {
+    const _logging = Logging.getInstance('Microframwork');
+    _logging.info(message);
   }
 }

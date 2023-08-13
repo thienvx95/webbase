@@ -7,7 +7,11 @@ import { inject, injectable } from 'inversify';
 @injectable()
 export class GoogleAuthService implements IGoogleAuthService {
   private googleAuthClient: OAuth2Client;
-  constructor(@inject(COMMON_TYPES.SiteSettings) private siteSettings: ISiteSettings) {
+  constructor(
+    @inject(COMMON_TYPES.SiteSettings) private siteSettings: ISiteSettings,
+  ) {}
+
+  private initGooogleSerivce = (): void => {
     const googleId = this.siteSettings.get('Google_Id') as string;
     const googleCallBack = this.siteSettings.get(
       'Google_Callback_URL',
@@ -18,9 +22,10 @@ export class GoogleAuthService implements IGoogleAuthService {
       clientSecret: googleSecret,
       redirectUri: googleCallBack,
     });
-  }
+  };
 
   async getToken(code: string): Promise<GetTokenResponse> {
+    this.initGooogleSerivce();
     return await this.googleAuthClient.getToken(code);
   }
 

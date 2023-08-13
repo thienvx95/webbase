@@ -23,7 +23,7 @@ import { BaseDto } from '@business/core/model/base.dto';
 import { Address } from '@entities/common/address';
 import { AddressDto } from '@business/common/model/address/address.dto';
 import { afterMap } from '@automapper/core';
-import { getFileUploadUrl } from '@core/ultis';
+import { getFileUploadUrl, isValidHttpUrl } from '@core/ultis';
 import { SystemConfig } from '@core/configuration';
 
 export function MapDtoToEntity(autoMapper: AutoMapper): void {
@@ -43,10 +43,12 @@ export function MapEntityToDto(autoMapper: AutoMapper): void {
     User,
     UserDto,
     afterMap((sourceObject: User, destinationIdentifier: UserDto) => {
-      destinationIdentifier.avatar = getFileUploadUrl(
-        sourceObject.avatar,
-        SystemConfig.getCurrentDomain(),
-      );
+      if (!isValidHttpUrl(destinationIdentifier.avatar)) {
+        destinationIdentifier.avatar = getFileUploadUrl(
+          sourceObject.avatar,
+          SystemConfig.getCurrentDomain(),
+        );
+      }
     }),
   );
   autoMapper.createMap(UserToken, UserTokenDto);

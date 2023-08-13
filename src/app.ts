@@ -37,17 +37,20 @@ bootstrapMicroframework({
     showBootstrapTime: true,
     debug: false,
   },
-}).catch((e) => {
-  const log = Logging.getInstance('System');
-  log.error(`Application is crashed: ${e.name}: ${e.message} ${e.stack}`);
-  RedisCache.getInstance().disconnect();
-});
-
+})
+  .then((framework) => {
+    return framework.shutdown();
+  })
+  .catch((e) => {
+    const log = Logging.getInstance('System');
+    log.error(`Application is crashed: ${e.name}: ${e.message} ${e.stack}`);
+    RedisCache.getInstance().disconnect();
+  });
 
 process.on('SIGINT', cleanup);
 process.on('SIGTERM', cleanup);
 
-function cleanup():void {
+function cleanup(): void {
   RedisCache.getInstance().disconnect();
   process.exit();
-};
+}

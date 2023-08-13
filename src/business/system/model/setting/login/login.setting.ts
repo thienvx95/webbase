@@ -9,12 +9,17 @@ export class LoginSettings extends BaseSettingPage {
     if (this.enableGoogleAuth) {
       this.googleClientId = instance.get('Google_Id');
     }
-    this.enableGoogleAuth = instance.get('Facebook_Login');
+    this.enableFacebookAuth = instance.get('Facebook_Login');
+    if (this.enableFacebookAuth) {
+      this.facebookeClientId = instance.get('Facebook_Id');
+    }
+
     this.type = PageSettingEnum.Login;
   }
-  enableGoogleAuth: boolean;
-  googleClientId: string;
-  enableFacebookAuth: boolean;
-  enableRembemerAuth: boolean;
-  enableForgotPassword: boolean;
+  enableGoogleAuth: boolean | false = false;
+  googleClientId: string | null = null;
+  enableFacebookAuth: boolean | false = false;
+  facebookeClientId: string | null = null;
+  enableRembemerAuth: boolean | false = false;
+  enableForgotPassword: boolean | false = false;
 }

@@ -17,11 +17,11 @@
     "build:watch": "tsc -w -p tsconfig.json",
     "build:release": "npm run clean && tsc -p tsconfig.release.json && tsc-alias -p tsconfig.json",
     "watch-debug": "concurrently -k -p \"[{name}]\"  -c \"yellow.bold,cyan.bold,green.bold\" \"npm run watch-ts\" \"npm run watch-ts-alias\" \"npm run serve-debug-dev\"",
-    "watch-node": "nodemon dist/app.js",
+    "watch-node": "nodemon --trace-warnings --inspect dist/app.js",
     "watch-test": "npm run test -- --watchAll",
     "watch-ts": "tsc -w",
     "watch-ts-alias": "tsc-alias -w",
-    "watch": "concurrently -k -p \"[{name}]\"  -c \"yellow.bold,cyan.bold,green.bold\"  \"npm run watch-ts\" \"npm run watch-node\"",
+    "watch": "concurrently -k -p \"[{name}]\"  -c \"yellow.bold,cyan.bold,green.bold\"  \"npm run watch-ts\" \"npm run watch-ts-alias\" \"npm run watch-node\"",
     "lint": "eslint . --ext .ts --ext .mts",
     "test": "jest --coverage",
     "prettier": "prettier --config .prettierrc --write .",
@@ -34,14 +34,14 @@
     "@bull-board/express": "^4.10.1",
     "@typegoose/typegoose": "^11.4.0",
     "app-root-path": "^3.1.0",
-    "aws-sdk": "^2.1432.0",
+    "aws-sdk": "^2.1435.0",
     "bcrypt": "^5.1.0",
     "bluebird": "^3.7.2",
     "bull": "^4.11.2",
     "bullmq": "^4.7.0",
     "class-transformer": "^0.5.1",
     "class-validator": "^0.14.0",
-    "class-validator-jsonschema": "^5.0.0",
+    "class-validator-jsonschema": "^4.0.0",
     "compression": "^1.7.4",
     "cors": "^2.8.5",
     "dotenv": "^16.3.1",
@@ -102,5 +102,18 @@
   },
   "engines": {
     "node": ">= 16.13"
+  },
+  "nodemonConfig": {
+    "ignore": [
+      "**/*.test.ts",
+      "**/*.spec.ts",
+      ".git",
+      "node_modules"
+    ],
+    "watch": [
+      "src"
+    ],
+    "exec": "node -r tsconfig-paths/register -r ts-node/register ./src/app.ts",
+    "ext": "ts, js"
   }
 }

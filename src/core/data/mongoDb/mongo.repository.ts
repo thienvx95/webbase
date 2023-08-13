@@ -35,7 +35,7 @@ export class MongoRepository<T = BaseEntity> implements IRepository<T> {
    * @param error - Error mongoose
    */
   private handleError = (error: any): any => {
-    Logging.getInstance('Repository').error(
+    Logging.getInstance('MongoRepository').error(
       `${JSON.stringify(error)}`,
       'HandleError',
     );

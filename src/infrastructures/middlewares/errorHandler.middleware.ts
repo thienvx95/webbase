@@ -23,25 +23,40 @@ type Errors = {
 export class ErrorHandlerMiddleware implements ExpressErrorMiddlewareInterface {
   public error(error: Errors, _req: Request, res: Response): Response {
     const log = Logging.getInstance('ErrorHandler');
-    const responseResult = { 
+    const responseResult = {
       success: false,
       message: error.message,
       code: error.code,
     } as ResponseResult;
-    
-    if (error.statusCode && error.statusCode !== HttpStatus.InternalServerError) {
-      if(error.errors){
-        log.info(`[${error.code}]${error.message} - ${JSON.stringify(formatErrors(error.errors))}` );
+
+    if (
+      error.statusCode &&
+      error.statusCode !== HttpStatus.InternalServerError
+    ) {
+      if (error.errors) {
+        log.warn(
+          `${error.code}: ${error.message} - ${JSON.stringify(
+            formatErrors(error.errors),
+          )} - ${_req.url}`,
+        );
       } else {
-        log.info(`[${error.code}]${error.message}`);
+        log.warn(`${error.code}: ${error.message} - ${_req.url} `);
       }
       return res.status(error.statusCode).json(responseResult);
     }
 
-    if (error.httpCode === HttpStatus.BadRequest && error?.errors) {
-      log.info(JSON.stringify(formatErrors(error.errors)));
-      responseResult.errors = formatErrors(error.errors);
-      return res.status(error.httpCode).json(responseResult);
+    if (
+      error.httpCode == HttpStatus.BadRequest ||
+      error.code == HttpStatus.BadRequest
+    ) {
+      log.warn(error.stack);
+      if (error?.errors) {
+        log.warn(JSON.stringify(formatErrors(error.errors)));
+        responseResult.errors = formatErrors(error.errors);
+      }
+      return res
+        .status(error.httpCode || Number(error.code))
+        .json(responseResult);
     }
 
     responseResult.message = 'Internal server error';

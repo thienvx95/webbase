@@ -13,7 +13,7 @@ export const SwaggerLoader: ILoader = async (
   if (settings) {
     const expressApp = settings.getData<Express>('express_app');
     const configs = settings.getData<ISystemConfig>('configs');
-    if(!configs.SwaggerSetting.Enable) return;
+    if (!configs.SwaggerSetting.Enable) return;
     const schemas = validationMetadatasToSchemas({
       refPointerPrefix: '#/components/schemas/',
     });

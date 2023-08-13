@@ -127,7 +127,7 @@ export class AWSFileUploadSerivce implements IFileUploader {
   ): Promise<FileUploadDto[]> => {
     try {
       if (Array.isArray(files)) {
-        const result: FileUploadDto[] = await Promise.all(
+        let result: FileUploadDto[] = await Promise.all(
           files.map(async (file) => this.uploadFile(file)),
         );
         if (isEmpty(result)) {
@@ -137,7 +137,11 @@ export class AWSFileUploadSerivce implements IFileUploader {
           );
         }
 
-        this.fileUploadService.createMulti(result, type, session);
+        result = await this.fileUploadService.createMulti(
+          result,
+          type,
+          session,
+        );
         return result;
       }
       return [];

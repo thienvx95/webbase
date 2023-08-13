@@ -23,17 +23,15 @@ export class SiteSettings implements ISiteSettings {
     return SiteSettings._instance;
   }
 
-  public init(): void {
-    this._settingModel.find(
-      { type: { $nin: ['section', 'group'] } },
-      (_err, data) => {
-        if (!isEmpty(data)) {
-          data.forEach((record: Setting) => {
-            this.setValue(record._id, record.value);
-          });
-        }
-      },
-    );
+  public async init(): Promise<void> {
+    const data = await this._settingModel.find({
+      type: { $nin: ['section', 'group'] },
+    });
+    if (!isEmpty(data)) {
+      data.forEach((record: Setting) => {
+        this.setValue(record._id, record.value);
+      });
+    }
   }
 
   public get<T>(_id: string, isReload = false): T {

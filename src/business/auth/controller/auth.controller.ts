@@ -118,13 +118,19 @@ export class AuthController extends BaseController {
     return await this.authService.revokeByUserId(session._id, session.ip);
   }
 
-  @Get('/getGoogleClientId')
-  async getGoogleClientId(): Promise<ResponseResult<string>> {
-    return this.Ok<string>(true, this.siteSettings.get<string>('Google_Id'));
-  }
-
   @Get('/loginSetting')
   async getLoginSetting(): Promise<ResponseResult<string>> {
     return this.Ok<string>(true, this.siteSettings.get<string>('Google_Id'));
+  }
+
+  @Post('/google/callback')
+  async googleCallBack(
+    @Body() googleCallBack: any,
+  ): Promise<ResponseResult<string>> {
+    console.log(
+      '🚀 ~ file: auth.controller.ts:133 ~ AuthController ~ googleCallBack ~ googleCallBack',
+      googleCallBack,
+    );
+    return this.Ok<string>(true, null);
   }
 }

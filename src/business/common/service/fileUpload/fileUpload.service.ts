@@ -60,7 +60,6 @@ export class FileUploadService implements IFileUploadService {
     type: UploadType,
     session: Session,
   ): Promise<FileUploadDto[]> {
-    this.log.info('Create new FileUpload');
     const fileUploadModel = this.autoMapper.MapArray(
       fileUpload,
       FileUploadDto,
@@ -80,7 +79,6 @@ export class FileUploadService implements IFileUploadService {
   }
 
   async update(_id: string, fileUpload: FileUpload): Promise<boolean> {
-    this.log.info('Update fileUpload id: ' + _id);
     const result = await this.fileUploadRepository.update({ _id }, fileUpload);
     if (result) {
       this.eventDispatcher.dispatch(events.fileUpload.updated, fileUpload);
@@ -90,7 +88,6 @@ export class FileUploadService implements IFileUploadService {
   }
 
   async delete(_id: string): Promise<boolean> {
-    this.log.info('Delete a FileUpload');
     const result = await this.fileUploadRepository.deleteById(_id);
     if (result) {
       this.eventDispatcher.dispatch(events.fileUpload.deleted, _id);

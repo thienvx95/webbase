@@ -6,7 +6,7 @@ export enum DataBaseCustomNames {
   Settings = 'settings',
   ApplicationInfo = 'applicationInfo',
   DomainHosts = 'domainHosts',
-  MigrationDb = 'migrationDb',
+  MigrationDbs = 'migrationDbs',
   FileUploads = 'fileUploads',
   Languages = 'languages',
   Translations = 'translations',

@@ -49,11 +49,8 @@ export class UserService implements IUserService {
     paginateRequest: PaginateRequest,
   ): Promise<PaginationModel<UserDto>> {
     this._log.info('Find users paging');
-    const result = await this.userRepository.findPaging<UserDto>(
-      paginateRequest,
-    );
-    result.docs = this.autoMapper.MapArray(result.docs, User, UserDto);
-    return result;
+    const paging = await this.userRepository.findPaging(paginateRequest);
+    return this.autoMapper.MapPaging(paging, User, UserDto);
   }
 
   async findById(id: string): Promise<UserDto> {
@@ -235,14 +232,10 @@ export class UserService implements IUserService {
   async getUserLogin(
     paginateRequest: PaginateRequest,
   ): Promise<PaginationModel<UserLoginDto>> {
-    const pagingResult =
-      await this.userLoginRepository.findPaging<UserLoginDto>(paginateRequest);
-    pagingResult.docs = this.autoMapper.MapArray(
-      pagingResult.docs,
-      UserLogin,
-      UserLoginDto,
+    const pagingResult = await this.userLoginRepository.findPaging(
+      paginateRequest,
     );
-    return pagingResult;
+    return this.autoMapper.MapPaging(pagingResult, UserLogin, UserLoginDto);
   }
 
   async deleteUserLoginActivity(

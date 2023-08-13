@@ -11,6 +11,7 @@ export interface IBootstrapConfig {
 
 export interface IConfig {
   showBootstrapTime?: boolean;
+  showLoaderInit?: boolean;
   debug?: boolean;
   bootstrapTimeout?: number;
 }

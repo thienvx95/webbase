@@ -25,7 +25,7 @@ export function common(container: Container): void {
     .inSingletonScope();
   container
     .bind<ISiteSettings>(COMMON_TYPES.SiteSettings)
-    .to(SiteSettings)
+    .toDynamicValue(() => SiteSettings.getInstance())
     .inSingletonScope();
   container
     .bind<ISiteSettingPage>(COMMON_TYPES.SiteSettingPage)

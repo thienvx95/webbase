@@ -18,7 +18,7 @@ import {
   UserLoginDto,
 } from '../model';
 import { Session } from '@business/auth/model';
-import { PaginateResult } from '@business/common/model';
+import { PaginationModel } from 'mongoose-paginate-ts';
 import { inject, injectable } from 'inversify';
 import { CacheKey } from '@core/enums/cacheKey.enum';
 import { ErrorEnum } from '@core/exception/httpStatusError';
@@ -78,6 +78,10 @@ export class UserProfileController extends BaseController {
       session,
     );
     if (!isEmpty(uploadFiles)) {
+      console.log(
+        '🚀 ~ file: userProfile.controller.ts:81 ~ UserProfileController ~ uploadFiles:',
+        uploadFiles,
+      );
       await this.fileUploader.deleteByTypeAndUserId(
         session._id,
         UploadType.Avatar,
@@ -144,7 +148,7 @@ export class UserProfileController extends BaseController {
   async getCurrentUserLoginActivities(
     @Body() paginateRequest: PaginateRequest,
     @CurrentUser() session: Session,
-  ): Promise<ResponseResult<PaginateResult<UserLoginDto>>> {
+  ): Promise<ResponseResult<PaginationModel<UserLoginDto>>> {
     paginateRequest.filter = { userId: [session._id] };
     const data = await this.userService.getUserLogin(paginateRequest);
     return this.Ok(true, data);
@@ -155,7 +159,7 @@ export class UserProfileController extends BaseController {
   async deleteUserLoginActivity(
     @Param('id') id: string,
     @CurrentUser() session: Session,
-  ): Promise<ResponseResult<PaginateResult<UserLoginDto>>> {
+  ): Promise<ResponseResult<PaginationModel<UserLoginDto>>> {
     let errorCode = 0;
     const result = await this.userService.deleteUserLoginActivity(
       id,
