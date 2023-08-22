@@ -120,6 +120,9 @@ export class SystemConfig {
         Prefix: getOsEnv('REDIS_PREFIX'),
         Url: getOsEnv('REDIS_URL'),
       },
+      MemoryCacheSetting: {
+        Prefix: getOsEnv('MEMORY_CACHE_PREFIX'),
+      },
       S3Config: {
         BucketName: getOsEnv('S3_BUCKET_NAME'),
         AWSAccessKeyId: getOsEnv('S3_AWS_ACCESS_KEY_ID'),

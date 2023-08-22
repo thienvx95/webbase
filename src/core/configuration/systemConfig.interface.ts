@@ -75,6 +75,11 @@ export interface ReditSetting {
   Password?: string;
   Prefix?: string;
 }
+
+export interface MemoryCacheSetting {
+  Prefix?: string;
+}
+
 export interface ISystemConfig {
   Node?: string;
   IsProduction: boolean;
@@ -88,6 +93,7 @@ export interface ISystemConfig {
   QueueMonitorSetting?: QueueMonitorSetting;
   CacheProvider: CacheProvider;
   ReditSetting?: ReditSetting;
+  MemoryCacheSetting?: MemoryCacheSetting;
   StorageProvider?: StorageProvider;
   S3Config?: S3Config;
   Dirs: PathStructure;
