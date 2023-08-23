@@ -1,7 +1,6 @@
-import NodeCache from 'node-cache';
+import * as NodeCache from 'node-cache';
 import { ICacheBase } from '@business/core/interface';
 import { injectable } from 'inversify';
-import { Logging } from '@core/log';
 import { SystemConfig } from '@core/configuration';
 import { CacheTime } from '@core/constants';
 import { SiteSettings } from '@business/system/service/siteSetting.service';
@@ -9,7 +8,6 @@ import { SiteSettings } from '@business/system/service/siteSetting.service';
 @injectable()
 export class MemoryCache implements ICacheBase {
   private cache: NodeCache;
-  private readonly log = Logging.getInstance('MemoryCache');
   private readonly config = SystemConfig.Configs.MemoryCacheSetting;
   private readonly siteSettings = SiteSettings.getInstance();
   private static _instance: MemoryCache;
@@ -54,14 +52,7 @@ export class MemoryCache implements ICacheBase {
     await this.cache.del(cacheKey);
   }
   async removeByPrefix(prefix: string): Promise<void> {
-    for await (const key of this.cache.scanStream({
-      type: 'string', // `SCAN` only
-      match: `*${prefix}*`,
-      count: 100,
-    })) {
-      // use the key!
-      await this.removeAsync(key);
-    }
+    await this.deleteWithWildcard(prefix);
   }
   async clear(): Promise<void> {
     this.cache.flushAll();
@@ -72,23 +63,12 @@ export class MemoryCache implements ICacheBase {
     }
   }
 
-  // private string[] getWithWildcard(key: string) {
-  //   const keys = this.cache.keys();
-  //   const result: unknown[] = [];
-  //   for (const k of keys) {
-  //     if (k.startsWith(key)) {
-  //       result.push(this.get(k));
-  //     }
-  //   }
-  //   return result;
-  // }
-
-  // deleteWithWildcard(key: string) {
-  //   const keys = this.cache.keys();
-  //   for (const k of keys) {
-  //     if (k.startsWith(key)) {
-  //       this.delete(k);
-  //     }
-  //   }
-  // }
+  async deleteWithWildcard(key: string): Promise<void> {
+    const keys = this.cache.keys();
+    for await (const k of keys) {
+      if (k.startsWith(key)) {
+        await this.removeAsync(k);
+      }
+    }
+  }
 }

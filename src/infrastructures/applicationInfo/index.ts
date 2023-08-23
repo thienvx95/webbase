@@ -1,5 +1,6 @@
 import { SystemConfig } from '@core/configuration';
 import { ApplicationVersion } from '@core/constants';
+import { Logging } from '@core/log';
 import { ApplicationInfo } from '@entities/application/applicationInfo.entity';
 import { MigrationDb } from '@entities/data/migrationDb.entity';
 import { getModelForClass, ReturnModelType } from '@typegoose/typegoose';
@@ -48,6 +49,7 @@ export class Application implements IApplication {
             dbProvider: SystemConfig.DbProvider,
             version: ApplicationVersion,
             databaseMigration: migrationDbId,
+            cacheProvider: SystemConfig.CacheProvider,
           },
           {},
         )
@@ -79,6 +81,16 @@ export class Application implements IApplication {
       {},
     );
     this.get(true);
+  }
+
+  async setCacheProvider(value: string, message: string): Promise<void> {
+    await this._applicationModel
+      .updateOne(
+        { version: ApplicationVersion },
+        { cacheProvider: value, cacheStatus: message },
+      )
+      .exec();
+    await this.get(true);
   }
 
   private getLastestDbMigrationVersion = async (): Promise<string> => {

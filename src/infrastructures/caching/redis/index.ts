@@ -5,6 +5,8 @@ import { Logging } from '@core/log';
 import { SiteSettings } from '@business/system/service/siteSetting.service';
 import { CacheTime } from '@core/constants';
 import { injectable } from 'inversify';
+import { Application } from '@infrastructures/applicationInfo';
+import { CacheProvider } from '@core/enums/cacheProvider.enum';
 
 @injectable()
 export class RedisCache implements ICacheBase {
@@ -13,32 +15,60 @@ export class RedisCache implements ICacheBase {
   private readonly config = SystemConfig.Configs.ReditSetting;
   private readonly siteSettings = SiteSettings.getInstance();
   private static _instance: RedisCache;
-
   public static getInstance(): RedisCache {
     if (!RedisCache._instance) {
       RedisCache._instance = new RedisCache();
     }
-
     return RedisCache._instance;
   }
 
   public async init(): Promise<void> {
-    this.cache = new Redis({
-      port: this.config.Port, // Redis port
-      host: this.config.Url, // Redis host
-      username: this.config.Username, // needs Redis >= 6
-      password: this.config.Password,
-      db: this.config.Db, // Defaults to 0
-    });
-    this.cache.on('connect', () => {
-      this.log.info(`Redis connection established`);
-    });
+    try {
+      this.cache = new Redis({
+        lazyConnect: true,
+        port: this.config.Port, // Redis port
+        host: this.config.Url, // Redis host
+        username: this.config.Username, // needs Redis >= 6
+        password: this.config.Password,
+        db: this.config.Db, // Defaults to 0
+        autoResubscribe: false,
+        maxRetriesPerRequest: 0,
+      });
 
-    this.cache.on('error', (error) => {
-      this.log.error(`Redis error, service degraded: ${error}`);
-    });
+      this.log.info(await this.cache.info());
+      // this.cache.on('error', (err: any): void => {
+      //   if (err.code === 'ECONNREFUSED') {
+      //     this.log.warn(`Could not connect to Redis: ${err.message}.`);
+      //   } else if (err.name === 'MaxRetriesPerRequestError') {
+      //     this.log.error(
+      //       `Critical Redis error: ${err.message}. Shutting down.`,
+      //     );
+      //     process.exit(1);
+      //   } else {
+      //     this.log.error(`Redis encountered an error: ${err.message}.`);
+      //   }
+      // });
 
-    this.cache.flushdb();
+      this.cache.flushdb();
+      Application.getInstance().setCacheProvider(
+        CacheProvider.Redis,
+        `Redis connection established`,
+      );
+    } catch (err) {
+      if (err.code === 'ECONNREFUSED') {
+        this.log.warn(`Could not connect to Redis: ${err.message}.`);
+      } else if (err.name === 'MaxRetriesPerRequestError') {
+        this.log.error(`Critical Redis error: ${err.message}. Shutting down.`);
+      } else {
+        this.log.error(`Redis encountered an error: ${err.message}.`);
+      }
+      Application.getInstance().setCacheProvider(
+        CacheProvider.MemoryCache,
+        `Redis encountered an error: ${err.message}.`,
+      );
+    } finally {
+      await this.cache.disconnect();
+    }
   }
 
   async getAsync<T>(key: string): Promise<T>;

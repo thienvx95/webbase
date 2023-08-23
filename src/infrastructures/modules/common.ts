@@ -4,7 +4,6 @@ import { EventDispatcher } from '@business/core/events/eventDispatcher';
 import { AutoMapper } from '@infrastructures/mapper/autoMapper';
 import { SiteSettings } from '@business/system/service/siteSetting.service';
 import { RedisCache } from '@infrastructures/caching/redis';
-import { SystemConfig } from '@core/configuration';
 import { CacheProvider } from '@core/enums/cacheProvider.enum';
 import {
   IEventDispatcher,
@@ -14,6 +13,8 @@ import {
   ISiteSettingPage,
 } from '@business/core/interface';
 import { SiteSettingPage } from '@business/system/service/siteSettingPage.serivce';
+import { MemoryCache } from '@infrastructures/caching/memory';
+import { Application } from '@infrastructures/applicationInfo';
 
 export function common(container: Container): void {
   container
@@ -34,10 +35,11 @@ export function common(container: Container): void {
   container
     .bind<ICacheBase>(COMMON_TYPES.MemoryCache)
     .toDynamicValue(() => {
-      if (SystemConfig.CacheProvider == CacheProvider.Redis) {
+      const cacheProvider = Application.getInstance().get().cacheProvider;
+      if (cacheProvider == CacheProvider.Redis) {
         return RedisCache.getInstance();
       }
-      return null;
+      return MemoryCache.getInstance();
     })
     .inSingletonScope();
 }
