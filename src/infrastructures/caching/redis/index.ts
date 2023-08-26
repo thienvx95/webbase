@@ -35,7 +35,6 @@ export class RedisCache implements ICacheBase {
         maxRetriesPerRequest: 0,
       });
 
-      this.log.info(await this.cache.info());
       // this.cache.on('error', (err: any): void => {
       //   if (err.code === 'ECONNREFUSED') {
       //     this.log.warn(`Could not connect to Redis: ${err.message}.`);
@@ -66,8 +65,6 @@ export class RedisCache implements ICacheBase {
         CacheProvider.MemoryCache,
         `Redis encountered an error: ${err.message}.`,
       );
-    } finally {
-      await this.cache.disconnect();
     }
   }
 

@@ -1,6 +1,5 @@
 import { SystemConfig } from '@core/configuration';
 import { ApplicationVersion } from '@core/constants';
-import { Logging } from '@core/log';
 import { ApplicationInfo } from '@entities/application/applicationInfo.entity';
 import { MigrationDb } from '@entities/data/migrationDb.entity';
 import { getModelForClass, ReturnModelType } from '@typegoose/typegoose';
