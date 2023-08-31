@@ -13,6 +13,8 @@ import {
 } from '@business/core/interface';
 import { REPOSITORY_TYPES, COMMON_TYPES } from '@infrastructures/modules';
 import { ErrorEnum } from '@core/enums/error.enum';
+import { PaginateRequest } from '@business/common/model';
+import { PaginationModel } from 'mongoose-paginate-ts';
 
 @injectable()
 export class RoleService implements IRoleService {
@@ -24,6 +26,11 @@ export class RoleService implements IRoleService {
     @inject(COMMON_TYPES.EventDispatcher)
     private eventDispatcher: IEventDispatcher,
   ) {}
+  async findPaging(paginateRequest: PaginateRequest): Promise<PaginationModel<RoleDto>> {
+    this._log.info('Find roles paging');
+    const paging = await this.roleRepository.findPaging(paginateRequest);
+    return this.autoMapper.MapPaging(paging, Role, RoleDto);
+  }
   async findAll(): Promise<RoleDto[]> {
     this._log.info('', 'FindAll');
     const models = await this.roleRepository.find({});

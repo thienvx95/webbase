@@ -21,6 +21,8 @@ import {
   ResponseResult,
   Session,
 } from '@business/core/controller/baseController';
+import { PaginateRequest } from '@business/common/model';
+import { PaginationModel } from 'mongoose-paginate-ts';
 
 @JsonController(RoutingAPI.Role)
 @injectable()
@@ -32,6 +34,16 @@ export class RoleController extends BaseController {
     super();
   }
 
+  @Authorized([Roles.Admin])
+  @Post('/paging')
+  @ResponseSchema(ResponseResult<PaginationModel<RoleDto>>)
+  async findPaging(
+    @Body() body: PaginateRequest,
+  ): Promise<ResponseResult<PaginationModel<RoleDto>>> {
+    const data = await this.roleService.findPaging(body);
+    return this.Ok(true, data);
+  }
+  
   @Get()
   @ResponseSchema(RoleDto, { isArray: true })
   async find(): Promise<ResponseResult<RoleDto[]>> {

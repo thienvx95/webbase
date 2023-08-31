@@ -35,20 +35,7 @@ export class RedisCache implements ICacheBase {
         maxRetriesPerRequest: 0,
       });
 
-      // this.cache.on('error', (err: any): void => {
-      //   if (err.code === 'ECONNREFUSED') {
-      //     this.log.warn(`Could not connect to Redis: ${err.message}.`);
-      //   } else if (err.name === 'MaxRetriesPerRequestError') {
-      //     this.log.error(
-      //       `Critical Redis error: ${err.message}. Shutting down.`,
-      //     );
-      //     process.exit(1);
-      //   } else {
-      //     this.log.error(`Redis encountered an error: ${err.message}.`);
-      //   }
-      // });
-
-      this.cache.flushdb();
+      await this.cache.flushdb();
       Application.getInstance().setCacheProvider(
         CacheProvider.Redis,
         `Redis connection established`,
@@ -57,7 +44,7 @@ export class RedisCache implements ICacheBase {
       if (err.code === 'ECONNREFUSED') {
         this.log.warn(`Could not connect to Redis: ${err.message}.`);
       } else if (err.name === 'MaxRetriesPerRequestError') {
-        this.log.error(`Critical Redis error: ${err.message}. Shutting down.`);
+        this.log.error(`Critical Redis error: ${err.message}`);
       } else {
         this.log.error(`Redis encountered an error: ${err.message}.`);
       }
@@ -65,6 +52,7 @@ export class RedisCache implements ICacheBase {
         CacheProvider.MemoryCache,
         `Redis encountered an error: ${err.message}.`,
       );
+      await this.cache.disconnect();
     }
   }
 
