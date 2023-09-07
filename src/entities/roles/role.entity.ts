@@ -5,6 +5,7 @@ import {
   Severity,
 } from "@typegoose/typegoose";
 import { DataBaseCustomNames } from "@core/enums/dbCustomeNames";
+import { AutoMap } from "@automapper/classes";
 
 @modelOptions({
   options: {  allowMixed: Severity.ALLOW, customName: DataBaseCustomNames.Roles },
@@ -12,6 +13,7 @@ import { DataBaseCustomNames } from "@core/enums/dbCustomeNames";
 })
 export class Role extends BaseEntity {
   @prop()
+  @AutoMap()
   public description?: string;
 
   @prop()
